@@ -37,3 +37,680 @@ Migrating to CreateProducts (20091017182938)
  WHERE type = 'table' AND NOT name = 'sqlite_sequence'
 [0m
   [4;36;1mSQL (0.0ms)[0m   [0;1mPRAGMA index_list("products")[0m
+
+
+Processing ProductsController#index (for 127.0.0.1 at 2009-10-17 14:35:25) [GET]
+  [4;36;1mProduct Load (0.0ms)[0m   [0;1mSELECT * FROM "products" [0m
+Rendering template within layouts/products
+Rendering products/index
+Completed in 1329ms (View: 1297, DB: 0) | 200 OK [http://localhost/products]
+
+
+Processing ProductsController#new (for 127.0.0.1 at 2009-10-17 14:35:34) [GET]
+Rendering template within layouts/products
+Rendering products/new
+Completed in 172ms (View: 157, DB: 0) | 200 OK [http://localhost/products/new]
+
+
+Processing ProductsController#create (for 127.0.0.1 at 2009-10-17 14:35:50) [POST]
+  Parameters: {"commit"=>"Create", "authenticity_token"=>"k78VTJXxfC11uC/60fISoCXqzafvsOL82EjTb6448MA=", "product"=>{"image_url"=>"", "title"=>"Dollar", "description"=>"A soon to be useless commodity."}}
+  [4;35;1mProduct Create (16.0ms)[0m   [0mINSERT INTO "products" ("image_url", "updated_at", "title", "description", "created_at") VALUES('', '2009-10-17 18:35:50', 'Dollar', 'A soon to be useless commodity.', '2009-10-17 18:35:50')[0m
+Redirected to http://localhost:3000/products/1
+Completed in 140ms (DB: 16) | 302 Found [http://localhost/products]
+
+
+Processing ProductsController#show (for 127.0.0.1 at 2009-10-17 14:35:50) [GET]
+  Parameters: {"id"=>"1"}
+  [4;36;1mProduct Load (0.0ms)[0m   [0;1mSELECT * FROM "products" WHERE ("products"."id" = 1) [0m
+Rendering template within layouts/products
+Rendering products/show
+Completed in 47ms (View: 16, DB: 0) | 200 OK [http://localhost/products/1]
+
+
+Processing ProductsController#index (for 127.0.0.1 at 2009-10-17 14:35:55) [GET]
+  [4;35;1mProduct Load (0.0ms)[0m   [0mSELECT * FROM "products" [0m
+Rendering template within layouts/products
+Rendering products/index
+Completed in 31ms (View: 15, DB: 0) | 200 OK [http://localhost/products]
+
+
+Processing ProductsController#index (for 127.0.0.1 at 2009-10-17 14:37:36) [GET]
+  [4;36;1mProduct Load (0.0ms)[0m   [0;1mSELECT * FROM "products" [0m
+Rendering template within layouts/products
+Rendering products/index
+Completed in 47ms (View: 31, DB: 0) | 200 OK [http://localhost/products]
+
+
+Processing ProductsController#index (for 127.0.0.1 at 2009-10-17 14:37:39) [GET]
+  [4;35;1mProduct Load (15.0ms)[0m   [0mSELECT * FROM "products" [0m
+Rendering template within layouts/products
+Rendering products/index
+Completed in 31ms (View: 16, DB: 15) | 200 OK [http://localhost/products]
+
+
+Processing ProductsController#show (for 127.0.0.1 at 2009-10-17 14:37:47) [GET]
+  Parameters: {"id"=>"1"}
+  [4;36;1mProduct Load (0.0ms)[0m   [0;1mSELECT * FROM "products" WHERE ("products"."id" = 1) [0m
+Rendering template within layouts/products
+Rendering products/show
+Completed in 31ms (View: 0, DB: 0) | 200 OK [http://localhost/products/1]
+
+
+Processing ProductsController#edit (for 127.0.0.1 at 2009-10-17 14:37:49) [GET]
+  Parameters: {"id"=>"1"}
+  [4;35;1mProduct Load (0.0ms)[0m   [0mSELECT * FROM "products" WHERE ("products"."id" = 1) [0m
+Rendering template within layouts/products
+Rendering products/edit
+Completed in 156ms (View: 140, DB: 0) | 200 OK [http://localhost/products/1/edit]
+
+
+Processing ProductsController#update (for 127.0.0.1 at 2009-10-17 14:38:09) [PUT]
+  Parameters: {"commit"=>"Update", "authenticity_token"=>"k78VTJXxfC11uC/60fISoCXqzafvsOL82EjTb6448MA=", "product"=>{"image_url"=>"img/dollar.jpg", "title"=>"Dollar", "description"=>"A soon to be useless commodity. Thanks to Barack Obama and Ben Bernanke."}, "id"=>"1"}
+  [4;36;1mProduct Load (0.0ms)[0m   [0;1mSELECT * FROM "products" WHERE ("products"."id" = 1) [0m
+  [4;35;1mProduct Update (0.0ms)[0m   [0mUPDATE "products" SET "image_url" = 'img/dollar.jpg', "description" = 'A soon to be useless commodity. Thanks to Barack Obama and Ben Bernanke.', "updated_at" = '2009-10-17 18:38:09' WHERE "id" = 1[0m
+Redirected to http://localhost:3000/products/1
+Completed in 110ms (DB: 0) | 302 Found [http://localhost/products/1]
+
+
+Processing ProductsController#show (for 127.0.0.1 at 2009-10-17 14:38:09) [GET]
+  Parameters: {"id"=>"1"}
+  [4;36;1mProduct Load (0.0ms)[0m   [0;1mSELECT * FROM "products" WHERE ("products"."id" = 1) [0m
+Rendering template within layouts/products
+Rendering products/show
+Completed in 31ms (View: 16, DB: 0) | 200 OK [http://localhost/products/1]
+
+
+Processing ProductsController#index (for 127.0.0.1 at 2009-10-17 14:38:15) [GET]
+  [4;35;1mProduct Load (0.0ms)[0m   [0mSELECT * FROM "products" [0m
+Rendering template within layouts/products
+Rendering products/index
+Completed in 32ms (View: 16, DB: 0) | 200 OK [http://localhost/products]
+  [4;36;1mSQL (16.0ms)[0m   [0;1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [4;35;1mSQL (0.0ms)[0m   [0mSELECT version FROM schema_migrations[0m
+Migrating to CreateProducts (20091017182938)
+Migrating to AddPriceToProduct (20091017183721)
+  [4;36;1mSQL (0.0ms)[0m   [0;1mselect sqlite_version(*)[0m
+  [4;35;1mSQL (0.0ms)[0m   [0mALTER TABLE "products" ADD "price" decimal[0m
+  [4;36;1mSQL (0.0ms)[0m   [0;1mINSERT INTO schema_migrations (version) VALUES ('20091017183721')[0m
+  [4;35;1mSQL (15.0ms)[0m   [0m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [4;36;1mSQL (0.0ms)[0m   [0;1mSELECT version FROM schema_migrations[0m
+  [4;35;1mSQL (0.0ms)[0m   [0m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [4;36;1mSQL (0.0ms)[0m   [0;1mPRAGMA index_list("products")[0m
+
+
+Processing ProductsController#index (for 127.0.0.1 at 2009-10-17 14:38:42) [GET]
+  [4;36;1mProduct Load (0.0ms)[0m   [0;1mSELECT * FROM "products" [0m
+Rendering template within layouts/products
+Rendering products/index
+Completed in 31ms (View: 15, DB: 0) | 200 OK [http://localhost/products]
+
+
+Processing ProductsController#index (for 127.0.0.1 at 2009-10-17 14:38:46) [GET]
+  [4;35;1mProduct Load (16.0ms)[0m   [0mSELECT * FROM "products" [0m
+Rendering template within layouts/products
+Rendering products/index
+Completed in 31ms (View: 15, DB: 16) | 200 OK [http://localhost/products]
+
+
+Processing ProductsController#index (for 127.0.0.1 at 2009-10-17 14:38:47) [GET]
+  [4;36;1mProduct Load (0.0ms)[0m   [0;1mSELECT * FROM "products" [0m
+Rendering template within layouts/products
+Rendering products/index
+Completed in 32ms (View: 16, DB: 0) | 200 OK [http://localhost/products]
+
+
+Processing ProductsController#index (for 127.0.0.1 at 2009-10-17 14:40:05) [GET]
+  [4;35;1mProduct Load (0.0ms)[0m   [0mSELECT * FROM "products" [0m
+Rendering template within layouts/products
+Rendering products/index
+Completed in 32ms (View: 16, DB: 0) | 200 OK [http://localhost/products]
+
+
+Processing ProductsController#index (for 127.0.0.1 at 2009-10-17 14:40:46) [GET]
+  [4;36;1mProduct Load (0.0ms)[0m   [0;1mSELECT * FROM "products" [0m
+Rendering template within layouts/products
+Rendering products/index
+Completed in 47ms (View: 32, DB: 0) | 200 OK [http://localhost/products]
+
+
+Processing ProductsController#edit (for 127.0.0.1 at 2009-10-17 14:40:50) [GET]
+  Parameters: {"id"=>"1"}
+  [4;35;1mProduct Load (0.0ms)[0m   [0mSELECT * FROM "products" WHERE ("products"."id" = 1) [0m
+Rendering template within layouts/products
+Rendering products/edit
+Completed in 313ms (View: 282, DB: 0) | 200 OK [http://localhost/products/1/edit]
+
+
+Processing ProductsController#update (for 127.0.0.1 at 2009-10-17 14:40:56) [PUT]
+  Parameters: {"commit"=>"Update", "authenticity_token"=>"k78VTJXxfC11uC/60fISoCXqzafvsOL82EjTb6448MA=", "product"=>{"image_url"=>"img/dollar.jpg", "price"=>"0.00", "title"=>"Dollar", "description"=>"A soon to be useless commodity. Thanks to Barack Obama and Ben Bernanke."}, "id"=>"1"}
+  [4;36;1mProduct Load (0.0ms)[0m   [0;1mSELECT * FROM "products" WHERE ("products"."id" = 1) [0m
+  [4;35;1mProduct Update (0.0ms)[0m   [0mUPDATE "products" SET "price" = 0.0, "updated_at" = '2009-10-17 18:40:56' WHERE "id" = 1[0m
+Redirected to http://localhost:3000/products/1
+Completed in 219ms (DB: 0) | 302 Found [http://localhost/products/1]
+
+
+Processing ProductsController#show (for 127.0.0.1 at 2009-10-17 14:40:57) [GET]
+  Parameters: {"id"=>"1"}
+  [4;36;1mProduct Load (0.0ms)[0m   [0;1mSELECT * FROM "products" WHERE ("products"."id" = 1) [0m
+Rendering template within layouts/products
+Rendering products/show
+Completed in 47ms (View: 31, DB: 0) | 200 OK [http://localhost/products/1]
+
+
+Processing ProductsController#index (for 127.0.0.1 at 2009-10-17 14:41:00) [GET]
+  [4;35;1mProduct Load (15.0ms)[0m   [0mSELECT * FROM "products" [0m
+Rendering template within layouts/products
+Rendering products/index
+Completed in 31ms (View: 16, DB: 15) | 200 OK [http://localhost/products]
+
+
+Processing ProductsController#new (for 127.0.0.1 at 2009-10-17 15:01:57) [GET]
+Rendering template within layouts/products
+Rendering products/new
+Completed in 46ms (View: 31, DB: 0) | 200 OK [http://localhost/products/new]
+
+
+Processing ProductsController#create (for 127.0.0.1 at 2009-10-17 16:21:40) [POST]
+  Parameters: {"commit"=>"Create", "authenticity_token"=>"k78VTJXxfC11uC/60fISoCXqzafvsOL82EjTb6448MA=", "product"=>{"image_url"=>"img/gold.jpg", "price"=>"1056.00", "title"=>"Gold", "description"=>"The next best thing in the world."}}
+  [4;36;1mProduct Create (16.0ms)[0m   [0;1mINSERT INTO "products" ("image_url", "updated_at", "title", "price", "description", "created_at") VALUES('img/gold.jpg', '2009-10-17 20:21:40', 'Gold', 1056.0, 'The next best thing in the world.', '2009-10-17 20:21:40')[0m
+Redirected to http://localhost:3000/products/2
+Completed in 187ms (DB: 16) | 302 Found [http://localhost/products]
+
+
+Processing ProductsController#show (for 127.0.0.1 at 2009-10-17 16:21:40) [GET]
+  Parameters: {"id"=>"2"}
+  [4;35;1mProduct Load (0.0ms)[0m   [0mSELECT * FROM "products" WHERE ("products"."id" = 2) [0m
+Rendering template within layouts/products
+Rendering products/show
+Completed in 47ms (View: 16, DB: 0) | 200 OK [http://localhost/products/2]
+
+
+Processing ProductsController#index (for 127.0.0.1 at 2009-10-17 16:21:48) [GET]
+  [4;36;1mProduct Load (0.0ms)[0m   [0;1mSELECT * FROM "products" [0m
+Rendering template within layouts/products
+Rendering products/index
+Completed in 62ms (View: 47, DB: 0) | 200 OK [http://localhost/products]
+
+
+Processing ProductsController#show (for 127.0.0.1 at 2009-10-17 16:40:11) [GET]
+  Parameters: {"id"=>"1"}
+  [4;35;1mProduct Load (0.0ms)[0m   [0mSELECT * FROM "products" WHERE ("products"."id" = 1) [0m
+Rendering template within layouts/products
+Rendering products/show
+Completed in 62ms (View: 16, DB: 0) | 200 OK [http://localhost/products/1]
+
+
+Processing ProductsController#show (for 127.0.0.1 at 2009-10-17 16:40:22) [GET]
+  Parameters: {"id"=>"1"}
+  [4;36;1mProduct Load (0.0ms)[0m   [0;1mSELECT * FROM "products" WHERE ("products"."id" = 1) [0m
+Rendering template within layouts/products
+Rendering products/show
+Completed in 31ms (View: 16, DB: 0) | 200 OK [http://localhost/products/1]
+
+
+Processing ProductsController#show (for 127.0.0.1 at 2009-10-17 16:40:24) [GET]
+  Parameters: {"id"=>"1"}
+  [4;35;1mProduct Load (0.0ms)[0m   [0mSELECT * FROM "products" WHERE ("products"."id" = 1) [0m
+Rendering template within layouts/products
+Rendering products/show
+Completed in 31ms (View: 16, DB: 0) | 200 OK [http://localhost/products/1]
+
+
+Processing ProductsController#edit (for 127.0.0.1 at 2009-10-17 16:40:33) [GET]
+  Parameters: {"id"=>"1"}
+  [4;36;1mProduct Load (0.0ms)[0m   [0;1mSELECT * FROM "products" WHERE ("products"."id" = 1) [0m
+Rendering template within layouts/products
+Rendering products/edit
+Completed in 31ms (View: 16, DB: 0) | 200 OK [http://localhost/products/1/edit]
+
+
+Processing ProductsController#update (for 127.0.0.1 at 2009-10-17 16:40:41) [PUT]
+  Parameters: {"commit"=>"Update", "authenticity_token"=>"k78VTJXxfC11uC/60fISoCXqzafvsOL82EjTb6448MA=", "product"=>{"image_url"=>"img/dollar.jpg", "price"=>"0", "title"=>"Dollar", "description"=>"A soon to be useless commodity. <br>Thanks to Barack Obama and Ben Bernanke."}, "id"=>"1"}
+  [4;35;1mProduct Load (16.0ms)[0m   [0mSELECT * FROM "products" WHERE ("products"."id" = 1) [0m
+  [4;36;1mProduct Update (0.0ms)[0m   [0;1mUPDATE "products" SET "description" = 'A soon to be useless commodity. <br>Thanks to Barack Obama and Ben Bernanke.', "updated_at" = '2009-10-17 20:40:41' WHERE "id" = 1[0m
+Redirected to http://localhost:3000/products/1
+Completed in 110ms (DB: 16) | 302 Found [http://localhost/products/1]
+
+
+Processing ProductsController#show (for 127.0.0.1 at 2009-10-17 16:40:42) [GET]
+  Parameters: {"id"=>"1"}
+  [4;35;1mProduct Load (0.0ms)[0m   [0mSELECT * FROM "products" WHERE ("products"."id" = 1) [0m
+Rendering template within layouts/products
+Rendering products/show
+Completed in 31ms (View: 15, DB: 0) | 200 OK [http://localhost/products/1]
+
+
+Processing ProductsController#index (for 127.0.0.1 at 2009-10-17 16:41:45) [GET]
+  [4;36;1mProduct Load (0.0ms)[0m   [0;1mSELECT * FROM "products" [0m
+Rendering template within layouts/products
+Rendering products/index
+Completed in 46ms (View: 31, DB: 0) | 200 OK [http://localhost/products]
+
+
+Processing ProductsController#new (for 127.0.0.1 at 2009-10-17 16:41:48) [GET]
+Rendering template within layouts/products
+Rendering products/new
+Completed in 32ms (View: 16, DB: 0) | 200 OK [http://localhost/products/new]
+
+
+Processing ProductsController#create (for 127.0.0.1 at 2009-10-17 16:42:06) [POST]
+  Parameters: {"commit"=>"Create", "authenticity_token"=>"k78VTJXxfC11uC/60fISoCXqzafvsOL82EjTb6448MA=", "product"=>{"image_url"=>"img/euro.jpg", "price"=>"", "title"=>"Euro", "description"=>"Boring, and going to suck as much as dollar."}}
+  [4;35;1mProduct Create (0.0ms)[0m   [0mINSERT INTO "products" ("image_url", "updated_at", "title", "price", "description", "created_at") VALUES('img/euro.jpg', '2009-10-17 20:42:06', 'Euro', NULL, 'Boring, and going to suck as much as dollar.', '2009-10-17 20:42:06')[0m
+Redirected to http://localhost:3000/products/3
+Completed in 125ms (DB: 0) | 302 Found [http://localhost/products]
+
+
+Processing ProductsController#show (for 127.0.0.1 at 2009-10-17 16:42:06) [GET]
+  Parameters: {"id"=>"3"}
+  [4;36;1mProduct Load (16.0ms)[0m   [0;1mSELECT * FROM "products" WHERE ("products"."id" = 3) [0m
+Rendering template within layouts/products
+Rendering products/show
+Completed in 32ms (View: 0, DB: 16) | 200 OK [http://localhost/products/3]
+
+
+Processing ProductsController#edit (for 127.0.0.1 at 2009-10-17 16:58:38) [GET]
+  Parameters: {"id"=>"3"}
+  [4;35;1mSQL (15.0ms)[0m   [0m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [4;36;1mSQL (0.0ms)[0m   [0;1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+
+NoMethodError (undefined method `validates_numaricality_of' for #<Class:0x4af11b8>):
+  app/models/product.rb:3
+  app/controllers/products_controller.rb:37:in `edit'
+  c:/ruby/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+  c:/ruby/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:162:in `start'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:95:in `start'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:92:in `each'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:92:in `start'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:23:in `start'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:82:in `start'
+  -e:4:in `load'
+  -e:4
+
+Rendered rescues/_trace (359.0ms)
+Rendered rescues/_request_and_response (16.0ms)
+Rendering rescues/layout (internal_server_error)
+
+
+Processing ProductsController#edit (for 127.0.0.1 at 2009-10-17 17:00:08) [GET]
+  Parameters: {"id"=>"3"}
+
+NoMethodError (undefined method `validates_presence_of' for main:Object):
+  app/models/product.rb:3
+  app/controllers/products_controller.rb:37:in `edit'
+  c:/ruby/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+  c:/ruby/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:162:in `start'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:95:in `start'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:92:in `each'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:92:in `start'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:23:in `start'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:82:in `start'
+  -e:4:in `load'
+  -e:4
+
+Rendered rescues/_trace (500.0ms)
+Rendered rescues/_request_and_response (0.0ms)
+Rendering rescues/layout (internal_server_error)
+
+
+Processing ProductsController#edit (for 127.0.0.1 at 2009-10-17 17:01:39) [GET]
+  Parameters: {"id"=>"3"}
+
+NoMethodError (undefined method `validates_presence_of' for main:Object):
+  app/models/product.rb:3
+  app/controllers/products_controller.rb:37:in `edit'
+  c:/ruby/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+  c:/ruby/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:162:in `start'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:95:in `start'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:92:in `each'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:92:in `start'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:23:in `start'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:82:in `start'
+  -e:4:in `load'
+  -e:4
+
+Rendered rescues/_trace (312.0ms)
+Rendered rescues/_request_and_response (0.0ms)
+Rendering rescues/layout (internal_server_error)
+
+
+Processing ProductsController#edit (for 127.0.0.1 at 2009-10-17 17:02:46) [GET]
+  Parameters: {"id"=>"3"}
+  [4;35;1mSQL (0.0ms)[0m   [0m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [4;36;1mSQL (16.0ms)[0m   [0;1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+
+NoMethodError (undefined method `validates_numaricality_of' for #<Class:0x4cec364>):
+  app/models/product.rb:3
+  app/controllers/products_controller.rb:37:in `edit'
+  c:/ruby/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+  c:/ruby/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:162:in `start'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:95:in `start'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:92:in `each'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:92:in `start'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:23:in `start'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:82:in `start'
+  -e:4:in `load'
+  -e:4
+
+Rendered rescues/_trace (1797.0ms)
+Rendered rescues/_request_and_response (0.0ms)
+Rendering rescues/layout (internal_server_error)
+
+
+Processing ProductsController#edit (for 127.0.0.1 at 2009-10-17 17:02:48) [GET]
+  Parameters: {"id"=>"3"}
+  [4;35;1mSQL (0.0ms)[0m   [0m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [4;36;1mSQL (0.0ms)[0m   [0;1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+
+NoMethodError (undefined method `validates_numaricality_of' for #<Class:0x4bf5d84>):
+  app/models/product.rb:3
+  app/controllers/products_controller.rb:37:in `edit'
+  c:/ruby/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+  c:/ruby/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:162:in `start'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:95:in `start'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:92:in `each'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:92:in `start'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:23:in `start'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:82:in `start'
+  -e:4:in `load'
+  -e:4
+
+Rendered rescues/_trace (719.0ms)
+Rendered rescues/_request_and_response (16.0ms)
+Rendering rescues/layout (internal_server_error)
+
+
+Processing ProductsController#edit (for 127.0.0.1 at 2009-10-17 17:03:01) [GET]
+  Parameters: {"id"=>"3"}
+
+NameError (undefined local variable or method `protected' for main:Object):
+  app/models/product.rb:7
+  app/controllers/products_controller.rb:37:in `edit'
+  c:/ruby/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+  c:/ruby/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:162:in `start'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:95:in `start'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:92:in `each'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:92:in `start'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:23:in `start'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:82:in `start'
+  -e:4:in `load'
+  -e:4
+
+Rendered rescues/_trace (297.0ms)
+Rendered rescues/_request_and_response (0.0ms)
+Rendering rescues/layout (internal_server_error)
+
+
+Processing ProductsController#edit (for 127.0.0.1 at 2009-10-17 17:03:15) [GET]
+  Parameters: {"id"=>"3"}
+  [4;35;1mProduct Load (0.0ms)[0m   [0mSELECT * FROM "products" WHERE ("products"."id" = 3) [0m
+Rendering template within layouts/products
+Rendering products/edit
+Completed in 110ms (View: 63, DB: 0) | 200 OK [http://localhost/products/3/edit]
+
+
+Processing ProductsController#update (for 127.0.0.1 at 2009-10-17 17:03:23) [PUT]
+  Parameters: {"commit"=>"Update", "authenticity_token"=>"k78VTJXxfC11uC/60fISoCXqzafvsOL82EjTb6448MA=", "product"=>{"image_url"=>"img/euro.jpg", "price"=>"", "title"=>"Euro", "description"=>"Boring, and going to suck as much as dollar."}, "id"=>"3"}
+  [4;36;1mProduct Load (0.0ms)[0m   [0;1mSELECT * FROM "products" WHERE ("products"."id" = 3) [0m
+Rendering template within layouts/products
+Rendering products/edit
+Completed in 250ms (View: 156, DB: 0) | 200 OK [http://localhost/products/3]
+
+
+Processing ProductsController#update (for 127.0.0.1 at 2009-10-17 17:03:31) [PUT]
+  Parameters: {"commit"=>"Update", "authenticity_token"=>"k78VTJXxfC11uC/60fISoCXqzafvsOL82EjTb6448MA=", "product"=>{"image_url"=>"img/euro.jpg", "price"=>"10", "title"=>"Euro", "description"=>"Boring, and going to suck as much as dollar."}, "id"=>"3"}
+  [4;35;1mProduct Load (0.0ms)[0m   [0mSELECT * FROM "products" WHERE ("products"."id" = 3) [0m
+  [4;36;1mProduct Update (0.0ms)[0m   [0;1mUPDATE "products" SET "price" = 10.0, "updated_at" = '2009-10-17 21:03:31' WHERE "id" = 3[0m
+Redirected to http://localhost:3000/products/3
+Completed in 187ms (DB: 0) | 302 Found [http://localhost/products/3]
+
+
+Processing ProductsController#show (for 127.0.0.1 at 2009-10-17 17:03:32) [GET]
+  Parameters: {"id"=>"3"}
+  [4;35;1mProduct Load (0.0ms)[0m   [0mSELECT * FROM "products" WHERE ("products"."id" = 3) [0m
+Rendering template within layouts/products
+Rendering products/show
+Completed in 78ms (View: 31, DB: 0) | 200 OK [http://localhost/products/3]
+
+
+Processing ProductsController#index (for 127.0.0.1 at 2009-10-17 17:03:38) [GET]
+  [4;36;1mProduct Load (0.0ms)[0m   [0;1mSELECT * FROM "products" [0m
+Rendering template within layouts/products
+Rendering products/index
+Completed in 156ms (View: 109, DB: 0) | 200 OK [http://localhost/products]
+
+
+Processing ProductsController#edit (for 127.0.0.1 at 2009-10-17 17:03:47) [GET]
+  Parameters: {"id"=>"2"}
+  [4;35;1mProduct Load (0.0ms)[0m   [0mSELECT * FROM "products" WHERE ("products"."id" = 2) [0m
+Rendering template within layouts/products
+Rendering products/edit
+Completed in 109ms (View: 47, DB: 0) | 200 OK [http://localhost/products/2/edit]
+
+
+Processing ProductsController#update (for 127.0.0.1 at 2009-10-17 17:03:55) [PUT]
+  Parameters: {"commit"=>"Update", "authenticity_token"=>"k78VTJXxfC11uC/60fISoCXqzafvsOL82EjTb6448MA=", "product"=>{"image_url"=>"img/gold.jpg", "price"=>"1056", "title"=>"Gold", "description"=>"The next best thing in the world."}, "id"=>"2"}
+  [4;36;1mProduct Load (0.0ms)[0m   [0;1mSELECT * FROM "products" WHERE ("products"."id" = 2) [0m
+Redirected to http://localhost:3000/products/2
+Completed in 78ms (DB: 0) | 302 Found [http://localhost/products/2]
+
+
+Processing ProductsController#show (for 127.0.0.1 at 2009-10-17 17:03:56) [GET]
+  Parameters: {"id"=>"2"}
+  [4;35;1mProduct Load (0.0ms)[0m   [0mSELECT * FROM "products" WHERE ("products"."id" = 2) [0m
+Rendering template within layouts/products
+Rendering products/show
+Completed in 78ms (View: 31, DB: 0) | 200 OK [http://localhost/products/2]
+
+
+Processing ProductsController#index (for 127.0.0.1 at 2009-10-17 17:04:04) [GET]
+  [4;36;1mProduct Load (0.0ms)[0m   [0;1mSELECT * FROM "products" [0m
+Rendering template within layouts/products
+Rendering products/index
+Completed in 140ms (View: 93, DB: 0) | 200 OK [http://localhost/products]
+
+
+Processing ProductsController#index (for 127.0.0.1 at 2009-10-17 17:04:25) [GET]
+  [4;35;1mProduct Load (0.0ms)[0m   [0mSELECT * FROM "products" [0m
+Rendering template within layouts/products
+Rendering products/index
+Completed in 172ms (View: 141, DB: 0) | 200 OK [http://localhost/products]
+
+
+Processing ProductsController#index (for 127.0.0.1 at 2009-10-17 17:04:35) [GET]
+  [4;36;1mProduct Load (0.0ms)[0m   [0;1mSELECT * FROM "products" [0m
+Rendering template within layouts/products
+Rendering products/index
+Completed in 562ms (View: 516, DB: 0) | 200 OK [http://localhost/products]
+
+
+Processing ProductsController#index (for 127.0.0.1 at 2009-10-17 17:05:02) [GET]
+  [4;35;1mProduct Load (0.0ms)[0m   [0mSELECT * FROM "products" [0m
+Rendering template within layouts/products
+Rendering products/index
+Completed in 188ms (View: 157, DB: 0) | 200 OK [http://localhost/products]
+
+
+Processing ProductsController#index (for 127.0.0.1 at 2009-10-17 17:05:51) [GET]
+  [4;36;1mProduct Load (15.0ms)[0m   [0;1mSELECT * FROM "products" [0m
+Rendering template within layouts/products
+Rendering products/index
+Completed in 203ms (View: 141, DB: 15) | 200 OK [http://localhost/products]
+
+
+Processing ProductsController#edit (for 127.0.0.1 at 2009-10-17 17:08:25) [GET]
+  Parameters: {"id"=>"1"}
+  [4;35;1mSQL (0.0ms)[0m   [0m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [4;36;1mSQL (15.0ms)[0m   [0;1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+
+NoMethodError (undefined method `validates_unqiueness_of' for #<Class:0x4c18014>):
+  app/models/product.rb:5
+  app/controllers/products_controller.rb:37:in `edit'
+  c:/ruby/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+  c:/ruby/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:162:in `start'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:95:in `start'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:92:in `each'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:92:in `start'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:23:in `start'
+  c:/ruby/lib/ruby/1.8/webrick/server.rb:82:in `start'
+  -e:4:in `load'
+  -e:4
+
+Rendered rescues/_trace (891.0ms)
+Rendered rescues/_request_and_response (0.0ms)
+Rendering rescues/layout (internal_server_error)
+
+
+Processing ProductsController#edit (for 127.0.0.1 at 2009-10-17 17:08:43) [GET]
+  Parameters: {"id"=>"1"}
+  [4;35;1mProduct Load (0.0ms)[0m   [0mSELECT * FROM "products" WHERE ("products"."id" = 1) [0m
+Rendering template within layouts/products
+Rendering products/edit
+Completed in 125ms (View: 63, DB: 0) | 200 OK [http://localhost/products/1/edit]
+
+
+Processing ProductsController#update (for 127.0.0.1 at 2009-10-17 17:08:49) [PUT]
+  Parameters: {"commit"=>"Update", "authenticity_token"=>"k78VTJXxfC11uC/60fISoCXqzafvsOL82EjTb6448MA=", "product"=>{"image_url"=>"img/dollar.jpg", "price"=>"0", "title"=>"Dollar", "description"=>"A soon to be useless commodity. <br>Thanks to Barack Obama and Ben Bernanke."}, "id"=>"1"}
+  [4;36;1mProduct Load (0.0ms)[0m   [0;1mSELECT * FROM "products" WHERE ("products"."id" = 1) [0m
+  [4;35;1mProduct Load (0.0ms)[0m   [0mSELECT "products".id FROM "products" WHERE ("products"."title" = 'Dollar' AND "products".id <> 1) LIMIT 1[0m
+Rendering template within layouts/products
+Rendering products/edit
+Completed in 171ms (View: 93, DB: 0) | 200 OK [http://localhost/products/1]
+
+
+Processing ProductsController#update (for 127.0.0.1 at 2009-10-17 17:08:57) [PUT]
+  Parameters: {"commit"=>"Update", "authenticity_token"=>"k78VTJXxfC11uC/60fISoCXqzafvsOL82EjTb6448MA=", "product"=>{"image_url"=>"img/dollar.jpg", "price"=>"0.01", "title"=>"Dollar", "description"=>"A soon to be useless commodity. <br>Thanks to Barack Obama and Ben Bernanke."}, "id"=>"1"}
+  [4;36;1mProduct Load (0.0ms)[0m   [0;1mSELECT * FROM "products" WHERE ("products"."id" = 1) [0m
+  [4;35;1mProduct Load (0.0ms)[0m   [0mSELECT "products".id FROM "products" WHERE ("products"."title" = 'Dollar' AND "products".id <> 1) LIMIT 1[0m
+  [4;36;1mProduct Update (0.0ms)[0m   [0;1mUPDATE "products" SET "price" = 0.01, "updated_at" = '2009-10-17 21:08:57' WHERE "id" = 1[0m
+Redirected to http://localhost:3000/products/1
+Completed in 187ms (DB: 0) | 302 Found [http://localhost/products/1]
+
+
+Processing ProductsController#show (for 127.0.0.1 at 2009-10-17 17:08:59) [GET]
+  Parameters: {"id"=>"1"}
+  [4;35;1mProduct Load (0.0ms)[0m   [0mSELECT * FROM "products" WHERE ("products"."id" = 1) [0m
+Rendering template within layouts/products
+Rendering products/show
+Completed in 78ms (View: 31, DB: 0) | 200 OK [http://localhost/products/1]
+
+
+Processing ProductsController#edit (for 127.0.0.1 at 2009-10-17 17:09:02) [GET]
+  Parameters: {"id"=>"1"}
+  [4;36;1mProduct Load (16.0ms)[0m   [0;1mSELECT * FROM "products" WHERE ("products"."id" = 1) [0m
+Rendering template within layouts/products
+Rendering products/edit
+Completed in 109ms (View: 47, DB: 16) | 200 OK [http://localhost/products/1/edit]
+
+
+Processing ProductsController#update (for 127.0.0.1 at 2009-10-17 17:09:15) [PUT]
+  Parameters: {"commit"=>"Update", "authenticity_token"=>"k78VTJXxfC11uC/60fISoCXqzafvsOL82EjTb6448MA=", "product"=>{"image_url"=>"img/dollar.jpg3", "price"=>"0.01", "title"=>"Euro", "description"=>"A soon to be useless commodity. <br>Thanks to Barack Obama and Ben Bernanke."}, "id"=>"1"}
+  [4;35;1mProduct Load (0.0ms)[0m   [0mSELECT * FROM "products" WHERE ("products"."id" = 1) [0m
+  [4;36;1mProduct Load (0.0ms)[0m   [0;1mSELECT "products".id FROM "products" WHERE ("products"."title" = 'Euro' AND "products".id <> 1) LIMIT 1[0m
+Rendering template within layouts/products
+Rendering products/edit
+Completed in 187ms (View: 109, DB: 0) | 200 OK [http://localhost/products/1]
+
+
+Processing ProductsController#update (for 127.0.0.1 at 2009-10-17 17:09:28) [PUT]
+  Parameters: {"commit"=>"Update", "authenticity_token"=>"k78VTJXxfC11uC/60fISoCXqzafvsOL82EjTb6448MA=", "product"=>{"image_url"=>"img/dollar.jpg3", "price"=>"0.01", "title"=>"Dollar", "description"=>"A soon to be useless commodity. <br>Thanks to Barack Obama and Ben Bernanke."}, "id"=>"1"}
+  [4;35;1mProduct Load (0.0ms)[0m   [0mSELECT * FROM "products" WHERE ("products"."id" = 1) [0m
+  [4;36;1mProduct Load (0.0ms)[0m   [0;1mSELECT "products".id FROM "products" WHERE ("products"."title" = 'Dollar' AND "products".id <> 1) LIMIT 1[0m
+  [4;35;1mProduct Update (0.0ms)[0m   [0mUPDATE "products" SET "image_url" = 'img/dollar.jpg3', "updated_at" = '2009-10-17 21:09:28' WHERE "id" = 1[0m
+Redirected to http://localhost:3000/products/1
+Completed in 219ms (DB: 0) | 302 Found [http://localhost/products/1]
+
+
+Processing ProductsController#show (for 127.0.0.1 at 2009-10-17 17:09:29) [GET]
+  Parameters: {"id"=>"1"}
+  [4;36;1mProduct Load (0.0ms)[0m   [0;1mSELECT * FROM "products" WHERE ("products"."id" = 1) [0m
+Rendering template within layouts/products
+Rendering products/show
+Completed in 78ms (View: 15, DB: 0) | 200 OK [http://localhost/products/1]
+
+
+Processing ProductsController#edit (for 127.0.0.1 at 2009-10-17 17:09:33) [GET]
+  Parameters: {"id"=>"1"}
+  [4;35;1mProduct Load (0.0ms)[0m   [0mSELECT * FROM "products" WHERE ("products"."id" = 1) [0m
+Rendering template within layouts/products
+Rendering products/edit
+Completed in 109ms (View: 62, DB: 0) | 200 OK [http://localhost/products/1/edit]
+
+
+Processing ProductsController#update (for 127.0.0.1 at 2009-10-17 17:09:52) [PUT]
+  Parameters: {"commit"=>"Update", "authenticity_token"=>"k78VTJXxfC11uC/60fISoCXqzafvsOL82EjTb6448MA=", "product"=>{"image_url"=>"img/dollar.jpg3", "price"=>"0.01", "title"=>"Dollar", "description"=>"A soon to be useless commodity. <br>Thanks to Barack Obama and Ben Bernanke."}, "id"=>"1"}
+  [4;36;1mProduct Load (0.0ms)[0m   [0;1mSELECT * FROM "products" WHERE ("products"."id" = 1) [0m
+  [4;35;1mProduct Load (0.0ms)[0m   [0mSELECT "products".id FROM "products" WHERE ("products"."title" = 'Dollar' AND "products".id <> 1) LIMIT 1[0m
+Rendering template within layouts/products
+Rendering products/edit
+Completed in 204ms (View: 125, DB: 0) | 200 OK [http://localhost/products/1]
+
+
+Processing ProductsController#update (for 127.0.0.1 at 2009-10-17 17:09:58) [PUT]
+  Parameters: {"commit"=>"Update", "authenticity_token"=>"k78VTJXxfC11uC/60fISoCXqzafvsOL82EjTb6448MA=", "product"=>{"image_url"=>"img/dollar.jpg", "price"=>"0.01", "title"=>"Dollar", "description"=>"A soon to be useless commodity. <br>Thanks to Barack Obama and Ben Bernanke."}, "id"=>"1"}
+  [4;36;1mProduct Load (0.0ms)[0m   [0;1mSELECT * FROM "products" WHERE ("products"."id" = 1) [0m
+  [4;35;1mProduct Load (0.0ms)[0m   [0mSELECT "products".id FROM "products" WHERE ("products"."title" = 'Dollar' AND "products".id <> 1) LIMIT 1[0m
+  [4;36;1mProduct Update (0.0ms)[0m   [0;1mUPDATE "products" SET "image_url" = 'img/dollar.jpg', "updated_at" = '2009-10-17 21:09:58' WHERE "id" = 1[0m
+Redirected to http://localhost:3000/products/1
+Completed in 187ms (DB: 0) | 302 Found [http://localhost/products/1]
+
+
+Processing ProductsController#show (for 127.0.0.1 at 2009-10-17 17:10:00) [GET]
+  Parameters: {"id"=>"1"}
+  [4;35;1mProduct Load (16.0ms)[0m   [0mSELECT * FROM "products" WHERE ("products"."id" = 1) [0m
+Rendering template within layouts/products
+Rendering products/show
+Completed in 78ms (View: 31, DB: 16) | 200 OK [http://localhost/products/1]
