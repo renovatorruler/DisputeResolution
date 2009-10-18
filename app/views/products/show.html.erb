@@ -1,23 +1,28 @@
-<p>
-  <b>Title:</b>
-  <%=h @product.title %>
-</p>
-
-<p>
-  <b>Description:</b>
-  <%=@product.description %>
-</p>
-
-<p>
-  <b>Image url:</b>
-  <%=h @product.image_url %>
-</p>
-
-<p>
-  <b>Price:</b>
-  <%=h @product.price %>
-</p>
-
-
-<%= link_to 'Edit', edit_product_path(@product) %> |
-<%= link_to 'Back', products_path %>
+<div class="container">
+	<div class="span-4">
+  		<strong>Title:</strong>
+  		<%=h @product.title %>
+	</div>
+	<br/>
+	<div class="span-4">
+		<strong>Description:</strong>
+	</div>
+	<div class="span-20">
+		<blockquote><%=@product.description %></blockquote>
+	</div>
+	<br/>
+	<div class="span-16">
+  		<strong>Image url:</strong>
+  		<%=h @product.image_url %>
+	</div>
+	<br/>
+	<div class="span-4 last">
+  		<strong>Price:</strong>
+		<%=h @product.price %>
+	</div>
+	<br/>
+	<div class="span-16">
+		<%= link_to 'Edit', edit_product_path(@product) %> |
+		<%= link_to 'Back', products_path %>
+	</div>
+</div>
