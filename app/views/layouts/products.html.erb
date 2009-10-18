@@ -5,11 +5,13 @@
 <head>
   <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
   <title>Products: <%= controller.action_name %></title>
-  <%= stylesheet_link_tag 'scaffold' %>
+  <%= stylesheet_link_tag 'blueprint/screen', :media=>"screen,projection" %>
+  <%= stylesheet_link_tag 'blueprint/print', :media=>"print" %>
+  <%= stylesheet_link_tag 'blueprint/ie', :media=>"screen,projection" %>
 </head>
 <body>
 
-<p style="color: green"><%= flash[:notice] %></p>
+<p style="class: highlight"><%= flash[:notice] %></p>
 
 <%= yield %>
 
