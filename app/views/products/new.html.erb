@@ -1,27 +1,35 @@
 <h1>New product</h1>
-
+<div class="span-24">
 <% form_for(@product) do |f| %>
   <%= f.error_messages %>
 
-  <p>
-    <%= f.label :title %><br />
+  <div class="span-4">
+    <%= f.label :title %>
+  </div>
+  <div class="span-18">
     <%= f.text_field :title %>
-  </p>
-  <p>
-    <%= f.label :description %><br />
+  </div>
+  <div class="span-4">
+    <%= f.label :description %>
+  </div>
+  <div class="span-18">
     <%= f.text_area :description %>
-  </p>
-  <p>
-    <%= f.label :image_url %><br />
+  </div>
+  <div class="span-4">
+    <%= f.label :image_url %>
+  </div>
+  <div class="span-18">
     <%= f.text_field :image_url %>
-  </p>
-  <p>
-    <%= f.label :price %><br />
+  </div>
+  <div class="span-4">
+    <%= f.label :price %>
+  </div>
+  <div class="span-18">
     <%= f.text_field :price %>
-  </p>
-  <p>
+  </div>
+  <div class="span-22">
     <%= f.submit 'Create' %>
-  </p>
+  </div>
 <% end %>
-
+</div>
 <%= link_to 'Back', products_path %>

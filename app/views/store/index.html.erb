@@ -1,0 +1,27 @@
+<div class="column span-20 last">
+	<h2>My Store</h2>
+	<% for product in @products -%>
+		<div class="span-4 border">
+			<%= image_tag(product.image_url) %>
+		</div>
+		<div class="span-16 last">
+			<div class="span-16 last">
+				<h3><%=h product.title%></h3>
+			</div>
+			<div class="span-16 last">
+				<%= product.description %>
+			</div>
+			<div class="span-16 last">
+				<div class="span-1">
+					Price
+				</div>
+				<div class="span-1">
+					<%= number_to_currency(product.price) %>
+				</div>
+				<div class="span-14 last">
+					<%= button_to "Add to Cart" %>
+				</div>
+			</div>
+		</div>
+	<% end %>
+</div>

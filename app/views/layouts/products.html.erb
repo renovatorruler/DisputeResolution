@@ -10,10 +10,12 @@
   <%= stylesheet_link_tag 'blueprint/ie', :media=>"screen,projection" %>
 </head>
 <body>
-
-<p style="class: highlight"><%= flash[:notice] %></p>
-
+<div class="container">
+<div class="span-24">
+	<h1>Depot Application</h1>
+</div>
+<p class="flash"><%= flash[:notice] %></p>
 <%= yield %>
-
+</div>
 </body>
 </html>

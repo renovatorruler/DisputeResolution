@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+  <title>Store: <%= controller.action_name %></title>
+  <%= stylesheet_link_tag 'blueprint/screen', :media=>"screen,projection" %>
+  <%= stylesheet_link_tag 'blueprint/print', :media=>"print" %>
+  <!--[if lt IE 8]>
+  		<%= stylesheet_link_tag 'blueprint/ie', :media=>"screen,projection" %>
+  <![endif]-->
+  <%= stylesheet_link_tag 'blueprint/plugins/fancy-type/screen', :media=>"screen,projection" %>
+</head>
+<body>
+<div class="container showgrid">
+	<div class="span-24 top highlight">
+		<h1>Depot Application</h1>
+	</div>
+	<div class="span-24">
+		<div class="column span-4 border sidebar">
+			<div class="span-4">
+				<%= link_to 'Products',:controller=>'products' %>
+			</div>
+			<div class="span-4">
+				<%= link_to 'New Products',:controller=>'products', :action=>'new' %>
+			</div>
+			<div class="span-4">
+				<%= Time.now %>
+			</div>
+		</div>
+		<%= yield %>
+	</div>
+</div>
+</body>
+</html>
