@@ -1,3 +1,4 @@
+<div class="column span-20 last">
 <h2>Listing products</h2>
 
 <table border="1">
@@ -13,7 +14,7 @@
   <tr class="<%= cycle('even','odd')%>">
     <td><%=h product.title %></td>
     <td><%=h truncate(product.description.gsub(/<.*?>/,''),:length=>80) %></td>
-    <td><%=h product.image_url %></td>
+    <td><%= image_tag(product.image_url) %></td>
     <td><%=h product.price %></td>
     <td><%= link_to 'Show', product %></td>
     <td><%= link_to 'Edit', edit_product_path(product) %></td>
@@ -21,8 +22,4 @@
   </tr>
 <% end %>
 </table>
-
-<br />
-
-<%= link_to 'New product', new_product_path %>
-<%= link_to 'Store', :controller=>'store' %>
+</div>

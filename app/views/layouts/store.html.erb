@@ -26,9 +26,15 @@
 				<%= link_to 'New Products',:controller=>'products', :action=>'new' %>
 			</div>
 			<div class="span-4">
+				<%= link_to 'Store',:controller=>'store'%>
+			</div>
+			<div class="span-4">
 				<%= Time.now %>
 			</div>
 		</div>
+                <% if flash[:notice] -%>
+                  <div class="top error large"><%= flash[:notice] %></div>
+                <% end -%>
 		<%= yield %>
 	</div>
 </div>

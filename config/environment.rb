@@ -28,6 +28,12 @@ Rails::Initializer.run do |config|
   # you must remove the Active Record framework.
   # config.frameworks -= [ :active_record, :active_resource, :action_mailer ]
 
+  config.action_controller.session_store = :active_record_store
+  config.action_controller.session = {
+    :session_key => 'depot_session',
+    :secret => 'fe3e8971233993abdee482393432caaddbe3242234234dd19292'
+  }
+
   # Activate observers that should always be running
   # config.active_record.observers = :cacher, :garbage_collector, :forum_observer
 

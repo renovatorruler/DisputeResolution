@@ -23,7 +23,7 @@ a img {border:none;}
 
 /* typography.css */
 html {font-size:100.01%;}
-body {font-size:75%;color:#222;background:#fff;font-family:Calibri,"Helvetica Neue", Arial, Helvetica, sans-serif;}
+body {font-size:88%;color:#222;background:#fff;font-family:"Myriad Pro","Helvetica Neue", Arial, Helvetica, sans-serif;}
 h1, h2, h3, h4, h5, h6 {font-weight:normal;color:#111;}
 h1 {font-size:3em;line-height:1;margin-bottom:0.5em;font-family:"Oceania Display";}
 h2 {font-size:2em;margin-bottom:0.75em;font-family:"Oceania Display";}
@@ -66,25 +66,25 @@ dd {margin-left:1.5em;}
 table {margin-bottom:1.4em;
     width:100%;
     border-width: 2px 2px 2px 2px;
-	border-spacing: 2px;
-	border-style: dashed dashed dashed dashed;
-	border-color: red red red red;
-	border-collapse: collapse;
-	background-color: rgb(255, 250, 250);}
+    border-spacing: 2px;
+    border-style: dashed dashed dashed dashed;
+    border-color: red red red red;
+    border-collapse: collapse;
+    background-color: rgb(255, 250, 250);}
 th {font-weight:bold;
     border-width: 1px 1px 1px 1px;
-	padding: 1px 1px 1px 1px;
-	border-style: dashed dashed dashed dashed;
-	border-color: blue blue blue blue;
-	background-color: white;
-	-moz-border-radius: 0px 0px 0px 0px;}
+    padding: 1px 1px 1px 1px;
+    border-style: dashed dashed dashed dashed;
+    border-color: blue blue blue blue;
+    background-color: white;
+    -moz-border-radius: 0px 0px 0px 0px;}
 td {
     border-width: 1px 1px 1px 1px;
-	padding: 1px 1px 1px 1px;
-	border-style: dashed dashed dashed dashed;
-	border-color: blue blue blue blue;
-	background-color: rgb(250, 240, 230);
-	-moz-border-radius: 0px 0px 0px 0px;}
+    padding: 1px 1px 1px 1px;
+    border-style: dashed dashed dashed dashed;
+    border-color: blue blue blue blue;
+    background-color: rgb(250, 240, 230);
+    -moz-border-radius: 0px 0px 0px 0px;}
 thead th {background:#c3d9ff;}
 th, td, caption {padding:4px 10px 4px 5px;}
 tr.even td {background:#e5ecf9;}
@@ -103,10 +103,15 @@ caption {background:#eee;}
 .top {margin-top:0;padding-top:0;text-align:center;}
 .bottom {margin-bottom:0;padding-bottom:0;}
 .errorExplanation {margin:1.5em;color:#666;font-style:italic;
-            border-width: 1px 1px 1px 1px;
-	        padding: 1px 1px 1px 1px;
-	        border-style: dashed dashed dashed dashed;
-	        background-color: rgb(250, 250, 250);}
+                   border-width: 1px 1px 1px 1px;
+                   padding: 1px 1px 1px 1px;
+                   border-style: dashed dashed dashed dashed;
+                   background-color: rgb(250, 250, 250);}
+.showcase {margin-top:1px;
+     margin-left:1px;
+     margin-right:1px;
+     margin-bottom:1px;
+     border-width: 1px 1px 1px 1px;}
 
 /* forms.css */
 label {font-weight:bold;}
@@ -122,10 +127,10 @@ input[type=checkbox], input[type=radio], input.checkbox, input.radio {position:r
 form.inline {line-height:3;}
 form.inline p {margin-bottom:0;}
 .error, .notice, .success {padding:.8em;margin-bottom:1em;border:2px solid #ddd;}
-.error {background:#FBE3E4;color:#8a1f11;border-color:#FBC2C4;}
+.error {background:#F8EEEE;color:#8a1f11;border-color:#FBC2C4;}
 .notice {background:#FFF6BF;color:#514721;border-color:#FFD324;}
 .success {background:#E6EFC2;color:#264409;border-color:#C6D880;}
-.error a {color:#8a1f11;}
+.error a {color:#aa1f11;}
 .notice a {color:#514721;}
 .success a {color:#264409;}
 
