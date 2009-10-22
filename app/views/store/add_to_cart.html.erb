@@ -1,13 +1,6 @@
-<div class="column span-20 last">
-	<h2 class="span-20">Your Shopping cart</h2>
-	<ul class="span-20">
-		<% for item in @cart.items %>
-                        <li class="span-20">
-                          <%=h item.title %> &times; <%= item.quantity %> = <%= number_to_currency(item.price) %>
-			</li>
-		<% end %>
-	</ul>
-        <div class="span-20">
-          <%= button_to 'Empty Cart', :action=>'empty_cart' %>
-        </div>
-</div>
+<%#
+# To change this template, choose Tools | Templates
+# and open the template in the editor.
+%>
+
+<%= "add_to_cart.html" %>

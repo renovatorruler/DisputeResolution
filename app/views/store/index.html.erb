@@ -1,13 +1,19 @@
 <div class="column span-20 last">
-	<h2>My Store</h2>
+	<h2>My Store Accessed <%= pluralize(@count, "time") %></h2>
         <table>
-	<% for product in @products -%>
-          <tr class="<%= cycle("even","odd") %>">
-            <td><%= image_tag(product.image_url) %></td>
-            <td><%=h product.title%></td>
-            <td><%= product.description %></td>
-            <td>Price: <%= number_to_currency(product.price) %> <%= button_to "Add to Cart", :action=>"add_to_cart", :id=>product %></td>
+          <tr class="span-20">
+            <th>Image</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Cost</th>
           </tr>
-	<% end %>
+          <% for product in @products -%>
+            <tr class="<%= cycle("even","odd") %>">
+              <td><%= image_tag(product.image_url) %></td>
+              <td><%=h product.title%></td>
+              <td><%= product.description %></td>
+              <td>Price: <%= number_to_currency(product.price) %> <%= button_to "Add to Cart", :action=>"add_to_cart", :id=>product %></td>
+            </tr>
+          <% end %>
         </table>
 </div>

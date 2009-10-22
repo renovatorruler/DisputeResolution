@@ -31,6 +31,9 @@
 			<div class="span-4">
 				<%= Time.now %>
 			</div>
+                        <div class="span-4">
+                                <%= render(:partial=>"cart",:object =>@cart) %>
+                        </div>
 		</div>
                 <% if flash[:notice] -%>
                   <div class="top error large"><%= flash[:notice] %></div>

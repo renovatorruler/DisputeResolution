@@ -1,0 +1,11 @@
+<h2>Your Cart</h2>
+<table>
+  <%= render(:partial=>"cart_item", :collection=>cart.items) %>
+  <tr>
+    <th colspan="2">Total</th>
+    <th><%= number_to_currency(cart.total_price) %></th>
+  </tr>
+</table>
+<div>
+  <%= button_to 'Empty Cart', :action=>:empty_cart %>
+</div>

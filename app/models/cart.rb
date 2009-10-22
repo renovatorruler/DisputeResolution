@@ -13,4 +13,10 @@ class Cart
   		@items << CartItem.new(product)
   	end
   end
+
+  def total_price
+    @items.sum do |item|
+      item.price
+    end
+  end
 end
