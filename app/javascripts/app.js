@@ -36,6 +36,21 @@ function sendCoin() {
   });
 };
 
+function killContract() {
+    var meta = MetaCoin.deployed();
+
+    var receiver = document.getElementById("receiver").value;
+
+    setStatus("Initiating transaction... (please wait)");
+
+    meta.kill(receiver, {from: account}).then(function () {
+        setStatus("Dead");
+    }).catch(function (e) {
+        console.log(e);
+        setStatus("Error sending coin; " + e);
+    });
+}
+
 window.onload = function() {
   web3.eth.getAccounts(function(err, accs) {
     if (err != null) {

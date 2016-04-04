@@ -1,18 +1,20 @@
-contract MetaCoin {
-	mapping (address => uint) balances;
+import "Tribitrated";
 
-	function MetaCoin() {
-		balances[tx.origin] = 10000;
-	}
+contract MetaCoin is Tribitrated {
+    mapping (address => uint) balances;
 
-	function sendCoin(address receiver, uint amount) returns(bool sufficient) {
-		if (balances[msg.sender] < amount) return false;
-		balances[msg.sender] -= amount;
-		balances[receiver] += amount;
-		return true;
-	}
+    function MetaCoin() {
+        balances[tx.origin] = 10000;
+    }
 
-  function getBalance(address addr) returns(uint) {
-    return balances[addr];
-  }
+    function sendCoin(address receiver, uint amount) returns(bool sufficient) {
+        if (balances[msg.sender] < amount) return false;
+        balances[msg.sender] -= amount;
+        balances[receiver] += amount;
+        return true;
+    }
+
+    function getBalance(address addr) returns(uint) {
+        return balances[addr];
+    }
 }
