@@ -26,8 +26,8 @@ var factory = function factory(Pudding) {
   ;
 
   // Set up specific data for this class.
-  Tribitrated.abi = [{ "constant": false, "inputs": [{ "name": "addr", "type": "address" }], "name": "kill", "outputs": [], "type": "function" }];
-  Tribitrated.binary = "606060405260388060106000396000f3606060405260e060020a6000350463cbf0b0c08114601a575b005b60186004358073ffffffffffffffffffffffffffffffffffffffff16ff";
+  Tribitrated.abi = [{ "constant": false, "inputs": [], "name": "makeAppeal", "outputs": [], "type": "function" }, { "constant": false, "inputs": [{ "name": "addr", "type": "address" }], "name": "setArbitrator", "outputs": [], "type": "function" }];
+  Tribitrated.binary = "60606040526000805460ff191681556080908190601b90396000f3606060405260e060020a60003504639de8e4b081146024578063b0eefabe146028575b005b6022565b60226004358060016000506000815481101560025752507fb10e2d527612073b26eecdfd717e6a320cf44b4afac2b0732d9fcbe2b7fa0cf6805473ffffffffffffffffffffffffffffffffffffffff1916909117905556";
 
   if ("" != "") {
     Tribitrated.address = "";
