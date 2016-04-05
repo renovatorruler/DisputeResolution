@@ -11,35 +11,35 @@ var factory = function factory(Pudding) {
   // the easiest way to extend a Babel-based class. Note that the
   // resulting .js file does not have a dependency on Babel.
 
-  var Tribitrated = (function (_Pudding) {
-    _inherits(Tribitrated, _Pudding);
+  var arbitrated = (function (_Pudding) {
+    _inherits(arbitrated, _Pudding);
 
-    function Tribitrated() {
-      _classCallCheck(this, Tribitrated);
+    function arbitrated() {
+      _classCallCheck(this, arbitrated);
 
-      _get(Object.getPrototypeOf(Tribitrated.prototype), "constructor", this).apply(this, arguments);
+      _get(Object.getPrototypeOf(arbitrated.prototype), "constructor", this).apply(this, arguments);
     }
 
-    return Tribitrated;
+    return arbitrated;
   })(Pudding);
 
   ;
 
   // Set up specific data for this class.
-  Tribitrated.abi = [{ "constant": false, "inputs": [], "name": "makeAppeal", "outputs": [], "type": "function" }, { "constant": false, "inputs": [{ "name": "addr", "type": "address" }], "name": "setArbitrator", "outputs": [], "type": "function" }];
-  Tribitrated.binary = "60606040526000805460ff191681556080908190601b90396000f3606060405260e060020a60003504639de8e4b081146024578063b0eefabe146028575b005b6022565b60226004358060016000506000815481101560025752507fb10e2d527612073b26eecdfd717e6a320cf44b4afac2b0732d9fcbe2b7fa0cf6805473ffffffffffffffffffffffffffffffffffffffff1916909117905556";
+  arbitrated.abi = [{ "constant": false, "inputs": [], "name": "makeAppeal", "outputs": [], "type": "function" }, { "constant": false, "inputs": [{ "name": "addr", "type": "address" }], "name": "setArbitrator", "outputs": [], "type": "function" }];
+  arbitrated.binary = "60606040526000805460ff191681556080908190601b90396000f3606060405260e060020a60003504639de8e4b081146024578063b0eefabe146028575b005b6022565b60226004358060016000506000815481101560025752507fb10e2d527612073b26eecdfd717e6a320cf44b4afac2b0732d9fcbe2b7fa0cf6805473ffffffffffffffffffffffffffffffffffffffff1916909117905556";
 
   if ("" != "") {
-    Tribitrated.address = "";
+    arbitrated.address = "";
 
     // Backward compatibility; Deprecated.
-    Tribitrated.deployed_address = "";
+    arbitrated.deployed_address = "";
   }
 
-  Tribitrated.generated_with = "1.0.3";
-  Tribitrated.contract_name = "Tribitrated";
+  arbitrated.generated_with = "1.0.3";
+  arbitrated.contract_name = "arbitrated";
 
-  return Tribitrated;
+  return arbitrated;
 };
 
 // Nicety for Node.
@@ -50,5 +50,5 @@ if (typeof module != "undefined") {
 } else {
   // There will only be one version of Pudding in the browser,
   // and we can use that.
-  window.Tribitrated = factory;
+  window.arbitrated = factory;
 }

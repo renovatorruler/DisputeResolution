@@ -1,10 +1,10 @@
-contract Tribitrated {
+contract arbitrated {
 
     uint8 currentArbitrator = 0; 
     address [] arbitrators;
     bool isDisputed;
     modifier disputeLock () {
-       if(msg.sender != arbitrators[currentArbitrator ]) {
+       if(msg.sender != arbitrators[currentArbitrator]) {
           throw;
        } 
     }

@@ -1,6 +1,6 @@
-import "Tribitrated";
+import "arbitrated";
 
-contract MetaCoin is Tribitrated {
+contract MetaCoin is arbitrated {
     mapping (address => uint) balances;
 
     function MetaCoin() {
