@@ -5728,115 +5728,139 @@ var Pudding =
 /***/ }
 /******/ ]);
 
-"use strict";
+// Factory "morphs" into a Pudding class.
+// The reasoning is that calling load in each context
+// is cumbersome.
 
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+(function() {
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+  var contract_data = {
+    abi: [{"constant":false,"inputs":[{"name":"addr","type":"address"}],"name":"setPartyB","outputs":[],"type":"function"},{"constant":false,"inputs":[{"name":"addr","type":"address"}],"name":"setArbitrator2","outputs":[],"type":"function"},{"constant":false,"inputs":[{"name":"addr1","type":"address"},{"name":"addr2","type":"address"}],"name":"setArbitrator1and2","outputs":[],"type":"function"},{"constant":false,"inputs":[],"name":"raiseDispute","outputs":[],"type":"function"},{"constant":false,"inputs":[{"name":"addr","type":"address"}],"name":"setArbitrator0","outputs":[],"type":"function"},{"constant":false,"inputs":[{"name":"receiver","type":"address"},{"name":"amount","type":"uint256"}],"name":"sendCoin","outputs":[{"name":"sufficient","type":"bool"}],"type":"function"},{"constant":false,"inputs":[{"name":"addr","type":"address"}],"name":"setPartyA","outputs":[],"type":"function"},{"constant":false,"inputs":[{"name":"addr","type":"address"}],"name":"getBalance","outputs":[{"name":"","type":"uint256"}],"type":"function"},{"inputs":[],"type":"constructor"}],
+    binary: "60606040526001805460ff191660ff179055600160a060020a033216600090815260036020526040902061271090556103b28061003c6000396000f36060604052361561006c5760e060020a60003504634d47ae8c811461006e57806353a4aa511461008757806362c47064146100d65780636daa2d441461014e5780637a3e0013146101ad57806390b98a11146101fc578063ab624cf1146102bb578063f8b2cb4f146102e6575b005b60028054600160a060020a03191660043517905561006c565b61006c6004358060006000506002815481101561000257508052507f290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e5658054600160a060020a0319169091179055565b61006c60043560243560008054819081101561000257508080527f290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e56354600160a060020a03161480610130575081600160a060020a03166000145b80610144575080600160a060020a03166000145b1561031257610002565b61006c60015433600160a060020a03908116610100909204161480610181575060025433600160a060020a039081169116145b156101ab576002805474ff0000000000000000000000000000000000000000191660a060020a1790555b565b61006c6004358060006000506000815481101561000257508052507f290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e5638054600160a060020a0319169091179055565b610302600435602435600154600090810b810b8190128061024057506001546101009004600160a060020a03168114806102405750600254600160a060020a031681145b8061024d57508054600390105b806102b1575060025460a060020a900460ff1680156102b1575060015481548291820b820b90811015610002579080527f290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e563015433600160a060020a03908116911614155b1561030c57610002565b6001805474ffffffffffffffffffffffffffffffffffffffff0019166101006004350217905561006c565b600160a060020a03600435166000908152600360205260409020545b6060908152602090f35b92915050565b8160006000506001815481101561000257507f290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e564906101000a815481600160a060020a0302191690830217905550806000600050600281548110156100025750507f290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e5658054600160a060020a031916909117905550506001805460ff1916905556",
+    unlinked_binary: "60606040526001805460ff191660ff179055600160a060020a033216600090815260036020526040902061271090556103b28061003c6000396000f36060604052361561006c5760e060020a60003504634d47ae8c811461006e57806353a4aa511461008757806362c47064146100d65780636daa2d441461014e5780637a3e0013146101ad57806390b98a11146101fc578063ab624cf1146102bb578063f8b2cb4f146102e6575b005b60028054600160a060020a03191660043517905561006c565b61006c6004358060006000506002815481101561000257508052507f290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e5658054600160a060020a0319169091179055565b61006c60043560243560008054819081101561000257508080527f290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e56354600160a060020a03161480610130575081600160a060020a03166000145b80610144575080600160a060020a03166000145b1561031257610002565b61006c60015433600160a060020a03908116610100909204161480610181575060025433600160a060020a039081169116145b156101ab576002805474ff0000000000000000000000000000000000000000191660a060020a1790555b565b61006c6004358060006000506000815481101561000257508052507f290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e5638054600160a060020a0319169091179055565b610302600435602435600154600090810b810b8190128061024057506001546101009004600160a060020a03168114806102405750600254600160a060020a031681145b8061024d57508054600390105b806102b1575060025460a060020a900460ff1680156102b1575060015481548291820b820b90811015610002579080527f290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e563015433600160a060020a03908116911614155b1561030c57610002565b6001805474ffffffffffffffffffffffffffffffffffffffff0019166101006004350217905561006c565b600160a060020a03600435166000908152600360205260409020545b6060908152602090f35b92915050565b8160006000506001815481101561000257507f290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e564906101000a815481600160a060020a0302191690830217905550806000600050600281548110156100025750507f290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e5658054600160a060020a031916909117905550506001805460ff1916905556",
+    address: "0xadf0266dbd5a2b853d5c3599d12fe689063b68f3",
+    generated_with: "2.0.6",
+    contract_name: "MetaCoin"
+  };
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var factory = function factory(Pudding) {
-  // Inherit from Pudding. The dependency on Babel sucks, but it's
-  // the easiest way to extend a Babel-based class. Note that the
-  // resulting .js file does not have a dependency on Babel.
-
-  var MetaCoin = (function (_Pudding) {
-    _inherits(MetaCoin, _Pudding);
-
-    function MetaCoin() {
-      _classCallCheck(this, MetaCoin);
-
-      _get(Object.getPrototypeOf(MetaCoin.prototype), "constructor", this).apply(this, arguments);
+  function Contract() {
+    if (Contract.Pudding == null) {
+      throw new Error("MetaCoin error: Please call load() first before creating new instance of this contract.");
     }
 
-    return MetaCoin;
-  })(Pudding);
+    Contract.Pudding.apply(this, arguments);
+  };
 
-  ;
+  Contract.load = function(Pudding) {
+    Contract.Pudding = Pudding;
 
-  // Set up specific data for this class.
-  MetaCoin.abi = [{ "constant": false, "inputs": [{ "name": "receiver", "type": "address" }, { "name": "amount", "type": "uint256" }], "name": "sendCoin", "outputs": [{ "name": "sufficient", "type": "bool" }], "type": "function" }, { "constant": false, "inputs": [], "name": "makeAppeal", "outputs": [], "type": "function" }, { "constant": false, "inputs": [{ "name": "addr", "type": "address" }], "name": "setArbitrator", "outputs": [], "type": "function" }, { "constant": false, "inputs": [{ "name": "addr", "type": "address" }], "name": "getBalance", "outputs": [{ "name": "", "type": "uint256" }], "type": "function" }, { "inputs": [], "type": "constructor" }];
-  MetaCoin.binary = "60606040526000805460ff19169055600160a060020a03321660009081526003602052604090206127109055610119806100396000396000f3606060405260e060020a600035046390b98a11811461003c5780639de8e4b01461006b578063b0eefabe14610070578063f8b2cb4f146100ca575b005b6100e660043560243533600160a060020a0316600090815260036020526040812054829010156100f057610113565b61003a565b61003a600435806001600050600081548110156100025752507fb10e2d527612073b26eecdfd717e6a320cf44b4afac2b0732d9fcbe2b7fa0cf6805473ffffffffffffffffffffffffffffffffffffffff19169091179055565b600160a060020a03600435166000908152600360205260409020545b6060908152602090f35b604080822080548490039055600160a060020a0384168252902080548201905560015b9291505056";
+    Pudding.whisk(contract_data, Contract);
 
-  if ("0xcca2ec2c14049d1fc4c091bd4574905259ea85b2" != "") {
-    MetaCoin.address = "0xcca2ec2c14049d1fc4c091bd4574905259ea85b2";
-
-    // Backward compatibility; Deprecated.
-    MetaCoin.deployed_address = "0xcca2ec2c14049d1fc4c091bd4574905259ea85b2";
+    // Return itself for backwards compatibility.
+    return Contract;
   }
 
-  MetaCoin.generated_with = "1.0.3";
-  MetaCoin.contract_name = "MetaCoin";
-
-  return MetaCoin;
-};
-
-// Nicety for Node.
-factory.load = factory;
-
-if (typeof module != "undefined") {
-  module.exports = factory;
-} else {
-  // There will only be one version of Pudding in the browser,
-  // and we can use that.
-  window.MetaCoin = factory;
-};
-
-"use strict";
-
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var factory = function factory(Pudding) {
-  // Inherit from Pudding. The dependency on Babel sucks, but it's
-  // the easiest way to extend a Babel-based class. Note that the
-  // resulting .js file does not have a dependency on Babel.
-
-  var arbitrated = (function (_Pudding) {
-    _inherits(arbitrated, _Pudding);
-
-    function arbitrated() {
-      _classCallCheck(this, arbitrated);
-
-      _get(Object.getPrototypeOf(arbitrated.prototype), "constructor", this).apply(this, arguments);
+  Contract.new = function() {
+    if (Contract.Pudding == null) {
+      throw new Error("MetaCoin error: Please call load() first before calling new().");
     }
 
-    return arbitrated;
-  })(Pudding);
+    return Contract.Pudding.new.apply(Contract, arguments);
+  };
 
-  ;
+  Contract.at = function() {
+    if (Contract.Pudding == null) {
+      throw new Error("MetaCoin error: lease call load() first before calling at().");
+    }
 
-  // Set up specific data for this class.
-  arbitrated.abi = [{ "constant": false, "inputs": [], "name": "makeAppeal", "outputs": [], "type": "function" }, { "constant": false, "inputs": [{ "name": "addr", "type": "address" }], "name": "setArbitrator", "outputs": [], "type": "function" }];
-  arbitrated.binary = "60606040526000805460ff191681556080908190601b90396000f3606060405260e060020a60003504639de8e4b081146024578063b0eefabe146028575b005b6022565b60226004358060016000506000815481101560025752507fb10e2d527612073b26eecdfd717e6a320cf44b4afac2b0732d9fcbe2b7fa0cf6805473ffffffffffffffffffffffffffffffffffffffff1916909117905556";
+    return Contract.Pudding.at.apply(Contract, arguments);
+  };
 
-  if ("" != "") {
-    arbitrated.address = "";
+  Contract.deployed = function() {
+    if (Contract.Pudding == null) {
+      throw new Error("MetaCoin error: Please call load() first before calling deployed().");
+    }
 
-    // Backward compatibility; Deprecated.
-    arbitrated.deployed_address = "";
+    return Contract.Pudding.deployed.apply(Contract, arguments);
+  };
+
+  if (typeof module != "undefined" && typeof module.exports != "undefined") {
+    module.exports = Contract;
+  } else {
+    // There will only be one version of Pudding in the browser,
+    // and we can use that.
+    window.MetaCoin = Contract;
   }
 
-  arbitrated.generated_with = "1.0.3";
-  arbitrated.contract_name = "arbitrated";
+})();
+;
 
-  return arbitrated;
-};
+// Factory "morphs" into a Pudding class.
+// The reasoning is that calling load in each context
+// is cumbersome.
 
-// Nicety for Node.
-factory.load = factory;
+(function() {
 
-if (typeof module != "undefined") {
-  module.exports = factory;
-} else {
-  // There will only be one version of Pudding in the browser,
-  // and we can use that.
-  window.arbitrated = factory;
-};
+  var contract_data = {
+    abi: [{"constant":false,"inputs":[{"name":"addr","type":"address"}],"name":"setPartyB","outputs":[],"type":"function"},{"constant":false,"inputs":[{"name":"addr","type":"address"}],"name":"setArbitrator2","outputs":[],"type":"function"},{"constant":false,"inputs":[{"name":"addr1","type":"address"},{"name":"addr2","type":"address"}],"name":"setArbitrator1and2","outputs":[],"type":"function"},{"constant":false,"inputs":[],"name":"raiseDispute","outputs":[],"type":"function"},{"constant":false,"inputs":[{"name":"addr","type":"address"}],"name":"setArbitrator0","outputs":[],"type":"function"},{"constant":false,"inputs":[{"name":"addr","type":"address"}],"name":"setPartyA","outputs":[],"type":"function"}],
+    binary: "60606040526001805460ff191660ff1790556102c38061001f6000396000f3606060405236156100565760e060020a60003504634d47ae8c811461005857806353a4aa511461007157806362c47064146100c05780636daa2d44146101385780637a3e0013146101a9578063ab624cf1146101f8575b005b60028054600160a060020a031916600435179055610056565b6100566004358060006000506002815481101561000257508052507f290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e5658054600160a060020a0319169091179055565b61005660043560243560008054819081101561000257508080527f290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e56354600160a060020a0316148061011a575081600160a060020a03166000145b8061012e575080600160a060020a03166000145b1561022357610002565b61005660015433600160a060020a0390811661010090920416148061016c5750600254600160a060020a0390811633909116145b156101a7576002805474ff00000000000000000000000000000000000000001916740100000000000000000000000000000000000000001790555b565b6100566004358060006000506000815481101561000257508052507f290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e5638054600160a060020a0319169091179055565b6001805474ffffffffffffffffffffffffffffffffffffffff00191661010060043502179055610056565b8160006000506001815481101561000257507f290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e564906101000a815481600160a060020a0302191690830217905550806000600050600281548110156100025750507f290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e5658054600160a060020a031916909117905550506001805460ff1916905556",
+    unlinked_binary: "60606040526001805460ff191660ff1790556102c38061001f6000396000f3606060405236156100565760e060020a60003504634d47ae8c811461005857806353a4aa511461007157806362c47064146100c05780636daa2d44146101385780637a3e0013146101a9578063ab624cf1146101f8575b005b60028054600160a060020a031916600435179055610056565b6100566004358060006000506002815481101561000257508052507f290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e5658054600160a060020a0319169091179055565b61005660043560243560008054819081101561000257508080527f290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e56354600160a060020a0316148061011a575081600160a060020a03166000145b8061012e575080600160a060020a03166000145b1561022357610002565b61005660015433600160a060020a0390811661010090920416148061016c5750600254600160a060020a0390811633909116145b156101a7576002805474ff00000000000000000000000000000000000000001916740100000000000000000000000000000000000000001790555b565b6100566004358060006000506000815481101561000257508052507f290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e5638054600160a060020a0319169091179055565b6001805474ffffffffffffffffffffffffffffffffffffffff00191661010060043502179055610056565b8160006000506001815481101561000257507f290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e564906101000a815481600160a060020a0302191690830217905550806000600050600281548110156100025750507f290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e5658054600160a060020a031916909117905550506001805460ff1916905556",
+    address: "",
+    generated_with: "2.0.6",
+    contract_name: "arbitrated"
+  };
+
+  function Contract() {
+    if (Contract.Pudding == null) {
+      throw new Error("arbitrated error: Please call load() first before creating new instance of this contract.");
+    }
+
+    Contract.Pudding.apply(this, arguments);
+  };
+
+  Contract.load = function(Pudding) {
+    Contract.Pudding = Pudding;
+
+    Pudding.whisk(contract_data, Contract);
+
+    // Return itself for backwards compatibility.
+    return Contract;
+  }
+
+  Contract.new = function() {
+    if (Contract.Pudding == null) {
+      throw new Error("arbitrated error: Please call load() first before calling new().");
+    }
+
+    return Contract.Pudding.new.apply(Contract, arguments);
+  };
+
+  Contract.at = function() {
+    if (Contract.Pudding == null) {
+      throw new Error("arbitrated error: lease call load() first before calling at().");
+    }
+
+    return Contract.Pudding.at.apply(Contract, arguments);
+  };
+
+  Contract.deployed = function() {
+    if (Contract.Pudding == null) {
+      throw new Error("arbitrated error: Please call load() first before calling deployed().");
+    }
+
+    return Contract.Pudding.deployed.apply(Contract, arguments);
+  };
+
+  if (typeof module != "undefined" && typeof module.exports != "undefined") {
+    module.exports = Contract;
+  } else {
+    // There will only be one version of Pudding in the browser,
+    // and we can use that.
+    window.arbitrated = Contract;
+  }
+
+})();
+;
 
 
 

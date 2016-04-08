@@ -1,10 +1,10 @@
 //Throughout the contract arbitrators are zero indexed
 contract arbitrated {
   address [] arbitrators;
-  uint currentArbitrator = -1; 
+  int8 currentArbitrator = -1; 
 
-  address [] parties;
-  uint winningParty = -1;
+  address partyA;
+  address partyB;
 
   bool isDisputed;
   modifier disputeLockable() {
@@ -14,7 +14,7 @@ contract arbitrated {
     if((currentArbitrator < 0)
         || (partyA == 0x0 || partyB == 0x0)
         || (arbitrators.length < 3)
-        || (isDisputed && msg.sender != arbitrators[currentArbitrator])) {
+        || (isDisputed && msg.sender != arbitrators[uint(currentArbitrator)])) {
       throw;
     } 
   }
