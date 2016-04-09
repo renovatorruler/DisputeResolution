@@ -39,10 +39,6 @@ contract arbitrated {
     currentArbitrator = 0;
   }
 
-  function setArbitrator2(address addr) {
-    arbitrators[2] = addr;
-  }
-
   function setPartyA(address addr) {
     partyA = addr;
   }
