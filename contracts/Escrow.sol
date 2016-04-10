@@ -12,6 +12,8 @@ contract Escrow {
         seller = sellerAddress;
         if (msg.value >= amt) {
             amount = amt;
+        } else {
+          throw;
         }
     }
 
@@ -20,6 +22,8 @@ contract Escrow {
         if (msg.sender == buyer) {
             seller.send(amount);
             suicide(buyer);
+        } else {
+          throw;
         }
     }
 
