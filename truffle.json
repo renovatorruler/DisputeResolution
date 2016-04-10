@@ -10,7 +10,7 @@
     "images/": "images/"
   },
   "deploy": [
-    "MetaCoin"
+    "Escrow"
   ],
   "rpc": {
     "host": "localhost",
