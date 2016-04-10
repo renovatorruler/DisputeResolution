@@ -15,7 +15,7 @@ contract Escrow {
         }
     }
 
-    function release(){
+    function release() {
         //Only allow buyer to release the funds
         if (msg.sender == buyer) {
             seller.send(amount);
@@ -23,7 +23,7 @@ contract Escrow {
         }
     }
 
-    function void(){
+    function void() {
         //Only allow seller to void the contract
         if (msg.sender == seller) {
             suicide(buyer);
