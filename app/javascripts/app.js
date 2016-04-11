@@ -1,3 +1,4 @@
+/**
 var accounts;
 var account;
 var balance;
@@ -54,3 +55,32 @@ window.onload = function() {
     refreshBalance();
   });
 }
+**/
+(function(angular) {
+  'use strict';
+  var escrowArbitratedApp = angular.module('escrowArbitratedApp', ['ui.router']);
+  escrowArbitratedApp.config(function ($stateProvider, $urlRouterProvider, $locationProvider) {
+    $locationProvider.html5Mode(true);
+
+    $urlRouterProvider.otherwise('/');
+
+    $stateProvider
+    .state('Home', {
+        url: '/',
+        templateUrl: 'partials/home.html'
+      })
+    .state('Buyer', {
+        url: '/buyer',
+        templateUrl: 'partials/buyer.html'
+      })
+    .state('Seller', {
+        url: '/seller',
+        templateUrl: 'partials/seller.html'
+      })
+    .state('Arbitrator', {
+        url: '/arbitrator',
+        templateUrl: 'partials/arbitrator.html'
+    });
+  });
+  
+})(window.angular);
