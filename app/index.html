@@ -1,17 +1,18 @@
 <!DOCTYPE html>
-<html ng-app="escrowArbitratedApp">
+<html>
     <head>
         <title>Escrow Arbitrated - A contract to demonstrate Arbitrated contract</title>
         <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+        <link href="./vendor.css" rel='stylesheet' type='text/css'>
         <link href="./app.css" rel='stylesheet' type='text/css'>
-        <script src="./angular.min.js"></script>
-        <script src="./angular-ui-router.js"></script>
+        <script src="./vendor.js"></script>
         <script src="./app.js"></script>
+        <script src="./components.js"></script>
         <script type="text/javascript">
           angular.element(document.getElementsByTagName('head')).append(angular.element('<base href="' + window.location.pathname + '" />'));
         </script>
     </head>
-    <body>
-      <div class="well" ui-view></div>
+    <body ng-app="app">
+      <app></app>
     </body>
 </html>

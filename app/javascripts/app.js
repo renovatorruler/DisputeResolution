@@ -58,29 +58,25 @@ window.onload = function() {
 **/
 (function(angular) {
   'use strict';
-  var escrowArbitratedApp = angular.module('escrowArbitratedApp', ['ui.router']);
-  escrowArbitratedApp.config(function ($stateProvider, $urlRouterProvider, $locationProvider) {
-    $locationProvider.html5Mode(true);
+  var escrowArbitratedApp = angular.module('app', ['ngComponentRouter', 'buyer'])
 
-    $urlRouterProvider.otherwise('/');
-
-    $stateProvider
-    .state('Home', {
-        url: '/',
-        templateUrl: 'partials/home.html'
-      })
-    .state('Buyer', {
-        url: '/buyer',
-        templateUrl: 'partials/buyer.html'
-      })
-    .state('Seller', {
-        url: '/seller',
-        templateUrl: 'partials/seller.html'
-      })
-    .state('Arbitrator', {
-        url: '/arbitrator',
-        templateUrl: 'partials/arbitrator.html'
-    });
+  .value('$routerRootComponent', 'app')
+  
+  .config(function($locationProvider) {
+    //$locationProvider.html5Mode(true);
+  })
+  .component('app', {
+    template: [
+      '<nav class="uk-navbar">',
+      '   <ul class="uk-navbar-nav">',
+      '     <li class="uk-active"><a ng-link="[\'Buyer\']">Buyers</a></li>',
+      '   </ul>',
+      '</nav>',
+      '<ng-outlet></ng-outlet>'
+      ].join(''),
+    $routeConfig: [
+      {path: '/buyer/...', name: 'Buyer', component: 'buyer', useAsDefault: true}
+    ]
   });
   
 })(window.angular);

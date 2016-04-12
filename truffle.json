@@ -2,11 +2,17 @@
   "build": {
     "index.html": "index.html",
     "partials/": "partials/",
-    "angular.min.js": "../node_modules/angular/angular.min.js",
-    "angular-ui-router.js": "../node_modules/angular-ui-router/release/angular-ui-router.js",
-    "app.js": [
-      "javascripts/app.js",
+    "vendor.js": [
+      "../node_modules/angular/angular.js",
+      "../node_modules/@angular/router/angular1/angular_1_router.js"
+    ],
+    "app.js": "javascripts/app.js",
+    "components.js": [
+      "javascripts/buyer.js",
       "javascripts/escrowService.js"
+    ],
+    "vendor.css": [
+      "../node_modules/uikit/dist/css/uikit.min.css"
     ],
     "app.css": [
       "stylesheets/app.css"
