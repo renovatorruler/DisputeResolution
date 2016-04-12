@@ -58,7 +58,7 @@ window.onload = function() {
 **/
 (function(angular) {
   'use strict';
-  var escrowArbitratedApp = angular.module('app', ['ngComponentRouter', 'buyer'])
+  var escrowArbitratedApp = angular.module('app', ['ngComponentRouter', 'buyer', 'seller', 'arbitrator'])
 
   .value('$routerRootComponent', 'app')
   
@@ -69,13 +69,17 @@ window.onload = function() {
     template: [
       '<nav class="uk-navbar">',
       '   <ul class="uk-navbar-nav">',
-      '     <li class="uk-active"><a ng-link="[\'Buyer\']">Buyers</a></li>',
+      '     <li class="uk-active"><a ng-link="[\'Buyer\']">Buyer</a></li>',
+      '     <li><a ng-link="[\'Seller\']">Seller</a></li>',
+      '     <li><a ng-link="[\'Arbitrator\']">Arbitrator</a></li>',
       '   </ul>',
       '</nav>',
-      '<ng-outlet></ng-outlet>'
+      '<ng-outlet class="uk-grid uk-container"></ng-outlet>'
       ].join(''),
     $routeConfig: [
-      {path: '/buyer/...', name: 'Buyer', component: 'buyer', useAsDefault: true}
+      {path: '/buyer/...', name: 'Buyer', component: 'buyer', useAsDefault: true},
+      {path: '/seller/...', name: 'Seller', component: 'seller'},
+      {path: '/arbitrator/...', name: 'Arbitrator', component: 'arbitrator'}
     ]
   });
   
