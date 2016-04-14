@@ -58,7 +58,7 @@ window.onload = function() {
 **/
 (function(angular) {
   'use strict';
-  var escrowArbitratedApp = angular.module('app', ['ngComponentRouter', 'buyer', 'seller', 'arbitrator'])
+  var escrowArbitratedApp = angular.module('app', ['ngComponentRouter', 'accounts', 'buyer', 'seller', 'arbitrator'])
 
   .value('$routerRootComponent', 'app')
   

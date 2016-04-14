@@ -1,6 +1,6 @@
 (function(angular) {
   'use strict';
-  angular.module('buyer', [])
+  angular.module('buyer', ['accounts'])
     .component('buyer', {
       template: [
       '<div class="uk-width-1-1">',
@@ -24,9 +24,13 @@
       controller: buyerMainComponent
     });
 
-  function buyerSetupComponent() {
+  function buyerSetupComponent(accounts) {
     var $ctrl = this;
     this.$routerOnActivate = function(next) {
+      accounts.then(function (accountList) {
+        $ctrl.accounts = accountList;
+        $ctrl.selectedAccount = accountList[0];
+      });
     };
   }
 

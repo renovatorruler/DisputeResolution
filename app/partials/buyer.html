@@ -1,1 +1,7 @@
-Welcome Buyer
+<p>Welcome Buyer</p>
+<p>Account:</p>
+<select ng-model="$ctrl.selectedAccount" id="accountSelector" name="accountSelector">
+  <option ng-repeat="account in $ctrl.accounts" value="{{account}}">
+    {{account}}
+  </option>
+</select>
