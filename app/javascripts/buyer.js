@@ -24,14 +24,14 @@
       controller: buyerMainComponent
     });
 
-  function buyerSetupComponent(accounts) {
-    var $ctrl = this;
-    this.$routerOnActivate = function(next) {
-      accounts.then(function (accountList) {
-        $ctrl.accounts = accountList;
-        $ctrl.selectedAccount = accountList[0];
-      });
-    };
+    function buyerSetupComponent(accountService) {
+        var $ctrl = this;
+        this.$routerOnActivate = function(next) {
+        accountService.getAccounts().then(function (accountList) {
+            $ctrl.accounts = accountList;
+            $ctrl.selectedAccount = accountList[0];
+        });
+        };
   }
 
   function buyerMainComponent() {

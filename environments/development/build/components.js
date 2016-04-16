@@ -3,28 +3,51 @@
 (function(angular) {
   'use strict;'
   angular.module('accounts', [])
-  .factory('accounts', getAccounts);
+  .factory('accountService', accountService)
+  .controller('accountBalanceController', accountBalanceController)
+  .directive('accountBalance', function () {
+      return {
+        restrict: 'EA',
+        template: '<div>Hello</div>',
+        scope: {
+            accounts: '='
+        },
+        controller: accountBalanceController,
+        controllerAs: '$accountBalanceCtrl'
+      };
+  });
 
-  function getAccounts($q) {
-    var deferred = $q.defer();
-    web3.eth.getAccounts(function(err, accs) {
-      if (err != null) {
-        deferred.reject("There was an error fetching your accounts.");
-        return;
-      }
+  function accountService($q) {
+    function getAccounts() {
+        var deferred = $q.defer();
+        web3.eth.getAccounts(function(err, accs) {
+        if (err != null) {
+            deferred.reject("There was an error fetching your accounts.");
+            return;
+        }
 
-      if (accs.length == 0) {
-        deferred.reject("Couldn't get any accounts! Make sure your Ethereum client is configured correctly.");
-        return;
-      }
+        if (accs.length == 0) {
+            deferred.reject("Couldn't get any accounts! Make sure your Ethereum client is configured correctly.");
+            return;
+        }
 
-      accounts = accs;
-      account = accounts[0];
+        accounts = accs;
+        account = accounts[0];
 
-      deferred.resolve(accounts);
-    });
-    return deferred.promise;
+        deferred.resolve(accounts);
+        });
+        return deferred.promise;
+    }
+    return {
+        getAccounts: getAccounts
+    };
   }
+
+  function accountBalanceController($scope) {
+      var $accountBalanceCtrl = this;
+      console.log($scope);
+  }
+
 })(window.angular);
 
 
@@ -54,14 +77,14 @@
       controller: buyerMainComponent
     });
 
-  function buyerSetupComponent(accounts) {
-    var $ctrl = this;
-    this.$routerOnActivate = function(next) {
-      accounts.then(function (accountList) {
-        $ctrl.accounts = accountList;
-        $ctrl.selectedAccount = accountList[0];
-      });
-    };
+    function buyerSetupComponent(accountService) {
+        var $ctrl = this;
+        this.$routerOnActivate = function(next) {
+        accountService.getAccounts().then(function (accountList) {
+            $ctrl.accounts = accountList;
+            $ctrl.selectedAccount = accountList[0];
+        });
+        };
   }
 
   function buyerMainComponent() {
