@@ -6,10 +6,15 @@
   .directive('accountBalance', function () {
       return {
         restrict: 'EA',
-        template: '<div>Hello</div>',
         scope: {
-            accounts: '='
+            'address': '@'
         },
+        template: [
+        '<div>',
+        '   <p>Hello: {{$accountBalanceCtrl.address}}</p>',
+        '   <p>Balance: {{$accountBalanceCtrl.accountBalance}}</p>',
+        '</div>'
+        ].join(''),
         controller: accountBalanceController,
         controllerAs: '$accountBalanceCtrl'
       };
@@ -41,9 +46,14 @@
     };
   }
 
-  function accountBalanceController($scope) {
+  function accountBalanceController($scope, $element, $attrs) {
       var $accountBalanceCtrl = this;
-      console.log($scope);
+      $scope.$watch('address', function (address) {
+          if(address) {
+              $accountBalanceCtrl.address = $scope.address;
+              $accountBalanceCtrl.accountBalance = web3.eth.getBalance(address).toString();
+          }
+      });
   }
 
 })(window.angular);
