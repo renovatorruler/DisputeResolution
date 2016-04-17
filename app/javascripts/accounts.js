@@ -11,7 +11,6 @@
         },
         template: [
         '<div>',
-        '   <p>Hello: {{$accountBalanceCtrl.address}}</p>',
         '   <p>Balance: {{$accountBalanceCtrl.accountBalance}}</p>',
         '</div>'
         ].join(''),
@@ -50,8 +49,10 @@
       var $accountBalanceCtrl = this;
       $scope.$watch('address', function (address) {
           if(address) {
-              $accountBalanceCtrl.address = $scope.address;
-              $accountBalanceCtrl.accountBalance = web3.eth.getBalance(address).toString();
+              web3.eth.getBalance(address, function (err, result) {
+                  $accountBalanceCtrl.accountBalance = result.toString();
+                  $scope.$apply();
+              });
           }
       });
   }
