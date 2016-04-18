@@ -2,6 +2,25 @@
   'use strict;'
   angular.module('accounts', [])
   .factory('accountService', accountService)
+  .controller('accountSelectorController', accountSelectorController)
+  .directive('accountSelector', function () {
+      return {
+        restrict: 'EA',
+        template: [
+            '<a href="" class="uk-navbar-nav-subtitle">{{$accountSelectorCtrl.selectedAccount}} <div>Selected Account</div></a>',
+            '<div class="uk-dropdown uk-dropdown-navbar">',
+            ' <ul id="accountSelector" name="accountSelector" class="uk-nav uk-nav-navbar">',
+            '    <li class="uk-nav-header">Accounts</li>',
+            '    <li ng-repeat="account in $accountSelectorCtrl.accounts" value="{{account}}">',
+            '     <a href="">{{account}}</a>',
+            '    </li>',
+            '  </ul>',
+            '</div>',
+        ].join(''),
+        controller: accountSelectorController,
+        controllerAs: '$accountSelectorCtrl'
+      };
+  })
   .controller('accountBalanceController', accountBalanceController)
   .directive('accountBalance', function () {
       return {
@@ -10,9 +29,9 @@
             'address': '@'
         },
         template: [
-        '<div>',
-        '   <p>Balance: {{$accountBalanceCtrl.accountBalance}}</p>',
-        '</div>'
+        '<a href>',
+        '   Balance: {{$accountBalanceCtrl.accountBalance}}',
+        '</a>'
         ].join(''),
         controller: accountBalanceController,
         controllerAs: '$accountBalanceCtrl'
@@ -43,6 +62,14 @@
     return {
         getAccounts: getAccounts
     };
+  }
+
+  function accountSelectorController($scope, accountService) {
+      var $accountSelectorCtrl = this;
+      accountService.getAccounts().then(function (accountList) {
+          $accountSelectorCtrl.accounts = accountList;
+          $accountSelectorCtrl.selectedAccount = accountList[0];
+      });
   }
 
   function accountBalanceController($scope, $element, $attrs) {

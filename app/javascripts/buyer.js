@@ -27,10 +27,6 @@
     function buyerSetupComponent(accountService) {
         var $ctrl = this;
         this.$routerOnActivate = function(next) {
-        accountService.getAccounts().then(function (accountList) {
-            $ctrl.accounts = accountList;
-            $ctrl.selectedAccount = accountList[0];
-        });
         };
   }
 
