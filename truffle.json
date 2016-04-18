@@ -1,8 +1,24 @@
 {
   "build": {
     "index.html": "index.html",
-    "app.js": [
-      "javascripts/app.js"
+    "partials/": "partials/",
+    "vendor.js": [
+      "../node_modules/angular/angular.js",
+      "../node_modules/@angular/router/angular1/angular_1_router.js",
+      "../node_modules/jquery/dist/jquery.js",
+      "../node_modules/uikit/dist/js/uikit.js"
+    ],
+    "app.js": "javascripts/app.js",
+    "components.js": [
+      "javascripts/accounts.js",
+      "javascripts/buyer.js",
+      "javascripts/seller.js",
+      "javascripts/arbitrator.js",
+      "javascripts/escrowService.js"
+    ],
+    "vendor.css": [
+      "../node_modules/uikit/dist/css/uikit.min.css",
+      "../node_modules/uikit/dist/css/uikit.gradient.min.css"
     ],
     "app.css": [
       "stylesheets/app.css"

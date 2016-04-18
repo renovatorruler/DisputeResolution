@@ -1,0 +1,36 @@
+{
+  "name": "tribitration_contract",
+  "version": "0.1.0",
+  "description": "Arbitration Contract for any human mediated Smart Contracts",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ForgionePawar/tribitration_contract.git"
+  },
+  "keywords": [
+    "smart",
+    "contract",
+    "ethereum",
+    "arbitration"
+  ],
+  "author": "Prashant Singh Pawar",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ForgionePawar/tribitration_contract/issues"
+  },
+  "homepage": "https://github.com/ForgionePawar/tribitration_contract#readme",
+  "dependencies": {
+    "@angular/router": "^0.2.0",
+    "angular": "^1.5.0",
+    "jquery": "^2.2.3",
+    "uikit": "^2.26.2"
+  },
+  "devDependencies": {
+    "angular-mocks": "^1.5.0",
+    "ethereumjs-testrpc": "^2.0.3"
+  }
+}

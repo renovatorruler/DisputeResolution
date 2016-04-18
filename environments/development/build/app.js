@@ -5736,9 +5736,9 @@ var Pudding =
 
   var contract_data = {
     abi: [{"constant":false,"inputs":[],"name":"release","outputs":[],"type":"function"},{"constant":false,"inputs":[],"name":"void","outputs":[],"type":"function"},{"constant":false,"inputs":[{"name":"sellerAddress","type":"address"},{"name":"amt","type":"uint256"}],"name":"setSellerAndAmt","outputs":[],"type":"function"},{"constant":false,"inputs":[],"name":"EscrowRaj","outputs":[],"type":"function"}],
-    binary: "606060405261010f806100126000396000f3606060405260e060020a600035046386d1a69f811461003c578063ac4c25b214610089578063c4969b8f146100b0578063fbd22407146100ea575b005b61003a600054600160a060020a039081163391909116141561010d57600154600254600160a060020a0390911690600090606082818181858883f150509054600160a060020a0316915050ff5b61003a600154600160a060020a033381169116141561010d57600054600160a060020a0316ff5b61003a6004356024356001805473ffffffffffffffffffffffffffffffffffffffff191683179055348190106100e65760028190555b5050565b61003a6000805473ffffffffffffffffffffffffffffffffffffffff1916331790555b56",
-    unlinked_binary: "606060405261010f806100126000396000f3606060405260e060020a600035046386d1a69f811461003c578063ac4c25b214610089578063c4969b8f146100b0578063fbd22407146100ea575b005b61003a600054600160a060020a039081163391909116141561010d57600154600254600160a060020a0390911690600090606082818181858883f150509054600160a060020a0316915050ff5b61003a600154600160a060020a033381169116141561010d57600054600160a060020a0316ff5b61003a6004356024356001805473ffffffffffffffffffffffffffffffffffffffff191683179055348190106100e65760028190555b5050565b61003a6000805473ffffffffffffffffffffffffffffffffffffffff1916331790555b56",
-    address: "0x9fa089be77a7f7111a0b5305563a6f7765df61d3",
+    binary: "6060604052610110806100126000396000f3606060405260e060020a600035046386d1a69f811461003c578063ac4c25b214610089578063c4969b8f146100b0578063fbd22407146100e6575b005b61003a600054600160a060020a039081163391909116141561010b57600154600254600160a060020a0390911690600090606082818181858883f150509054600160a060020a0316915050ff5b61003a600154600160a060020a033381169116141561010957600054600160a060020a0316ff5b61003a6004356024356001805473ffffffffffffffffffffffffffffffffffffffff1916831790553481901061010b5760025550565b61003a6000805473ffffffffffffffffffffffffffffffffffffffff1916331790555b565b61000256",
+    unlinked_binary: "6060604052610110806100126000396000f3606060405260e060020a600035046386d1a69f811461003c578063ac4c25b214610089578063c4969b8f146100b0578063fbd22407146100e6575b005b61003a600054600160a060020a039081163391909116141561010b57600154600254600160a060020a0390911690600090606082818181858883f150509054600160a060020a0316915050ff5b61003a600154600160a060020a033381169116141561010957600054600160a060020a0316ff5b61003a6004356024356001805473ffffffffffffffffffffffffffffffffffffffff1916831790553481901061010b5760025550565b61003a6000805473ffffffffffffffffffffffffffffffffffffffff1916331790555b565b61000256",
+    address: "0xd1711b7a62f197fcaf5bd711e1fbf94fae6f44bd",
     generated_with: "2.0.6",
     contract_name: "Escrow"
   };
@@ -5866,6 +5866,7 @@ var Pudding =
 
 
 
+/**
 var accounts;
 var account;
 var balance;
@@ -5903,25 +5904,41 @@ function sendCoin() {
     setStatus("Error sending coin; see log.");
   });
 };
+**/
+(function(angular) {
+  'use strict';
+  var escrowArbitratedApp = angular.module('app', ['ngComponentRouter', 'accounts', 'buyer', 'seller', 'arbitrator', 'contracts'])
 
-window.onload = function() {
-  web3.eth.getAccounts(function(err, accs) {
-    if (err != null) {
-      alert("There was an error fetching your accounts.");
-      return;
-    }
-
-    if (accs.length == 0) {
-      alert("Couldn't get any accounts! Make sure your Ethereum client is configured correctly.");
-      return;
-    }
-
-    accounts = accs;
-    account = accounts[0];
-
-    refreshBalance();
+  .value('$routerRootComponent', 'app')
+  
+  .config(function($locationProvider) {
+    //$locationProvider.html5Mode(true);
+  })
+  .component('app', {
+    template: [
+      '<nav class="uk-navbar">',
+      '   <ul class="uk-navbar-nav">',
+      '     <li class="uk-active"><a ng-link="[\'Buyer\']">Buyer</a></li>',
+      '     <li><a ng-link="[\'Seller\']">Seller</a></li>',
+      '     <li><a ng-link="[\'Arbitrator\']">Arbitrator</a></li>',
+      '     <li class="uk-parent" account-selector data-uk-dropdown></li>',
+      '   </ul>',
+      '   <div class="uk-navbar-flip">',
+      '   <ul class="uk-navbar-nav">',
+      '     <li account-balance address={{$accountSelectorCtrl.selectedAccount}}></li>',
+      '   </ul>',
+      '   </div>',
+      '</nav>',
+      '<ng-outlet class="uk-grid uk-container"></ng-outlet>'
+      ].join(''),
+    $routeConfig: [
+      {path: '/buyer/...', name: 'Buyer', component: 'buyer', useAsDefault: true},
+      {path: '/seller/...', name: 'Seller', component: 'seller'},
+      {path: '/arbitrator/...', name: 'Arbitrator', component: 'arbitrator'}
+    ]
   });
-}
+  
+})(window.angular);
 
 
  // Added by Truffle bootstrap.                                
