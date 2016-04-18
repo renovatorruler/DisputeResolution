@@ -36,29 +36,10 @@ function sendCoin() {
     setStatus("Error sending coin; see log.");
   });
 };
-
-window.onload = function() {
-  web3.eth.getAccounts(function(err, accs) {
-    if (err != null) {
-      alert("There was an error fetching your accounts.");
-      return;
-    }
-
-    if (accs.length == 0) {
-      alert("Couldn't get any accounts! Make sure your Ethereum client is configured correctly.");
-      return;
-    }
-
-    accounts = accs;
-    account = accounts[0];
-
-    refreshBalance();
-  });
-}
 **/
 (function(angular) {
   'use strict';
-  var escrowArbitratedApp = angular.module('app', ['ngComponentRouter', 'accounts', 'buyer', 'seller', 'arbitrator'])
+  var escrowArbitratedApp = angular.module('app', ['ngComponentRouter', 'accounts', 'buyer', 'seller', 'arbitrator', 'contracts'])
 
   .value('$routerRootComponent', 'app')
   

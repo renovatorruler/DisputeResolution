@@ -40,6 +40,7 @@
   });
 
   function accountService($q) {
+    var selectedAccount;
     function getAccounts() {
         var deferred = $q.defer();
         web3.eth.getAccounts(function(err, accs) {
@@ -60,8 +61,18 @@
         });
         return deferred.promise;
     }
+
+    function setSelectedAccount(account) {
+        seelectedAccount = account;
+    }
+
+    function getSelectedAccount() {
+        return selectedAccount;
+    }
     return {
-        getAccounts: getAccounts
+        getAccounts: getAccounts,
+        setSelectedAccount: setSelectedAccount,
+        getSelectedAccount: getSelectedAccount
     };
   }
 
@@ -70,6 +81,7 @@
       accountService.getAccounts().then(function (accountList) {
           $accountSelectorCtrl.accounts = accountList;
           $accountSelectorCtrl.selectedAccount = accountList[0];
+          accountService.setSelectedAccount($accountSelectorCtrl.selectedAccount);
       });
 
       this.changeAccount = function accountChanged(newAccount) {

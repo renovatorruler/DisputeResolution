@@ -17,6 +17,10 @@ contract Escrow {
         }
     }
 
+    function setAmount() {
+        return amt;
+    }
+
     function release() {
         //Only allow buyer to release the funds
         if (msg.sender == buyer) {

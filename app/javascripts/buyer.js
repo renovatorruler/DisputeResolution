@@ -1,6 +1,6 @@
 (function(angular) {
   'use strict';
-  angular.module('buyer', ['accounts'])
+  angular.module('buyer', ['accounts', 'contracts'])
     .component('buyer', {
       template: [
       '<div class="uk-width-1-1">',
@@ -24,15 +24,18 @@
       controller: buyerMainComponent
     });
 
-    function buyerSetupComponent(accountService) {
+    function buyerSetupComponent(accountService, escrowService) {
         var $ctrl = this;
+        $ctrl.release = function release() {
+            escrowService.release(accountService.getSelectedAccount());
+        };
         this.$routerOnActivate = function(next) {
         };
-  }
+    }
 
-  function buyerMainComponent() {
-    var $buyerMainCtrl = this;
-    this.$routerOnActivate = function(next) {
-    };
-  }
+    function buyerMainComponent() {
+        var $buyerMainCtrl = this;
+        this.$routerOnActivate = function(next) {
+        };
+    }
 })(window.angular);

@@ -1,6 +1,6 @@
 (function(angular) {
   'use strict';
-  angular.module('seller', [])
+  angular.module('seller', ['accounts', 'contracts'])
     .component('seller', {
       template: [
       '<div class="uk-width-1-1">',
@@ -24,8 +24,12 @@
       controller: sellerMainComponent
     });
 
-  function sellerSetupComponent() {
+    function sellerSetupComponent(accountService, escrowService) {
     var $ctrl = this;
+    $ctrl.setSellerAndAmt = function release() {
+        console.log("$ctrl.setSellerAndAmt");
+        escrowService.setSellerAndAmt($ctrl.amount, accountService.getSelectedAccount());
+    };
     this.$routerOnActivate = function(next) {
     };
   }
