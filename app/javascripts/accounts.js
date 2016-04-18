@@ -12,7 +12,7 @@
             ' <ul id="accountSelector" name="accountSelector" class="uk-nav uk-nav-navbar">',
             '    <li class="uk-nav-header">Accounts</li>',
             '    <li ng-repeat="account in $accountSelectorCtrl.accounts" value="{{account}}">',
-            '     <a href="">{{account}}</a>',
+            '     <a ng-click="$accountSelectorCtrl.changeAccount(account)">{{account}}</a>',
             '    </li>',
             '  </ul>',
             '</div>',
@@ -29,8 +29,9 @@
             'address': '@'
         },
         template: [
-        '<a href>',
-        '   Balance: {{$accountBalanceCtrl.accountBalance}}',
+        '<a href="" class="uk-navbar-nav-subtitle">',
+        '   {{$accountBalanceCtrl.accountBalance}}',
+        '   <div>Balance</div>',
         '</a>'
         ].join(''),
         controller: accountBalanceController,
@@ -70,6 +71,10 @@
           $accountSelectorCtrl.accounts = accountList;
           $accountSelectorCtrl.selectedAccount = accountList[0];
       });
+
+      this.changeAccount = function accountChanged(newAccount) {
+          $accountSelectorCtrl.selectedAccount = newAccount;
+      };
   }
 
   function accountBalanceController($scope, $element, $attrs) {
