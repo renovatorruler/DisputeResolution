@@ -46,26 +46,26 @@
     function getAccounts() {
         var deferred = $q.defer();
         web3.eth.getAccounts(function(err, accs) {
-        if (err != null) {
-            deferred.reject("There was an error fetching your accounts.");
-            return;
-        }
+            if (err != null) {
+                deferred.reject("There was an error fetching your accounts.");
+                return;
+            }
 
-        if (accs.length == 0) {
-            deferred.reject("Couldn't get any accounts! Make sure your Ethereum client is configured correctly.");
-            return;
-        }
+            if (accs.length == 0) {
+                deferred.reject("Couldn't get any accounts! Make sure your Ethereum client is configured correctly.");
+                return;
+            }
 
-        accounts = accs;
-        account = accounts[0];
+            accounts = accs;
+            account = accounts[0];
 
-        deferred.resolve(accounts);
+            deferred.resolve(accounts);
         });
         return deferred.promise;
     }
 
     function setSelectedAccount(account) {
-        seelectedAccount = account;
+        selectedAccount = account;
     }
 
     function getSelectedAccount() {
@@ -177,11 +177,14 @@
 
     function sellerSetupComponent(accountService, escrowService) {
     var $ctrl = this;
-    $ctrl.setSellerAndAmt = function release() {
-        console.log("$ctrl.setSellerAndAmt");
-        escrowService.setSellerAndAmt($ctrl.amount, accountService.getSelectedAccount());
+    $ctrl.setAmount = function release() {
+        escrowService.setAmount($ctrl.amount, accountService.getSelectedAccount());
+    };
+    $ctrl.getAmount = function release() {
+        $ctrl.contractAmount = escrowService.getAmount(accountService.getSelectedAccount());
     };
     this.$routerOnActivate = function(next) {
+        $ctrl.contractAmount = escrowService.getAmount(accountService.getSelectedAccount());
     };
   }
 
@@ -240,10 +243,22 @@
 
   function escrowService() {
     var contract = Escrow.deployed();
-    function setSellerAndAmt(amount, account) {
+    function setSellerAndAmt(account) {
         console.log("contract.setSellerAndAmt");
-        contract.setSellerAndAmt.call(account, amount, {from: account}).then(function (val) {
+        contract.setSeller.call(account, {from: account}).then(function (val) {
             console.log(val);
+        });
+    }
+
+    function getAmount(account) {
+        contract.amount.call({from: account}).then(function (amount) {
+            console.log(amount.toString());
+        });
+    }
+
+    function setAmount(amount, account) {
+        contract.amount.call(amount, {from: account}).then(function (val) {
+            console.log(val.toString());
         });
     }
 
@@ -257,6 +272,8 @@
     }
     return {
       setSellerAndAmt: setSellerAndAmt,
+      getAmount: getAmount,
+      setAmount: setAmount,
       release: release,
       voidContract: voidContract
     }

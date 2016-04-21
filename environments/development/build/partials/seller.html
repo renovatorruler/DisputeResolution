@@ -3,6 +3,8 @@ Welcome Seller
     <fieldset data-uk-margin>
         <legend>Ether Amount</legend>
         <input type="text" placeholder="" ng-model="$ctrl.amount">
-        <button type="submit" class="uk-button" ng-click="$ctrl.setSellerAndAmt()">Send Ether</button>
+        <button type="submit" class="uk-button" ng-click="$ctrl.setAmount()">Send Ether</button>
+        <button type="buttton" class="uk-button" ng-click="$ctrl.getAmount()">Get Amount</button>
+        <p>{{$ctrl.contractAmount}}
     </fieldset>
 </form>

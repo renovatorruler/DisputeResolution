@@ -1,24 +1,19 @@
 contract Escrow {
     address buyer;
     address seller;
-    uint amount;
+    uint public amount;
 
     function EscrowRaj() {
         //aka setBuyer
         buyer = msg.sender;
     }
 
-    function setSellerAndAmt(address sellerAddress, uint amt) {
+    function setSeller(address sellerAddress) {
         seller = sellerAddress;
-        if (msg.value >= amt) {
-            amount = amt;
-        } else {
-          throw;
-        }
     }
 
-    function setAmount() {
-        return amt;
+    function setAmount(uint amt) {
+        amount = amt;
     }
 
     function release() {
@@ -27,7 +22,7 @@ contract Escrow {
             seller.send(amount);
             suicide(buyer);
         } else {
-          throw;
+            throw;
         }
     }
 

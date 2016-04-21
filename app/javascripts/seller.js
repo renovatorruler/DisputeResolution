@@ -26,11 +26,14 @@
 
     function sellerSetupComponent(accountService, escrowService) {
     var $ctrl = this;
-    $ctrl.setSellerAndAmt = function release() {
-        console.log("$ctrl.setSellerAndAmt");
-        escrowService.setSellerAndAmt($ctrl.amount, accountService.getSelectedAccount());
+    $ctrl.setAmount = function release() {
+        escrowService.setAmount($ctrl.amount, accountService.getSelectedAccount());
+    };
+    $ctrl.getAmount = function release() {
+        $ctrl.contractAmount = escrowService.getAmount(accountService.getSelectedAccount());
     };
     this.$routerOnActivate = function(next) {
+        $ctrl.contractAmount = escrowService.getAmount(accountService.getSelectedAccount());
     };
   }
 

@@ -5,10 +5,22 @@
 
   function escrowService() {
     var contract = Escrow.deployed();
-    function setSellerAndAmt(amount, account) {
+    function setSellerAndAmt(account) {
         console.log("contract.setSellerAndAmt");
-        contract.setSellerAndAmt.call(account, amount, {from: account}).then(function (val) {
+        contract.setSeller.call(account, {from: account}).then(function (val) {
             console.log(val);
+        });
+    }
+
+    function getAmount(account) {
+        contract.amount.call({from: account}).then(function (amount) {
+            console.log(amount.toString());
+        });
+    }
+
+    function setAmount(amount, account) {
+        contract.amount.call(amount, {from: account}).then(function (val) {
+            console.log(val.toString());
         });
     }
 
@@ -22,6 +34,8 @@
     }
     return {
       setSellerAndAmt: setSellerAndAmt,
+      getAmount: getAmount,
+      setAmount: setAmount,
       release: release,
       voidContract: voidContract
     }
