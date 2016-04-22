@@ -5735,10 +5735,10 @@ var Pudding =
 (function() {
 
   var contract_data = {
-    abi: [{"constant":false,"inputs":[{"name":"amt","type":"uint256"}],"name":"setAmount","outputs":[],"type":"function"},{"constant":false,"inputs":[],"name":"release","outputs":[],"type":"function"},{"constant":true,"inputs":[],"name":"amount","outputs":[{"name":"","type":"uint256"}],"type":"function"},{"constant":false,"inputs":[],"name":"void","outputs":[],"type":"function"},{"constant":false,"inputs":[{"name":"sellerAddress","type":"address"}],"name":"setSeller","outputs":[],"type":"function"},{"constant":false,"inputs":[],"name":"EscrowRaj","outputs":[],"type":"function"}],
-    binary: "606060405261013a806100126000396000f3606060405236156100565760e060020a6000350463271f88b4811461005857806386d1a69f14610063578063aa8c217c146100b0578063ac4c25b2146100b9578063e99d2866146100e0578063fbd2240714610106575b005b600435600255610056565b610056600054600160a060020a039081163391909116141561013557600154600254600160a060020a0390911690600090606082818181858883f150509054600160a060020a0316915050ff5b61012b60025481565b610056600154600160a060020a033381169116141561012957600054600160a060020a0316ff5b6001805473ffffffffffffffffffffffffffffffffffffffff1916600435179055610056565b6100566000805473ffffffffffffffffffffffffffffffffffffffff1916331790555b565b6060908152602090f35b61000256",
-    unlinked_binary: "606060405261013a806100126000396000f3606060405236156100565760e060020a6000350463271f88b4811461005857806386d1a69f14610063578063aa8c217c146100b0578063ac4c25b2146100b9578063e99d2866146100e0578063fbd2240714610106575b005b600435600255610056565b610056600054600160a060020a039081163391909116141561013557600154600254600160a060020a0390911690600090606082818181858883f150509054600160a060020a0316915050ff5b61012b60025481565b610056600154600160a060020a033381169116141561012957600054600160a060020a0316ff5b6001805473ffffffffffffffffffffffffffffffffffffffff1916600435179055610056565b6100566000805473ffffffffffffffffffffffffffffffffffffffff1916331790555b565b6060908152602090f35b61000256",
-    address: "0xf7bb97691e0636993f74f09891f100c936da9213",
+    abi: [{"constant":false,"inputs":[],"name":"release","outputs":[],"type":"function"},{"constant":true,"inputs":[],"name":"amount","outputs":[{"name":"","type":"uint256"}],"type":"function"},{"constant":false,"inputs":[],"name":"void","outputs":[],"type":"function"},{"inputs":[{"name":"buyer","type":"address"},{"name":"seller","type":"address"},{"name":"amount","type":"uint256"}],"type":"constructor"}],
+    binary: "606060405260405160608060d78339505060c060405260b68060216000396000f3606060405260e060020a600035046386d1a69f8114602e578063aa8c217c146078578063ac4c25b2146080575b005b602c600054600160a060020a0390811633909116141560b257600154600254600160a060020a0390911690600090606082818181858883f150509054600160a060020a0316915050ff5b60a660025481565b602c60015433600160a060020a039081169116141560b057600054600160a060020a0316ff5b6060908152602090f35b565b600256",
+    unlinked_binary: "606060405260405160608060d78339505060c060405260b68060216000396000f3606060405260e060020a600035046386d1a69f8114602e578063aa8c217c146078578063ac4c25b2146080575b005b602c600054600160a060020a0390811633909116141560b257600154600254600160a060020a0390911690600090606082818181858883f150509054600160a060020a0316915050ff5b60a660025481565b602c60015433600160a060020a039081169116141560b057600054600160a060020a0316ff5b6060908152602090f35b565b600256",
+    address: "0xae0ca237e943603ddd4398393ed4ddcff63312b0",
     generated_with: "2.0.6",
     contract_name: "Escrow"
   };
@@ -5790,6 +5790,73 @@ var Pudding =
     // There will only be one version of Pudding in the browser,
     // and we can use that.
     window.Escrow = Contract;
+  }
+
+})();
+;
+
+// Factory "morphs" into a Pudding class.
+// The reasoning is that calling load in each context
+// is cumbersome.
+
+(function() {
+
+  var contract_data = {
+    abi: [{"constant":false,"inputs":[{"name":"buyerAddress","type":"address"},{"name":"sellerAddress","type":"address"},{"name":"amount","type":"uint256"}],"name":"initiateCreation","outputs":[{"name":"token","type":"bytes32"}],"type":"function"},{"inputs":[],"type":"constructor"}],
+    binary: "606060405261017c806100126000396000f3606060405260e060020a600035046356b89473811461001b575b005b61016660043560243560443560006060818152608082905260e0604081905260a083815260c08490526c0100000000000000000000000073ffffffffffffffffffffffffffffffffffffffff8089168202845287160260f452610108859052906002906101289060209060488188866161da5a03f11561000257506040805180518183018352988152602081810187905282518084018452988952600189820181905283519687018452918652858101988952858301978852898752868152919095209351805185549183015173ffffffffffffffffffffffffffffffffffffffff1992831690911774ff00000000000000000000000000000000000000001990811674010000000000000000000000000000000000000000928302178755985180519787018054919094015192169096179097169690940295909517909255915191909201555090565b6040518082815260200191505060405180910390f3",
+    unlinked_binary: "606060405261017c806100126000396000f3606060405260e060020a600035046356b89473811461001b575b005b61016660043560243560443560006060818152608082905260e0604081905260a083815260c08490526c0100000000000000000000000073ffffffffffffffffffffffffffffffffffffffff8089168202845287160260f452610108859052906002906101289060209060488188866161da5a03f11561000257506040805180518183018352988152602081810187905282518084018452988952600189820181905283519687018452918652858101988952858301978852898752868152919095209351805185549183015173ffffffffffffffffffffffffffffffffffffffff1992831690911774ff00000000000000000000000000000000000000001990811674010000000000000000000000000000000000000000928302178755985180519787018054919094015192169096179097169690940295909517909255915191909201555090565b6040518082815260200191505060405180910390f3",
+    address: "0x417d1f7c4a3f04a1cec78b59bcbc2a705d6646b8",
+    generated_with: "2.0.6",
+    contract_name: "EscrowCreator"
+  };
+
+  function Contract() {
+    if (Contract.Pudding == null) {
+      throw new Error("EscrowCreator error: Please call load() first before creating new instance of this contract.");
+    }
+
+    Contract.Pudding.apply(this, arguments);
+  };
+
+  Contract.load = function(Pudding) {
+    Contract.Pudding = Pudding;
+
+    Pudding.whisk(contract_data, Contract);
+
+    // Return itself for backwards compatibility.
+    return Contract;
+  }
+
+  Contract.new = function() {
+    if (Contract.Pudding == null) {
+      throw new Error("EscrowCreator error: Please call load() first before calling new().");
+    }
+
+    return Contract.Pudding.new.apply(Contract, arguments);
+  };
+
+  Contract.at = function() {
+    if (Contract.Pudding == null) {
+      throw new Error("EscrowCreator error: lease call load() first before calling at().");
+    }
+
+    return Contract.Pudding.at.apply(Contract, arguments);
+  };
+
+  Contract.deployed = function() {
+    if (Contract.Pudding == null) {
+      throw new Error("EscrowCreator error: Please call load() first before calling deployed().");
+    }
+
+    return Contract.Pudding.deployed.apply(Contract, arguments);
+  };
+
+  if (typeof module != "undefined" && typeof module.exports != "undefined") {
+    module.exports = Contract;
+  } else {
+    // There will only be one version of Pudding in the browser,
+    // and we can use that.
+    window.EscrowCreator = Contract;
   }
 
 })();
@@ -5868,7 +5935,7 @@ var Pudding =
 
 (function(angular) {
   'use strict';
-  var escrowArbitratedApp = angular.module('app', ['ngComponentRouter', 'accounts', 'buyer', 'seller', 'arbitrator', 'contracts'])
+  var escrowArbitratedApp = angular.module('app', ['ngComponentRouter', 'accounts', 'buyer', 'seller', 'escrowCreator', 'arbitrator', 'contracts'])
 
   .value('$routerRootComponent', 'app')
   
@@ -5879,7 +5946,8 @@ var Pudding =
     template: [
       '<nav class="uk-navbar">',
       '   <ul class="uk-navbar-nav">',
-      '     <li class="uk-active"><a ng-link="[\'Buyer\']">Buyer</a></li>',
+      '     <li class="uk-active"><a ng-link="[\'Contract\']">Contract</a></li>',
+      '     <li><a ng-link="[\'Buyer\']">Buyer</a></li>',
       '     <li><a ng-link="[\'Seller\']">Seller</a></li>',
       '     <li><a ng-link="[\'Arbitrator\']">Arbitrator</a></li>',
       '     <li class="uk-parent" account-selector data-uk-dropdown></li>',
@@ -5893,7 +5961,8 @@ var Pudding =
       '<ng-outlet class="uk-grid uk-container"></ng-outlet>'
       ].join(''),
     $routeConfig: [
-      {path: '/buyer/...', name: 'Buyer', component: 'buyer', useAsDefault: true},
+      {path: '/contract/...', name: 'Contract', component: 'escrowCreator', useAsDefault: true},
+      {path: '/buyer/...', name: 'Buyer', component: 'buyer'},
       {path: '/seller/...', name: 'Seller', component: 'seller'},
       {path: '/arbitrator/...', name: 'Arbitrator', component: 'arbitrator'}
     ]
@@ -5924,5 +5993,5 @@ if (typeof web3 !== 'undefined') {
 
 Pudding.setWeb3(window.web3);                                 
 
-Pudding.load([Escrow, arbitrated], window);               
+Pudding.load([Escrow, EscrowCreator, arbitrated], window);               
 
