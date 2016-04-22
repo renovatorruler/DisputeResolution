@@ -293,32 +293,57 @@
       ].join(''),
       $routeConfig: [
         {path: '/', name: 'EscrowCreatorSetup', component: 'escrowCreatorSetup', useAsDefault: true},
-        {path: '/:contractAddress', name: 'EscrowCreatorMain', component: 'escrowCreatorMain'}
+        {path: '/:token', name: 'EscrowCreatorDetail', component: 'escrowCreatorDetail'}
       ]
     })
 
     .component('escrowCreatorSetup', {
       templateUrl: 'partials/escrowCreator.html',
+      bindings: { $router: '<' },
       controller: escrowCreatorSetupComponent
     })
 
-    .component('escrowCreatorMain', {
-      templateUrl: 'partials/escrowCreatorMain.html',
-      controller: escrowCreatorMainComponent
+    .component('escrowCreatorDetail', {
+      templateUrl: 'partials/escrowCreatorDetail.html',
+      controller: escrowCreatorDetailComponent
     });
 
-    function escrowCreatorSetupComponent(accountService, escrowCreatorService) {
+    function escrowCreatorSetupComponent(accountService, escrowCreatorService, $scope) {
         var $ctrl = this;
-        $ctrl.release = function release() {
-            escrowService.release(accountService.getSelectedAccount());
+
+        function validate() {
+            var formValid = true;
+            if(!$ctrl.buyerAddress || $ctrl.buyerAddress.length === 0) {
+                $ctrl.invalidBuyersAddress = true;
+                formValid = false;
+            }
+
+            if(!$ctrl.sellerAddress || $ctrl.sellerAddress.length === 0) {
+                $ctrl.invalidSellersAddress = true;
+                formValid = false;
+            }
+            if(!$ctrl.amount || $ctrl.amount.length === 0) {
+                $ctrl.invalidAmount = true;
+                formValid = false;
+            }
+            return formValid;
+        }
+        $ctrl.createContract = function () {
+            if(validate()) {
+                escrowCreatorService.initiateCreation($ctrl.buyerAddress, $ctrl.sellerAddress, $ctrl.amount, accountService.getSelectedAccount()).then(function (token) {
+                    $ctrl.token = token;
+                    $scope.$apply();
+                });
+            }
         };
         this.$routerOnActivate = function(next) {
         };
     }
 
-    function escrowCreatorMainComponent() {
-        var $escrowCreatorMainCtrl = this;
+    function escrowCreatorDetailComponent() {
+        var $ctrl = this;
         this.$routerOnActivate = function(next) {
+            $ctrl.token = next.params.token;
         };
     }
 })(window.angular);
@@ -331,7 +356,8 @@
 
   function escrowCreatorService() {
     var contract = EscrowCreator.deployed();
-    function initiateCreation() {
+    function initiateCreation(buyer, seller, amount, account) {
+        return contract.initiateCreation.call(buyer, seller, amount, {from: account});
     }
     return {
         initiateCreation: initiateCreation

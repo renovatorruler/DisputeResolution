@@ -5,7 +5,8 @@
 
   function escrowCreatorService() {
     var contract = EscrowCreator.deployed();
-    function initiateCreation() {
+    function initiateCreation(buyer, seller, amount, account) {
+        return contract.initiateCreation.call(buyer, seller, amount, {from: account});
     }
     return {
         initiateCreation: initiateCreation

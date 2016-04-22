@@ -1,1 +1,23 @@
-<h2>Escrow Setup</h2>
+<h2>Create Contract</h2>
+<form class="uk-form uk-form-horizontal">
+
+    <div class="uk-form-row">
+        <label class="uk-form-label">Buyer</label>
+        <input class="uk-form-width-large" ng-class="{'uk-form-danger': $ctrl.invalidBuyersAddress}" type="text" placeholder="Buyer's Ethereum Address 0x123" ng-model="$ctrl.buyerAddress" required>
+    </div>
+    <div class="uk-form-row">
+        <label class="uk-form-label">Seller</label>
+        <input class="uk-form-width-large" ng-class="{'uk-form-danger': $ctrl.invalidSellersAddress}" type="text" placeholder="Seller's Ethereum Address 0x123" ng-model="$ctrl.sellerAddress" required>
+    </div>
+    <div class="uk-form-row">
+        <label class="uk-form-label">Amount</label>
+        <input type="number" placeholder="Amount in Ethers" ng-class="{'uk-form-danger': $ctrl.invalidAmount}" ng-model="$ctrl.amount" min="0" required>
+    </div>
+    <div class="uk-form-row">
+        <button type="submit" class="uk-button" ng-click="$ctrl.createContract()">Create</button>
+    </div>
+</form>
+
+<div ng-show="$ctrl.token" class="uk-form-row">
+    <a ng-link="['EscrowCreatorDetail', {token: $ctrl.token}]">Click here to go to next step &raquo;</a>
+</div>

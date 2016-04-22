@@ -21,6 +21,7 @@ contract EscrowCreator {
         Entity memory buyer = Entity(buyerAddress, false);
         Entity memory seller = Entity(sellerAddress, true);
         contracts[token] = EscrowInfo(buyer, seller, amount);
+        return token;
     }
 
 }

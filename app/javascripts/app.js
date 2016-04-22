@@ -1,6 +1,14 @@
 (function(angular) {
   'use strict';
-  var escrowArbitratedApp = angular.module('app', ['ngComponentRouter', 'accounts', 'buyer', 'seller', 'escrowCreator', 'arbitrator', 'contracts'])
+  var escrowArbitratedApp = angular.module('app', [
+      'ngComponentRouter',
+      'accounts',
+      'buyer',
+      'seller',
+      'escrowCreator',
+      'arbitrator',
+      'contracts'
+  ])
 
   .value('$routerRootComponent', 'app')
   
