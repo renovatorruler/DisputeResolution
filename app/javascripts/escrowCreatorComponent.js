@@ -57,10 +57,19 @@
         };
     }
 
-    function escrowCreatorDetailComponent() {
+    function escrowCreatorDetailComponent(accountService, escrowCreatorService) {
         var $ctrl = this;
         this.$routerOnActivate = function(next) {
             $ctrl.token = next.params.token;
+            escrowCreatorService.getEscrowInfo($ctrl.token, accountService.getSelectedAccount())
+            .then(function (val) {
+                $ctrl.buyerAddress = val[0];
+                $ctrl.buyerAccepted = val[1];
+                $ctrl.sellerAddress = val[2];
+                $ctrl.sellerAccepted = val[3];
+                $ctrl.amount = val[4];
+                console.log(val);
+            });
         };
     }
 })(window.angular);

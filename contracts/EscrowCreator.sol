@@ -24,4 +24,17 @@ contract EscrowCreator {
         return token;
     }
 
+    function getEscrowInfo(bytes32 token) returns (
+        address buyerAddr,
+        bool buyerAccepted,
+        address sellerAddr,
+        bool sellerAccepted,
+        uint amount
+    ) {
+        buyerAddr = contracts[token].buyer.addr;
+        buyerAccepted = contracts[token].buyer.accepted;
+        sellerAddr = contracts[token].seller.addr;
+        sellerAccepted = contracts[token].seller.accepted;
+        amount = contracts[token].amount;
+    }
 }
