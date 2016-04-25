@@ -13,15 +13,15 @@ contract EscrowCreator {
 
     mapping (bytes32 => EscrowInfo) contracts;
 
-    function EscrowCreator() {
+    function keyGenerator(address buyerAddress, address sellerAddress, uint amount, uint blockNumber) returns (bytes32) {
+      return sha3(buyerAddress, sellerAddress, amount, blockNumber);
     }
 
-    function initiateCreation(address buyerAddress, address sellerAddress, uint amount) returns (bytes32 token) {
-        token = sha3(buyerAddress, sellerAddress, amount);
+    function initiateCreation(address buyerAddress, address sellerAddress, uint amount) {
+        token = keyGenerator(buyerAddress, sellerAddress, amount, block.number);
         Entity memory buyer = Entity(buyerAddress, false);
         Entity memory seller = Entity(sellerAddress, true);
         contracts[token] = EscrowInfo(buyer, seller, amount);
-        return token;
     }
 
     function getEscrowInfo(bytes32 token) returns (

@@ -333,6 +333,8 @@
                 escrowCreatorService.initiateCreation($ctrl.buyerAddress, $ctrl.sellerAddress, $ctrl.amount, accountService.getSelectedAccount()).then(function (token) {
                     $ctrl.token = token;
                     $scope.$apply();
+                }).catch(function (e) {
+                    console.log("error", e);
                 });
             }
         };
@@ -340,7 +342,7 @@
         };
     }
 
-    function escrowCreatorDetailComponent(accountService, escrowCreatorService) {
+    function escrowCreatorDetailComponent(accountService, escrowCreatorService, $scope) {
         var $ctrl = this;
         this.$routerOnActivate = function(next) {
             $ctrl.token = next.params.token;
@@ -350,8 +352,10 @@
                 $ctrl.buyerAccepted = val[1];
                 $ctrl.sellerAddress = val[2];
                 $ctrl.sellerAccepted = val[3];
-                $ctrl.amount = val[4];
-                console.log(val);
+                $ctrl.amount = parseInt(val[4].toString(), 10);
+                $scope.$apply();
+            }).catch(function (e) {
+                console.log("error", e);
             });
         };
     }
@@ -367,11 +371,14 @@
     var contract = EscrowCreator.deployed();
 
     function initiateCreation(buyer, seller, amount, account) {
-        return contract.initiateCreation.call(buyer, seller, amount, {from: account});
+      return contract.initiateCreation(buyer, seller, amount, {from: account}).then(function (tx) {
+        var txInfo = web3.eth.getTransaction(tx);
+        return contract.keyGenerator.call(buyer, seller, amount, txInfo["blockNumber"], {from: account});
+      });
     }
 
     function getEscrowInfo(token, account) {
-        return contract.getEscrowInfo.call(token, {from: account});
+      return contract.getEscrowInfo.call(token, {from: account});
     }
     return {
         initiateCreation: initiateCreation,
