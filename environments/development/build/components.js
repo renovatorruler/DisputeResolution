@@ -244,7 +244,6 @@
   function escrowService() {
     var contract = Escrow.deployed();
     function setSellerAndAmt(account) {
-        console.log("contract.setSellerAndAmt");
         contract.setSeller.call(account, {from: account}).then(function (val) {
             console.log(val);
         });
