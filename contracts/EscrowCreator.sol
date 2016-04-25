@@ -18,7 +18,7 @@ contract EscrowCreator {
     }
 
     function initiateCreation(address buyerAddress, address sellerAddress, uint amount) {
-        token = keyGenerator(buyerAddress, sellerAddress, amount, block.number);
+        bytes32 token = keyGenerator(buyerAddress, sellerAddress, amount, block.number);
         Entity memory buyer = Entity(buyerAddress, false);
         Entity memory seller = Entity(sellerAddress, true);
         contracts[token] = EscrowInfo(buyer, seller, amount);
