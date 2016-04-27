@@ -3,3 +3,8 @@
 [account-selector] .uk-dropdown {
     width: auto;
 }
+
+.entity-banner {
+    background: beige;
+    padding-top: 20px;
+}

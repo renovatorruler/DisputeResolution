@@ -4,15 +4,15 @@
 
     <div class="uk-form-row">
         <label class="uk-form-label">Buyer</label>
-        <input class="uk-form-width-large" ng-class="{'uk-form-danger': $ctrl.invalidBuyersAddress}" type="text" placeholder="Buyer's Ethereum Address 0x123" ng-model="$ctrl.buyerAddress" required>
+        <input class="uk-form-width-large" ng-class="{'uk-form-danger': $ctrl.invalidBuyersAddress}" type="text" placeholder="Buyer's Ethereum Address 0x123" ng-model="$ctrl.buyerAddress" disabled>
     </div>
     <div class="uk-form-row">
         <label class="uk-form-label">Seller</label>
-        <input class="uk-form-width-large" ng-class="{'uk-form-danger': $ctrl.invalidSellersAddress}" type="text" placeholder="Seller's Ethereum Address 0x123" ng-model="$ctrl.sellerAddress" required>
+        <input class="uk-form-width-large" ng-class="{'uk-form-danger': $ctrl.invalidSellersAddress}" type="text" placeholder="Seller's Ethereum Address 0x123" ng-model="$ctrl.sellerAddress" disabled>
     </div>
     <div class="uk-form-row">
         <label class="uk-form-label">Amount</label>
-        <input type="number" placeholder="Amount in Ethers" ng-class="{'uk-form-danger': $ctrl.invalidAmount}" ng-model="$ctrl.amount" min="0" required>
+        <input type="number" placeholder="Amount in Ethers" ng-class="{'uk-form-danger': $ctrl.invalidAmount}" ng-model="$ctrl.amount" min="0" disabled>
     </div>
     <div class="uk-form-row">
         <button type="submit" class="uk-button" ng-click="$ctrl.createContract()">Create</button>

@@ -17,7 +17,7 @@
   })
   .component('app', {
     template: [
-      '<nav class="uk-navbar">',
+      '<nav class="uk-navbar uk-width-1-1">',
       '   <ul class="uk-navbar-nav">',
       '     <li class="uk-active"><a ng-link="[\'Contract\']">Contract</a></li>',
       '     <li><a ng-link="[\'Buyer\']">Buyer</a></li>',
@@ -31,7 +31,7 @@
       '   </ul>',
       '   </div>',
       '</nav>',
-      '<ng-outlet class="uk-grid uk-container"></ng-outlet>'
+      '<ng-outlet class="uk-width-1-1"></ng-outlet>'
       ].join(''),
     $routeConfig: [
       {path: '/contract/...', name: 'Contract', component: 'escrowCreator', useAsDefault: true},
