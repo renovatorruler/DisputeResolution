@@ -49,6 +49,7 @@
             if(validate()) {
                 escrowCreatorService.initiateCreation($ctrl.buyerAddress, $ctrl.sellerAddress, $ctrl.amount, accountService.getSelectedAccount()).then(function (token) {
                     $ctrl.token = token;
+                    $ctrl.$router.navigate(['EscrowCreatorDetail', {token: $ctrl.token}]);
                     $scope.$apply();
                 }).catch(function (e) {
                     console.log("error", e);

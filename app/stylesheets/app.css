@@ -6,3 +6,12 @@
     background: beige;
     padding-top: 20px;
 }
+
+.currency-panel {
+    background: white;
+    border: none;
+}
+
+.currency-banner {
+    padding-top: 20px;
+}
