@@ -23,9 +23,11 @@
       "../node_modules/uikit/dist/css/uikit.gradient.min.css"
     ],
     "app.css": [
+      "stylesheets/fonts.css",
       "stylesheets/app.css"
     ],
-    "images/": "images/"
+    "images/": "images/",
+    "fonts/": "fonts/"
   },
   "deploy": [
     "EscrowCreator"

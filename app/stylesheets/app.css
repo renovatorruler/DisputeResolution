@@ -15,3 +15,18 @@
 .currency-banner {
     padding-top: 20px;
 }
+
+.signature {
+}
+
+.buyer-signature {
+    font-family: 'Desyrel';
+    font-size: 4em;
+    margin: 1em auto;
+}
+
+.seller-signature {
+    font-family: 'Journal';
+    font-size: 4em;
+    margin: 1em auto;
+}

@@ -349,9 +349,9 @@
             escrowCreatorService.getEscrowInfo($ctrl.token, accountService.getSelectedAccount())
             .then(function (val) {
                 $ctrl.buyerAddress = val[0];
-                $ctrl.buyerAccepted = val[1];
+                $ctrl.buyerSigned = val[1];
                 $ctrl.sellerAddress = val[2];
-                $ctrl.sellerAccepted = val[3];
+                $ctrl.sellerSigned = val[3];
                 $ctrl.amount = parseInt(val[4].toString(), 10);
                 $scope.$apply();
             }).catch(function (e) {

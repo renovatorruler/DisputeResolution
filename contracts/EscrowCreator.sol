@@ -1,7 +1,7 @@
 contract EscrowCreator {
     struct Entity {
         address addr;
-        bool accepted;
+        bool signed;
     }
 
     struct EscrowInfo {
@@ -20,21 +20,21 @@ contract EscrowCreator {
     function initiateCreation(address buyerAddress, address sellerAddress, uint amount) {
         bytes32 token = keyGenerator(buyerAddress, sellerAddress, amount, block.number);
         Entity memory buyer = Entity(buyerAddress, false);
-        Entity memory seller = Entity(sellerAddress, true);
+        Entity memory seller = Entity(sellerAddress, false);
         contracts[token] = EscrowInfo(buyer, seller, amount);
     }
 
     function getEscrowInfo(bytes32 token) returns (
         address buyerAddr,
-        bool buyerAccepted,
+        bool buyerSigned,
         address sellerAddr,
-        bool sellerAccepted,
+        bool sellerSigned,
         uint amount
     ) {
         buyerAddr = contracts[token].buyer.addr;
-        buyerAccepted = contracts[token].buyer.accepted;
+        buyerSigned = contracts[token].buyer.signed;
         sellerAddr = contracts[token].seller.addr;
-        sellerAccepted = contracts[token].seller.accepted;
+        sellerSigned = contracts[token].seller.signed;
         amount = contracts[token].amount;
     }
 }
