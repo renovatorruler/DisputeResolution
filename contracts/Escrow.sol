@@ -3,17 +3,10 @@ contract Escrow {
     address seller;
     uint public amount;
 
-    function EscrowRaj() {
-        //aka setBuyer
-        buyer = msg.sender;
-    }
-
-    function setSeller(address sellerAddress) {
-        seller = sellerAddress;
-    }
-
-    function setAmount(uint amt) {
-        amount = amt;
+    function Escrow(address buyer, address seller, uint amount) {
+        buyer = buyer;
+        seller = seller;
+        amount = amount;
     }
 
     function release() {

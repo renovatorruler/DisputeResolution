@@ -1,6 +1,14 @@
 (function(angular) {
   'use strict';
-  var escrowArbitratedApp = angular.module('app', ['ngComponentRouter', 'accounts', 'buyer', 'seller', 'arbitrator', 'contracts'])
+  var escrowArbitratedApp = angular.module('app', [
+      'ngComponentRouter',
+      'accounts',
+      'buyer',
+      'seller',
+      'escrowCreator',
+      'arbitrator',
+      'contracts'
+  ])
 
   .value('$routerRootComponent', 'app')
   
@@ -9,9 +17,10 @@
   })
   .component('app', {
     template: [
-      '<nav class="uk-navbar">',
+      '<nav class="uk-navbar uk-width-1-1">',
       '   <ul class="uk-navbar-nav">',
-      '     <li class="uk-active"><a ng-link="[\'Buyer\']">Buyer</a></li>',
+      '     <li class="uk-active"><a ng-link="[\'Contract\']">Contract</a></li>',
+      '     <li><a ng-link="[\'Buyer\']">Buyer</a></li>',
       '     <li><a ng-link="[\'Seller\']">Seller</a></li>',
       '     <li><a ng-link="[\'Arbitrator\']">Arbitrator</a></li>',
       '     <li class="uk-parent" account-selector data-uk-dropdown></li>',
@@ -22,10 +31,11 @@
       '   </ul>',
       '   </div>',
       '</nav>',
-      '<ng-outlet class="uk-grid uk-container"></ng-outlet>'
+      '<ng-outlet class="uk-width-1-1"></ng-outlet>'
       ].join(''),
     $routeConfig: [
-      {path: '/buyer/...', name: 'Buyer', component: 'buyer', useAsDefault: true},
+      {path: '/contract/...', name: 'Contract', component: 'escrowCreator', useAsDefault: true},
+      {path: '/buyer/...', name: 'Buyer', component: 'buyer'},
       {path: '/seller/...', name: 'Seller', component: 'seller'},
       {path: '/arbitrator/...', name: 'Arbitrator', component: 'arbitrator'}
     ]

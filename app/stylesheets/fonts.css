@@ -1,5 +1,3 @@
-
-
 @font-face{
 	font-family: 'Desyrel';
 	src: url('fonts/desyrel_regular/desyrel-webfont.eot');
@@ -16,38 +14,4 @@
 	     url('fonts/journal_regular/journal-webfont.woff') format('woff'),
 	     url('fonts/journal_regular/journal-webfont.ttf') format('truetype'),
 	     url('fonts/journal_regular/journal-webfont.svg#webfont') format('svg');
-}
-
-
-[account-selector] .uk-dropdown {
-    width: auto;
-}
-
-.entity-banner {
-    background: beige;
-    padding-top: 20px;
-}
-
-.currency-panel {
-    background: white;
-    border: none;
-}
-
-.currency-banner {
-    padding-top: 20px;
-}
-
-.signature {
-}
-
-.buyer-signature {
-    font-family: 'Desyrel';
-    font-size: 4em;
-    margin: 1em auto;
-}
-
-.seller-signature {
-    font-family: 'Journal';
-    font-size: 4em;
-    margin: 1em auto;
 }
