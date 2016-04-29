@@ -355,7 +355,7 @@
                 $ctrl.amount = parseInt(val[4].toString(), 10);
                 $scope.$apply();
             }).catch(function (e) {
-                console.log("error", e);
+                $ctrl.contractNotFound = true;
             });
         };
     }

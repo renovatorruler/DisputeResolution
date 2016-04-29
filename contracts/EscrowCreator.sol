@@ -31,6 +31,10 @@ contract EscrowCreator {
         bool sellerSigned,
         uint amount
     ) {
+        if(contracts[token].amount == 0) {
+            throw;
+        }
+
         buyerAddr = contracts[token].buyer.addr;
         buyerSigned = contracts[token].buyer.signed;
         sellerAddr = contracts[token].seller.addr;
