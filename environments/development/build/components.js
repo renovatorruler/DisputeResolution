@@ -155,7 +155,6 @@
     .component('seller', {
       template: [
       '<div class="uk-container uk-container-center uk-grid">',
-      '    <h1>Seller</h1>',
       '    <ng-outlet class="uk-width-1-1"></ng-outlet>',
       '</div>'
       ].join(''),
