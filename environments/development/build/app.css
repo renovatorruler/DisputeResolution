@@ -60,3 +60,9 @@
     width: 200px;
     margin: auto;
 }
+
+.not-signed {
+    font-size: 1.4em;
+    text-align: center;
+    line-height: 2em;
+}

@@ -1,0 +1,25 @@
+Welcome Seller
+<div ng-show="$ctrl.contractNotFound" class="uk-alert uk-alert-danger">
+    <h3>404 Contract not found</h3>
+    <a ng-link="['/Contract', 'EscrowCreatorSetup']">Click here to create a new Contract</a>
+</div>
+
+<form class="uk-form" ng-hide="$ctrl.contractNotFound">
+    <div class="uk-grid">
+        <div class="uk-width-1-3 uk-panel uk-panel-box">
+            <div class="entity-banner uk-panel-teaser">
+                <img src="images/entities/seller.png" width="40%" class="uk-align-center">
+            </div>
+            <label class="uk-form-label uk-panel-title">Seller</label>
+            <input class="uk-form-width-large" ng-class="" type="text" placeholder="Seller's Ethereum Address 0x123" ng-model="$ctrl.sellerAddress" disabled>
+            <div class="seller-signature-status" ng-show="$scope.sellerSigned">
+                <div class="seller-signature">Seller</div>
+            </div>
+            <div class="seller-signature-status uk-align-center" ng-hide="$scope.sellerSigned">
+                <div class="not-signed uk-text-danger">[Not Signed]</div>
+            </div>
+            <div class="contract-setup-url"><a ng-href="{{$ctrl.sellerUrl}}">{{$ctrl.sellerUrl}}</a></div>
+            <button class="uk-button uk-align-center uk-width-1-1 uk-button-primary">Sign</div>
+        </div>
+    </div>
+</form>

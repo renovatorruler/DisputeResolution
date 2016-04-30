@@ -154,9 +154,9 @@
   angular.module('seller', ['accounts', 'contracts'])
     .component('seller', {
       template: [
-      '<div class="uk-width-1-1">',
+      '<div class="uk-container uk-container-center uk-grid">',
       '    <h1>Seller</h1>',
-      '    <ng-outlet></ng-outlet>',
+      '    <ng-outlet class="uk-width-1-1"></ng-outlet>',
       '</div>'
       ].join(''),
       $routeConfig: [
@@ -166,7 +166,7 @@
     })
 
     .component('sellerSetup', {
-      templateUrl: 'partials/seller.html',
+      templateUrl: 'partials/sellerSetup.html',
       controller: sellerSetupComponent
     })
 
@@ -175,17 +175,26 @@
       controller: sellerMainComponent
     });
 
-    function sellerSetupComponent(accountService, escrowService) {
-    var $ctrl = this;
-    $ctrl.setAmount = function release() {
-        escrowService.setAmount($ctrl.amount, accountService.getSelectedAccount());
-    };
-    $ctrl.getAmount = function release() {
-        $ctrl.contractAmount = escrowService.getAmount(accountService.getSelectedAccount());
-    };
-    this.$routerOnActivate = function(next) {
-        $ctrl.contractAmount = escrowService.getAmount(accountService.getSelectedAccount());
-    };
+    function sellerSetupComponent(accountService, escrowCreatorService, $scope) {
+        var $ctrl = this;
+        this.$routerOnActivate = function(next) {
+            $ctrl.token = next.params.token;
+            escrowCreatorService.getEscrowInfo($ctrl.token, accountService.getSelectedAccount())
+            .then(function (val) {
+
+                $ctrl.buyerAddress = val[0];
+                $ctrl.buyerSigned = val[1];
+                $ctrl.sellerAddress = val[2];
+                $ctrl.sellerSigned = val[3];
+                $ctrl.amount = parseInt(val[4].toString(), 10);
+
+                $scope.$apply();
+            }).catch(function (e) {
+                $ctrl.contractNotFound = true;
+                $scope.$apply();
+                console.error(e);
+            });
+        };
   }
 
   function sellerMainComponent() {

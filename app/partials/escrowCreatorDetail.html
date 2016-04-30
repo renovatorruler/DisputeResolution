@@ -1,4 +1,4 @@
-<h2>Contract Setup Token: {{$ctrl.token}}</h2>
+<p>Contract Setup Token: {{$ctrl.token}}</p>
 <div ng-show="$ctrl.contractNotFound" class="uk-alert uk-alert-danger">
     <h3>404 Contract not found</h3>
     <a ng-link="['EscrowCreatorSetup']">Click here to create a new Contract</a>
@@ -15,8 +15,8 @@
             <div class="buyer-signature-status" ng-show="$scope.buyerSigned">
                 <div class="buyer-signature">Buyer</div>
             </div>
-            <div class="buyer-signature-status" ng-hide="$scope.buyerSigned">
-                <div class="not-signed">Not Signed</div>
+            <div class="buyer-signature-status uk-align-center" ng-hide="$scope.buyerSigned">
+                <div class="not-signed uk-text-danger">[Not Signed]</div>
             </div>
             <div class="contract-setup-url"><a ng-href="{{$ctrl.buyerUrl}}">{{$ctrl.buyerUrl}}</a></div>
             <div class="qr-code">
@@ -29,6 +29,12 @@
             </div>
             <label class="uk-form-label uk-panel-title">&Xi; Amount</label>
             <input class="uk-form-width-large" type="number" placeholder="Amount in Ethers" ng-class="{'uk-form-danger': $ctrl.invalidAmount}" ng-model="$ctrl.amount" min="0" disabled>
+
+            <ol class="instructions">
+                <li>Send the buyer/seller link/QR code to the buyer and seller respectively.</li>
+                <li>After the buyer funds the contract and Seller accepts the contract
+                    you can deploy the contract to the network.</li>
+            </ol>
         </div>
         <div class="uk-width-1-3 uk-panel uk-panel-box">
             <div class="entity-banner uk-panel-teaser">
@@ -39,8 +45,8 @@
             <div class="seller-signature-status" ng-show="$scope.sellerSigned">
                 <div class="seller-signature">Seller</div>
             </div>
-            <div class="seller-signature-status" ng-hide="$scope.sellerSigned">
-                <div class="not-signed">Not Signed</div>
+            <div class="seller-signature-status uk-align-center" ng-hide="$scope.sellerSigned">
+                <div class="not-signed uk-text-danger">[Not Signed]</div>
             </div>
             <div class="contract-setup-url"><a ng-href="{{$ctrl.sellerUrl}}">{{$ctrl.sellerUrl}}</a></div>
             <div class="qr-code">
