@@ -2,6 +2,7 @@
   'use strict';
   var escrowArbitratedApp = angular.module('app', [
       'ngComponentRouter',
+      'monospaced.qrcode',
       'accounts',
       'buyer',
       'seller',

@@ -6,7 +6,9 @@
       "../node_modules/angular/angular.js",
       "../node_modules/@angular/router/angular1/angular_1_router.js",
       "../node_modules/jquery/dist/jquery.js",
-      "../node_modules/uikit/dist/js/uikit.js"
+      "../node_modules/uikit/dist/js/uikit.js",
+      "../node_modules/qrcode-generator/js/qrcode.js",
+      "../node_modules/angular-qrcode/angular-qrcode.js"
     ],
     "app.js": "javascripts/app.js",
     "components.js": [

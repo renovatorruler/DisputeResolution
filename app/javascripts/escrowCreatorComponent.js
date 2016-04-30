@@ -1,6 +1,6 @@
 (function(angular) {
   'use strict';
-  angular.module('escrowCreator', ['accounts', 'contracts'])
+  angular.module('escrowCreator', ['accounts', 'contracts', 'monospaced.qrcode'])
     .component('escrowCreator', {
       template: [
       '<div class="uk-container uk-container-center uk-grid">',
@@ -8,6 +8,7 @@
       '    <ng-outlet class="uk-width-1-1"></ng-outlet>',
       '</div>'
       ].join(''),
+      bindings: { $router: '<' },
       $routeConfig: [
         {path: '/', name: 'EscrowCreatorSetup', component: 'escrowCreatorSetup', useAsDefault: true},
         {path: '/:token', name: 'EscrowCreatorDetail', component: 'escrowCreatorDetail'}
@@ -22,6 +23,7 @@
 
     .component('escrowCreatorDetail', {
       templateUrl: 'partials/escrowCreatorDetail.html',
+      bindings: { $router: '<' },
       controller: escrowCreatorDetailComponent
     });
 
@@ -52,7 +54,7 @@
                     $ctrl.$router.navigate(['EscrowCreatorDetail', {token: $ctrl.token}]);
                     $scope.$apply();
                 }).catch(function (e) {
-                    console.log("error", e);
+                    console.error(e);
                 });
             }
         };
@@ -60,20 +62,33 @@
         };
     }
 
-    function escrowCreatorDetailComponent(accountService, escrowCreatorService, $scope) {
+    function getBaseUrl(hash) {
+        var fullUrl = window.location.origin + window.location.pathname;
+        fullUrl += "#/" + hash;
+        return fullUrl;
+    }
+
+    function escrowCreatorDetailComponent(accountService, escrowCreatorService, $scope, $rootRouter) {
         var $ctrl = this;
+        $ctrl.contractNotFound = false;
         this.$routerOnActivate = function(next) {
             $ctrl.token = next.params.token;
             escrowCreatorService.getEscrowInfo($ctrl.token, accountService.getSelectedAccount())
             .then(function (val) {
+                $ctrl.buyerUrl = getBaseUrl($rootRouter.generate(['Buyer', 'BuyerSetup', {token: $ctrl.token}]).toLinkUrl());
+                $ctrl.sellerUrl = getBaseUrl($rootRouter.generate(['Seller', 'SellerSetup', {token: $ctrl.token}]).toLinkUrl());
+
                 $ctrl.buyerAddress = val[0];
                 $ctrl.buyerSigned = val[1];
                 $ctrl.sellerAddress = val[2];
                 $ctrl.sellerSigned = val[3];
                 $ctrl.amount = parseInt(val[4].toString(), 10);
+
                 $scope.$apply();
             }).catch(function (e) {
                 $ctrl.contractNotFound = true;
+                $scope.$apply();
+                console.error(e);
             });
         };
     }
