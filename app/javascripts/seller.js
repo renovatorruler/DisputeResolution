@@ -9,8 +9,8 @@
       '</div>'
       ].join(''),
       $routeConfig: [
-        {path: '/', name: 'SellerSetup', component: 'sellerSetup', useAsDefault: true},
-        {path: '/:contractAddress', name: 'SellerMain', component: 'sellerMain'}
+        {path: '/', name: 'SellerMain', component: 'sellerMain', useAsDefault: true},
+        {path: '/setup/:token', name: 'SellerSetup', component: 'sellerSetup'}
       ]
     })
 
