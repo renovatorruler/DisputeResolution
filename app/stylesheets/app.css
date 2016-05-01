@@ -29,6 +29,7 @@
     font-family: 'Journal';
     font-size: 4em;
     margin: 1em auto;
+    text-align:center;
 }
 
 .contract-setup-url {
@@ -40,8 +41,12 @@
     margin: auto;
 }
 
-.not-signed {
+.not-signed, .signed {
     font-size: 1.4em;
     text-align: center;
     line-height: 2em;
 }
+
+.accept-panel {
+    margin-top: 1em;
+  }

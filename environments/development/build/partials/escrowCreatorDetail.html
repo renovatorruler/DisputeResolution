@@ -12,10 +12,10 @@
             </div>
             <label class="uk-form-label uk-panel-title">Buyer</label>
             <input class="uk-form-width-large" ng-class="" type="text" placeholder="Buyer's Ethereum Address 0x123" ng-model="$ctrl.buyerAddress" disabled>
-            <div class="buyer-signature-status" ng-show="$scope.buyerSigned">
+            <div class="buyer-signature-status" ng-show="$ctrl.buyerSigned">
                 <div class="buyer-signature">Buyer</div>
             </div>
-            <div class="buyer-signature-status uk-align-center" ng-hide="$scope.buyerSigned">
+            <div class="buyer-signature-status uk-align-center" ng-hide="$ctrl.buyerSigned">
                 <div class="not-signed uk-text-danger">[Not Signed]</div>
             </div>
             <div class="contract-setup-url"><a ng-href="{{$ctrl.buyerUrl}}">{{$ctrl.buyerUrl}}</a></div>
@@ -42,10 +42,10 @@
             </div>
             <label class="uk-form-label uk-panel-title">Seller</label>
             <input class="uk-form-width-large" ng-class="" type="text" placeholder="Seller's Ethereum Address 0x123" ng-model="$ctrl.sellerAddress" disabled>
-            <div class="seller-signature-status" ng-show="$scope.sellerSigned">
+            <div class="seller-signature-status uk-align-center" ng-show="$ctrl.sellerSigned">
                 <div class="seller-signature">Seller</div>
             </div>
-            <div class="seller-signature-status uk-align-center" ng-hide="$scope.sellerSigned">
+            <div class="seller-signature-status uk-align-center" ng-hide="$ctrl.sellerSigned">
                 <div class="not-signed uk-text-danger">[Not Signed]</div>
             </div>
             <div class="contract-setup-url"><a ng-href="{{$ctrl.sellerUrl}}">{{$ctrl.sellerUrl}}</a></div>

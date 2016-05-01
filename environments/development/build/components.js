@@ -176,8 +176,22 @@
 
     function sellerSetupComponent(accountService, escrowCreatorService, $scope) {
         var $ctrl = this;
+
+        $ctrl.acceptContract = function acceptContract() {
+            escrowCreatorService.sellerAccepts($ctrl.token, accountService.getSelectedAccount())
+            .then(function (tx) {
+                loadContractInfo();
+            }).catch(function (e) {
+                console.error(e);
+            });
+        };
+
         this.$routerOnActivate = function(next) {
             $ctrl.token = next.params.token;
+            loadContractInfo();
+        };
+
+        function loadContractInfo() {
             escrowCreatorService.getEscrowInfo($ctrl.token, accountService.getSelectedAccount())
             .then(function (val) {
 
@@ -193,7 +207,7 @@
                 $scope.$apply();
                 console.error(e);
             });
-        };
+        }
   }
 
   function sellerMainComponent() {
@@ -403,9 +417,19 @@
     function getEscrowInfo(token, account) {
       return contract.getEscrowInfo.call(token, {from: account});
     }
+
+    function buyerAccepts(token, account) {
+      return contract.buyerAccepts(token, {from: account});
+    }
+
+    function sellerAccepts(token, account) {
+      return contract.sellerAccepts(token, {from: account});
+    }
     return {
         initiateCreation: initiateCreation,
-        getEscrowInfo: getEscrowInfo
+        getEscrowInfo: getEscrowInfo,
+        buyerAccepts: buyerAccepts,
+        sellerAccepts: sellerAccepts
     }
   }
 })(window.angular);

@@ -16,9 +16,19 @@
     function getEscrowInfo(token, account) {
       return contract.getEscrowInfo.call(token, {from: account});
     }
+
+    function buyerAccepts(token, account) {
+      return contract.buyerAccepts(token, {from: account});
+    }
+
+    function sellerAccepts(token, account) {
+      return contract.sellerAccepts(token, {from: account});
+    }
     return {
         initiateCreation: initiateCreation,
-        getEscrowInfo: getEscrowInfo
+        getEscrowInfo: getEscrowInfo,
+        buyerAccepts: buyerAccepts,
+        sellerAccepts: sellerAccepts
     }
   }
 })(window.angular);

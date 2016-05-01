@@ -25,8 +25,22 @@
 
     function sellerSetupComponent(accountService, escrowCreatorService, $scope) {
         var $ctrl = this;
+
+        $ctrl.acceptContract = function acceptContract() {
+            escrowCreatorService.sellerAccepts($ctrl.token, accountService.getSelectedAccount())
+            .then(function (tx) {
+                loadContractInfo();
+            }).catch(function (e) {
+                console.error(e);
+            });
+        };
+
         this.$routerOnActivate = function(next) {
             $ctrl.token = next.params.token;
+            loadContractInfo();
+        };
+
+        function loadContractInfo() {
             escrowCreatorService.getEscrowInfo($ctrl.token, accountService.getSelectedAccount())
             .then(function (val) {
 
@@ -42,7 +56,7 @@
                 $scope.$apply();
                 console.error(e);
             });
-        };
+        }
   }
 
   function sellerMainComponent() {
