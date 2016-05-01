@@ -41,4 +41,28 @@ contract EscrowCreator {
         sellerSigned = contracts[token].seller.signed;
         amount = contracts[token].amount;
     }
+
+    function buyerAccepts(bytes32 token) {
+      if(contracts[token].amount == 0) {
+        throw;
+      }
+
+      if(msg.sender == contracts[token].buyer.addr) {
+        contracts[token].buyer.signed = true;
+      } else {
+        throw;
+      }
+    }
+
+    function sellerAccepts(bytes32 token) {
+      if(contracts[token].amount == 0) {
+        throw;
+      }
+
+      if(msg.sender == contracts[token].seller.addr) {
+        contracts[token].seller.signed = true;
+      } else {
+        throw;
+      }
+    }
 }

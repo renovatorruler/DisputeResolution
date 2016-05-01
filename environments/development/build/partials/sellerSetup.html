@@ -1,0 +1,37 @@
+<h2>Welcome Seller</h2>
+<div ng-show="$ctrl.contractNotFound" class="uk-alert uk-alert-danger">
+  <h3>404 Contract not found</h3>
+  <a ng-link="['/Contract', 'EscrowCreatorSetup']">Click here to create a new Contract</a>
+</div>
+
+<form class="uk-form uk-form-horizontal" ng-hide="$ctrl.contractNotFound">
+  <div class="uk-grid">
+    <div class="uk-width-2-3 uk-container-center uk-panel uk-panel-box">
+      <div class="uk-form-row">
+        <label class="uk-form-label uk-panel-title">Seller</label>
+        <input class="uk-form-width-large uk-width-1-1" ng-class="{'uk-form-danger': !$ctrl.sellerSigned, 'uk-form-success': $ctrl.sellerSigned}" type="text" placeholder="Seller's Ethereum Address 0x123" ng-model="$ctrl.sellerAddress" disabled>
+      </div>
+
+      <div class="uk-form-row">
+        <label class="uk-form-label uk-panel-title">&Xi; Amount</label>
+        <input class="uk-form-width-large" type="number" placeholder="Amount in Ethers" ng-class="{'uk-form-danger': !$ctrl.buyerSigned, 'uk-form-success': $ctrl.buyerSigned}" ng-model="$ctrl.amount" min="0" disabled>
+      </div>
+
+      <div class="uk-form-row">
+        <label class="uk-form-label uk-panel-title">Buyer</label>
+        <input class="uk-form-width-large" ng-class="{'uk-form-danger': !$ctrl.buyerSigned, 'uk-form-success': $ctrl.buyerSigned}" type="text" placeholder="Buyer's Ethereum Address 0x123" ng-model="$ctrl.buyerAddress" disabled >
+      </div>
+      <div class="uk-form-row accept-panel">
+        <div class="seller-signature-status" ng-show="$ctrl.sellerSigned">
+          <div class="seller-signature">Seller</div>
+          <div class="signed uk-text-success">[Signed]</div>
+        </div>
+
+        <div class="seller-signature-status" ng-hide="$ctrl.sellerSigned">
+          <div class="contract-setup-url"><a ng-href="{{$ctrl.sellerUrl}}">{{$ctrl.sellerUrl}}</a></div>
+          <button class="uk-button uk-align-center uk-width-1-1 uk-button-primary" ng-click="$ctrl.acceptContract()">I Accept</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
