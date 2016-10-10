@@ -1,1 +1,1 @@
-# tribitration_contract (now known as brehon law)
+# Brehon Arbitration
