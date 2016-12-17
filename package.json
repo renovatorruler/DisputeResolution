@@ -6,7 +6,10 @@
   "directories": {
     "test": "test"
   },
-  "scripts": {},
+  "scripts": {
+    "build": "webpack --config webpack.config.js",
+    "dev": "webpack-dev-server"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ForgionePawar/tribitration_contract.git"
@@ -26,9 +29,11 @@
   "dependencies": {
     "@cycle/dom": "^14.2.0",
     "@cycle/http": "^11.2.0",
-    "@cycle/rxjs-run": "^3.1.0",
+    "@cycle/xstream-run": "^4.1.0",
     "babel-cli": "^6.18.0",
     "babel-preset-latest": "^6.16.0",
+    "chai": "^3.5.0",
+    "mocha": "^3.2.0",
     "typescript": "^2.1.4",
     "webpack": "^1.14.0",
     "xstream": "^9.0.0"
