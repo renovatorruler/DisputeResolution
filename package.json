@@ -24,14 +24,21 @@
   },
   "homepage": "https://github.com/ForgionePawar/tribitration_contract#readme",
   "dependencies": {
-    "@angular/router": "^0.2.0",
-    "angular": "^1.5.0",
-    "angular-qrcode": "^6.2.1",
-    "jquery": "^2.2.3",
-    "uikit": "^2.26.2"
+    "@cycle/dom": "^14.2.0",
+    "@cycle/http": "^11.2.0",
+    "@cycle/rxjs-run": "^3.1.0",
+    "babel-cli": "^6.18.0",
+    "babel-preset-latest": "^6.16.0",
+    "typescript": "^2.1.4",
+    "webpack": "^1.14.0",
+    "xstream": "^9.0.0"
   },
   "devDependencies": {
-    "angular-mocks": "^1.5.0",
-    "ethereumjs-testrpc": "^2.0.3"
+    "awesome-typescript-loader": "^3.0.0-beta.11",
+    "babel-core": "^6.20.0",
+    "babel-preset-es2016": "^6.16.0",
+    "babel-runtime": "^6.20.0",
+    "source-map-loader": "^0.1.5",
+    "webpack-dev-server": "^1.16.2"
   }
 }
