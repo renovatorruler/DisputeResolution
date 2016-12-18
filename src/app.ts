@@ -12,36 +12,6 @@ function bmi(weight: number, height: number) {
   return bmi;
 }
 
-function model(actions: IActions): Stream<IState> {
-  const weight$ = actions.changeWeight$.startWith(60);
-  const height$ = actions.changeHeight$.startWith(170);
-
-  return Stream.combine(weight$, height$)
-    .map(([weight, height]) => {
-      let state: IState = {
-        weight,
-        height,
-        bmi: bmi(weight, height)
-      };
-
-      return state;
-    });
-}
-
-function getSliderEvent(DOM: DOMSource, selector: string) {
-  return DOM.select('.' + selector)
-    .events('input')
-    .map(ev => +(ev.target as HTMLInputElement).value);
-}
-
-function intent(DOM: DOMSource) {
-  return {
-    changeWeight$: getSliderEvent(DOM, 'weight'),
-    changeHeight$: getSliderEvent(DOM, 'height')
-  };
-}
-
-
 function main(sources: ISources): ISinks {
   const weightProps$ = Stream.of({
     label: 'Weight', unit: '', min: 40, max: 170, value: 70
