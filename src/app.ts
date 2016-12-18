@@ -6,52 +6,10 @@ import { div, input, h2, label, makeDOMDriver, VNode } from '@cycle/dom';
 import { ISources, ISinks, IState, IActions } from './Interfaces';
 import LabeledSlider, { ISliderProps, Sources, Sinks } from './LabeledSlider';
 
-function renderSlider(props: ISliderProps) {
-  return div('.labeled-slider', [
-    label('.label', `${props.label} ${props.value} ${props.unit}`),
-    input('.slider', {
-      attrs: {
-        type: 'range',
-        min: props.min,
-        max: props.max
-      }
-    })
-  ]);
-}
-
-function renderWeightSlider(weight: number) {
-  return renderSlider({
-    label: 'Weight',
-    unit: 'kg',
-    min: 40,
-    value: 70,
-    max: 140
-  });
-}
-
-function renderHeightSlider(height: number) {
-  return renderSlider({
-    label: 'Height',
-    unit: 'cm',
-    min: 140,
-    value: 160,
-    max: 240
-  });
-}
-
 function bmi(weight: number, height: number) {
   const heightMeters = height * 0.01;
   const bmi = Math.round(weight / (heightMeters * heightMeters));
   return bmi;
-}
-
-function view(state$: Stream<IState>) {
-  return state$.map(state =>
-    div([
-      renderHeightSlider(state.height),
-      renderWeightSlider(state.weight),
-    ])
-  );
 }
 
 function model(actions: IActions): Stream<IState> {
@@ -92,8 +50,8 @@ function main(sources: ISources): ISinks {
     label: 'Height', unit: '', min: 140, max: 220, value: 160
   });
 
-  const weightSources: Sources = { DOM: sources.DOM, props: weightProps$ };
-  const heightSources: Sources = { DOM: sources.DOM, props: heightProps$ };
+  const weightSources: Sources = { DOM: sources.DOM, props$: weightProps$ };
+  const heightSources: Sources = { DOM: sources.DOM, props$: heightProps$ };
 
   const WeightSlider = isolate(LabeledSlider)(weightSources);
   const HeightSlider = isolate(LabeledSlider)(heightSources);

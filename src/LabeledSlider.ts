@@ -18,7 +18,7 @@ export type Sources = {
 
 export type Sinks = {
   DOM: Stream<VNode>,
-  value$: MemoryStream<number>
+  value: MemoryStream<number>
 }
 
 function LabeledSlider(sources: Sources): Sinks  {
@@ -60,7 +60,7 @@ function LabeledSlider(sources: Sources): Sinks  {
 
   const sinks: Sinks = {
     DOM: vdom$,
-    value$: state$.map(state => state.value)
+    value: state$.map(state => state.value)
   };
 
   return sinks;
