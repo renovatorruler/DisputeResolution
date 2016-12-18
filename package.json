@@ -30,6 +30,7 @@
   "dependencies": {
     "@cycle/dom": "^14.2.0",
     "@cycle/http": "^11.2.0",
+    "@cycle/isolate": "^1.4.0",
     "@cycle/xstream-run": "^4.1.0",
     "babel-cli": "^6.18.0",
     "babel-preset-latest": "^6.16.0",

@@ -1,13 +1,15 @@
 import { Stream } from 'xstream';
 import { run } from '@cycle/xstream-run';
 import { DOMSource } from '@cycle/dom/xstream-typings';
+import isolate from '@cycle/isolate';
 import { div, input, h2, label, makeDOMDriver, VNode } from '@cycle/dom';
-import { ISliderProps, ISources, ISinks, IComponentSinks, IState, IActions } from './Interfaces';
+import { ISources, ISinks, IState, IActions } from './Interfaces';
+import LabeledSlider, { ISliderProps, Sources, Sinks } from './LabeledSlider';
 
 function renderSlider(props: ISliderProps) {
   return div('.labeled-slider', [
     label('.label', `${props.label} ${props.value} ${props.unit}`),
-    input('.slider' + props.className, {
+    input('.slider', {
       attrs: {
         type: 'range',
         min: props.min,
@@ -20,7 +22,6 @@ function renderSlider(props: ISliderProps) {
 function renderWeightSlider(weight: number) {
   return renderSlider({
     label: 'Weight',
-    className: '.weight',
     unit: 'kg',
     min: 40,
     value: 70,
@@ -31,7 +32,6 @@ function renderWeightSlider(weight: number) {
 function renderHeightSlider(height: number) {
   return renderSlider({
     label: 'Height',
-    className: '.height',
     unit: 'cm',
     min: 140,
     value: 160,
@@ -50,7 +50,6 @@ function view(state$: Stream<IState>) {
     div([
       renderHeightSlider(state.height),
       renderWeightSlider(state.weight),
-      h2(`BMI is ${state.bmi}`)
     ])
   );
 }
@@ -85,70 +84,38 @@ function intent(DOM: DOMSource) {
 }
 
 
-function LabeledSlider(sources: ISources): IComponentSinks  {
-  const DOM = sources.DOM;
-  const props$ = sources.props;
+function main(sources: ISources): ISinks {
+  const weightProps$ = Stream.of({
+    label: 'Weight', unit: '', min: 40, max: 170, value: 70
+  });
+  const heightProps$ = Stream.of({
+    label: 'Height', unit: '', min: 140, max: 220, value: 160
+  });
 
-  const newValue$ = DOM
-    .select('.slider')
-    .events('input')
-    .map(ev => +(ev.target as HTMLInputElement).value);
+  const weightSources: Sources = { DOM: sources.DOM, props: weightProps$ };
+  const heightSources: Sources = { DOM: sources.DOM, props: heightProps$ };
 
-  const state$ = props$
-    .map(props => newValue$
-      .map(val => ({
-        label: props.label,
-        unit: props.unit,
-        min: props.min,
-        value: val,
-        max: props.max
-      }))
-      .startWith(props)
-    )
-    .flatten()
+  const WeightSlider = isolate(LabeledSlider)(weightSources);
+  const HeightSlider = isolate(LabeledSlider)(heightSources);
+
+  const weightVDom$ = WeightSlider.DOM;
+  const weightValue$ = WeightSlider.value;
+
+  const heightVDom$ = HeightSlider.DOM;
+  const heightValue$ = HeightSlider.value;
+
+  const bmi$ = Stream.combine(weightValue$, heightValue$)
+    .map(([weight, height]) => {
+      return bmi(+weight, +height);
+    })
     .remember();
 
-  const vdom$ = state$
-    .map(state =>
-         div('.labeled-slider', [
-           label('.label', `${state.label} ${state.value} ${state.unit}`),
-           input('.slider', {
-             attrs: {
-               type: 'range',
-               min: state.min,
-               max: state.max
-             }
-           })
-         ])
-        );
-
-  const sinks: IComponentSinks = {
-    DOM: vdom$,
-    value: state$.map(state => state.value)
-  };
-
-  return sinks;
-}
-
-function main(sources: ISources): ISinks {
-  const props$ = Stream.of({
-    label: 'Radius', className: '.radius', unit: '', min: 10, max: 100, value: 30
-  });
-  const childSources: ISources = {DOM: sources.DOM, props: props$};
-  const labeledSlider: IComponentSinks = LabeledSlider(childSources);
-  const childVDom$ = labeledSlider.DOM;
-  const childValue$ = labeledSlider.value;
-
-  const vdom$ = Stream.combine(childValue$, childVDom$)
-    .map(([value, childVDom]) => 
+  const vdom$ = Stream.combine(bmi$, weightVDom$, heightVDom$)
+    .map(([bmi, weightVDom, heightVDom]) =>
          div([
-           childVDom,
-           div({style: {
-             backgroundColor: '#58D338',
-             width: String(2 * value) + 'px',
-             height: String(2 * value) + 'px',
-             borderRadius: String(value) + 'px'
-           }})
+           weightVDom,
+           heightVDom,
+           h2(`BMI is ${bmi}`)
          ])
         );
 

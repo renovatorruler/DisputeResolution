@@ -1,15 +1,7 @@
 import { Stream } from 'xstream';
 import { DOMSource } from '@cycle/dom/xstream-typings';
 import { VNode } from '@cycle/dom';
-
-export interface ISliderProps {
-  label: string,
-  className: string,
-  unit: string,
-  min: number,
-  value: number,
-  max: number
-}
+import { ISliderProps } from './LabeledSlider';
 
 export interface ISources {
   DOM: DOMSource;
@@ -18,11 +10,6 @@ export interface ISources {
 
 export interface ISinks {
   DOM: Stream<VNode>;
-}
-
-export interface IComponentSinks {
-  DOM: Stream<VNode>;
-  value: Stream<number>;
 }
 
 export interface IState {
