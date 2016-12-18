@@ -1,10 +1,9 @@
+import "mocha";
+import { expect } from "chai";
 import main from '../src/app'
 
 describe('Main', () => {
-  beforeEach(() =>
-  );
-
   it('should return sinks', () => {
-    assert.equal(-1, [1,2,3].indexOf(4));
+    expect([1,2,3].indexOf(4)).to.equal(-1);
   });
 });

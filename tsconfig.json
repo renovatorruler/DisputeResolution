@@ -7,14 +7,17 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "noImplicitAny": true,
-    "suppressImplicitAnyIndexErrors": true
+    "suppressImplicitAnyIndexErrors": true,
+    "typeRoots": [
+      "node_modules/@types"
+    ]
   },
-   "awesomeTypescriptLoaderOptions": {
-       "target": "es6",
-       "useBabel": true,
-       "useCache": false
-   },
-   "exclude": [
-       "node_modules"
-   ]
+  "awesomeTypescriptLoaderOptions": {
+    "target": "es6",
+    "useBabel": true,
+    "useCache": false
+  },
+  "exclude": [
+    "node_modules"
+  ]
 }
