@@ -42,3 +42,5 @@ function main(sources: ISources) {
 run(main, {
   DOM: makeDOMDriver('#app')
 })
+
+export default main;
