@@ -9,43 +9,67 @@ contract BrehonContract is
     priced,
     stateMachine,
     accessRestricted {
-  address partyA;
-  address partyB;
+  struct Party {
+    address addr;
+    bool primaryBrehonApproval;
+    bool secondaryBrehonApproval;
+    bool tertiaryBrehonApproval;
+  }
+
+  struct Brehon {
+    address addr;
+    uint fixedFee;
+    uint disputeFee;
+  }
+
+  Party partyA;
+  Party partyB;
   address primaryBrehon;
   address secondaryBrehon;
   address tertiaryBrehon;
   mapping (address => uint) balances;
 
-  function BrehonContract() {
+  function BrehonContract(address _partyA, address _partyB) {
     stage = Stages.Negotiation;
+    partyA.addr = _partyA;
+    partyB.addr = _partyB;
   }
 
   function assignPartyA(address _partyA)
     atStage(Stages.Negotiation) 
   {
-    partyA = _partyA;
+    partyA.addr = _partyA;
   }
 
   function assignPartyB(address _partyB)
     atStage(Stages.Negotiation)
   {
-    partyB = _partyB;
+    partyB.addr = _partyB;
   }
 
-  function assignPrimaryBrehon(address _primaryBrehon)
-    atStage(Stage.Negotiation) 
+  function nominatePrimaryBrehon(address _primaryBrehon)
+    atStage(Stages.Negotiation)
+    eitherBy(partyA.addr, partyB.addr)
   {
+    if(msg.sender == partyA.addr &&
+      !partyA.primaryBrehonApproval) {
+      partyA.primaryBrehonApproval = true;
+    }
+    if(msg.sender == partyB.addr &&
+      !partyB.primaryBrehonApproval) {
+      partyB.primaryBrehonApproval = true;
+    }
     primaryBrehon = _primaryBrehon;
   }
 
   function assignSecondaryBrehon(address _secondaryBrehon)
-    atStage(Stage.Negotiation)
+    atStage(Stages.Negotiation)
   {
     secondaryBrehon = _secondaryBrehon;
   }
 
   function assignTertiaryBrehon(address _tertiaryBrehon)
-    atStage(Stage.Negotiation)
+    atStage(Stages.Negotiation)
   {
     tertiaryBrehon = _tertiaryBrehon;
   }

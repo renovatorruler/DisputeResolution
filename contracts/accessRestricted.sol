@@ -25,6 +25,16 @@ contract accessRestricted is priced {
         _;
     }
 
+    modifier eitherBy(address _account1, address _account2)
+    {
+        if (msg.sender != _account1 ||
+            msg.sender != _account2)
+            throw;
+
+        _;
+           
+    }
+
     /// Make `_newOwner` the new owner of this
     /// contract.
     function changeOwner(address _newOwner)
