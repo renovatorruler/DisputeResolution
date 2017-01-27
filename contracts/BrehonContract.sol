@@ -24,9 +24,9 @@ contract BrehonContract is
 
   Party partyA;
   Party partyB;
-  address primaryBrehon;
-  address secondaryBrehon;
-  address tertiaryBrehon;
+  Brehon primaryBrehon;
+  Brehon secondaryBrehon;
+  Brehon tertiaryBrehon;
   mapping (address => uint) balances;
 
   function BrehonContract(address _partyA, address _partyB) {
@@ -47,7 +47,7 @@ contract BrehonContract is
     partyB.addr = _partyB;
   }
 
-  function nominatePrimaryBrehon(address _primaryBrehon)
+  function nominatePrimaryBrehon(address _primaryBrehon, uint _fixedFee, uint _disputeFee)
     atStage(Stages.Negotiation)
     eitherBy(partyA.addr, partyB.addr)
   {
@@ -59,19 +59,25 @@ contract BrehonContract is
       !partyB.primaryBrehonApproval) {
       partyB.primaryBrehonApproval = true;
     }
-    primaryBrehon = _primaryBrehon;
+    primaryBrehon.addr = _primaryBrehon;
+    primaryBrehon.fixedFee = _fixedFee;
+    primaryBrehon.disputeFee = _disputeFee;
   }
 
-  function assignSecondaryBrehon(address _secondaryBrehon)
+  function assignSecondaryBrehon(address _secondaryBrehon, uint _fixedFee, uint _disputeFee)
     atStage(Stages.Negotiation)
   {
-    secondaryBrehon = _secondaryBrehon;
+    secondaryBrehon.addr = _secondaryBrehon;
+    secondaryBrehon.fixedFee = _fixedFee;
+    secondaryBrehon.disputeFee = _disputeFee;
   }
 
-  function assignTertiaryBrehon(address _tertiaryBrehon)
+  function assignTertiaryBrehon(address _tertiaryBrehon, uint _fixedFee, uint _disputeFee)
     atStage(Stages.Negotiation)
   {
-    tertiaryBrehon = _tertiaryBrehon;
+    tertiaryBrehon.addr = _tertiaryBrehon;
+    tertiaryBrehon.fixedFee = _fixedFee;
+    tertiaryBrehon.disputeFee = _disputeFee;
   }
 
   function deposit() {
