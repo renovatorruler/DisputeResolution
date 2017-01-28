@@ -2,7 +2,13 @@
   "name": "truffle-octo-robot",
   "version": "1.0.0",
   "main": "index.js",
+  "scripts": {
+    "start": "truffle serve"
+  },
   "repository": "git@github.com:prashantpawar/truffle-octo-robot.git",
   "author": "Prashant Singh Pawar <prashantpawar@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "truffle": "^2.1.1"
+  }
 }
