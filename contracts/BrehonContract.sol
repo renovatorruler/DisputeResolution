@@ -112,40 +112,7 @@ contract BrehonContract is
           secondaryBrehon.contractAccepted = true;
       } else if(msg.sender == tertiaryBrehon.addr) {
           tertiaryBrehon.contractAccepted = true;
-      }
-  }
-
-  function nominatePrimaryBrehon(address _primaryBrehon, uint _fixedFee, uint _disputeFee)
-    atStage(Stages.Negotiation)
-    eitherByParty(partyA, partyB)
-  {
-    if(msg.sender == partyA.addr &&
-      !partyA.primaryBrehonApproval) {
-      partyA.primaryBrehonApproval = true;
-    }
-    if(msg.sender == partyB.addr &&
-      !partyB.primaryBrehonApproval) {
-      partyB.primaryBrehonApproval = true;
-    }
-    primaryBrehon.addr = _primaryBrehon;
-    primaryBrehon.fixedFee = _fixedFee;
-    primaryBrehon.disputeFee = _disputeFee;
-  }
-
-  function assignSecondaryBrehon(address _secondaryBrehon, uint _fixedFee, uint _disputeFee)
-    atStage(Stages.Negotiation)
-  {
-    secondaryBrehon.addr = _secondaryBrehon;
-    secondaryBrehon.fixedFee = _fixedFee;
-    secondaryBrehon.disputeFee = _disputeFee;
-  }
-
-  function assignTertiaryBrehon(address _tertiaryBrehon, uint _fixedFee, uint _disputeFee)
-    atStage(Stages.Negotiation)
-  {
-    tertiaryBrehon.addr = _tertiaryBrehon;
-    tertiaryBrehon.fixedFee = _fixedFee;
-    tertiaryBrehon.disputeFee = _disputeFee;
+      } else throw;
   }
 
   function deposit() {
