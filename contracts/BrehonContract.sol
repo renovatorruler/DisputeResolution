@@ -11,6 +11,7 @@ contract BrehonContract is
     accessRestricted {
   struct Party {
     address addr;
+    bool contractAccepted;
     bool primaryBrehonApproval;
     bool secondaryBrehonApproval;
     bool tertiaryBrehonApproval;
@@ -18,6 +19,7 @@ contract BrehonContract is
 
   struct Brehon {
     address addr;
+    bool contractAccepted;
     uint fixedFee;
     uint disputeFee;
   }
@@ -34,7 +36,16 @@ contract BrehonContract is
       if (msg.sender != _party1.addr ||
           msg.sender != _party2.addr)
           throw;
+      _;
 
+  }
+
+  modifier eitherByBrehon(Brehon _brehon1, Brehon _brehon2, Brehon _brehon3)
+  {
+      if (msg.sender != _brehon1.addr ||
+          msg.sender != _brehon2.addr ||
+          msg.sender != _brehon3.addr)
+          throw;
       _;
 
   }
@@ -79,16 +90,28 @@ contract BrehonContract is
 
     //Defaults
     stage = Stages.Negotiation;
+    partyA.contractAccepted = false;
+    partyB.contractAccepted = false;
+    primaryBrehon.contractAccepted = false;
+    secondaryBrehon.contractAccepted = false;
+    tertiaryBrehon.contractAccepted = false;
   }
 
   function acceptContract()
     atStage(Stages.Negotiation)
-    eitherByParty(partyA, partyB, primaryBrehon, secondaryBrehon, tertiaryBrehon)
+    eitherByParty(partyA, partyB)
+    eitherByBrehon(primaryBrehon, secondaryBrehon, tertiaryBrehon)
   {
       if (msg.sender == partyA.addr) {
-          partyA.primaryBrehonApproval = true;
+          partyA.contractAccepted = true;
       } else if (msg.sender == partyB.addr) {
-          partyA.primaryBrehonApproval = true;
+          partyB.contractAccepted = true;
+      } else if(msg.sender == primaryBrehon.addr) {
+          primaryBrehon.contractAccepted = true;
+      } else if(msg.sender == secondaryBrehon.addr) {
+          secondaryBrehon.contractAccepted = true;
+      } else if(msg.sender == tertiaryBrehon.addr) {
+          tertiaryBrehon.contractAccepted = true;
       }
   }
 
