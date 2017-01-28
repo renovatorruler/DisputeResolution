@@ -30,6 +30,7 @@ contract BrehonContract is
   Brehon primaryBrehon;
   Brehon secondaryBrehon;
   Brehon tertiaryBrehon;
+  Brehon activeBrehon;
 
   modifier eitherByParty(Party _party1, Party _party2)
   {
@@ -48,6 +49,12 @@ contract BrehonContract is
           throw;
       _;
 
+  }
+
+  modifier onlyByActiveBrehon() {
+      if (msg.sender != activeBrehon.addr)
+          throw;
+      _;
   }
 
   function BrehonContract(
@@ -127,7 +134,7 @@ contract BrehonContract is
   function getActiveBrehon() {
   }
 
-  function arbitrate() {
+  function arbitrate() onlyByActiveBrehon() {
   }
 
   function claimFunds() {
@@ -137,5 +144,11 @@ contract BrehonContract is
   }
 
   function raise2ndAppeal() {
+  }
+
+  function proposeSettlement() {
+  }
+
+  function acceptSettlement() {
   }
 }
