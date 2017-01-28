@@ -28,6 +28,16 @@ contract BrehonContract is
   Brehon secondaryBrehon;
   Brehon tertiaryBrehon;
 
+  modifier eitherByParty(Party _party1, Party _party2)
+  {
+      if (msg.sender != _party1.addr ||
+          msg.sender != _party2.addr)
+          throw;
+
+      _;
+
+  }
+
   function BrehonContract(
       address _partyA,
       address _partyB,
@@ -68,9 +78,42 @@ contract BrehonContract is
     stage = Stages.Negotiation;
   }
 
+  function acceptPrimaryBrehon()
+    atStage(Stages.Negotiation)
+    eitherByParty(partyA, partyB)
+  {
+      if (msg.sender == partyA.addr) {
+          partyA.primaryBrehonApproval = true;
+      } else if (msg.sender == partyB.addr) {
+          partyA.primaryBrehonApproval = true;
+      }
+  }
+
+  function acceptSecondaryBrehon()
+    atStage(Stages.Negotiation)
+    eitherByParty(partyA, partyB)
+  {
+      if (msg.sender == partyA.addr) {
+          partyA.secondaryBrehonApproval = true;
+      } else if (msg.sender == partyB.addr) {
+          partyA.secondaryBrehonApproval = true;
+      }
+  }
+
+  function acceptTertiaryBrehon()
+    atStage(Stages.Negotiation)
+    eitherByParty(partyA, partyB)
+  {
+      if (msg.sender == partyA.addr) {
+          partyA.tertiaryBrehonApproval = true;
+      } else if (msg.sender == partyB.addr) {
+          partyA.tertiaryBrehonApproval = true;
+      }
+  }
+
   function nominatePrimaryBrehon(address _primaryBrehon, uint _fixedFee, uint _disputeFee)
     atStage(Stages.Negotiation)
-    eitherBy(partyA.addr, partyB.addr)
+    eitherByParty(partyA, partyB)
   {
     if(msg.sender == partyA.addr &&
       !partyA.primaryBrehonApproval) {
