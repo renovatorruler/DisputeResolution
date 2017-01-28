@@ -16,19 +16,10 @@ Contract Brehon {
 
   Constructor(partyA, partyB, primaryBrehon, secondaryBrehon, tertiaryBrehon);
 
-  setPartyA() atStage(Negotiation)
-  acceptPartyA() atStage(Negotiation) 
-  setPartyB() atStage(Negotiation)
-  acceptPartyB() atStage(Negotiation)
+  acceptContract()
 
-  nominatePrimaryBrehon() atStage(Negotiation)
-  acceptPrimaryBrehon() atStage(Negotiation)
-
-  nominateSecondaryBrehon() atStage(Negotiation)
-  acceptSecondaryBrehon() atStage(Negotiation)
-
-  nominateTertiaryBrehon() atStage(Negotiation)
-  acceptTertiaryBrehon() atStage(Negotiation)
+  _partyAcceptance()
+  _brehonAcceptance()
 
   deposit() atStage(Negotiation)
 

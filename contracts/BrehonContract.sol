@@ -22,6 +22,7 @@ contract BrehonContract is
     uint disputeFee;
   }
 
+  uint transactionAmount;
   Party partyA;
   Party partyB;
   Brehon primaryBrehon;
@@ -57,6 +58,8 @@ contract BrehonContract is
     partyA.secondaryBrehonApproval = false;
     partyA.tertiaryBrehonApproval = false;
 
+    transactionAmount = _transactionAmount;
+
     partyB.addr = _partyB;
     partyB.primaryBrehonApproval = false;
     partyB.secondaryBrehonApproval = false;
@@ -78,36 +81,14 @@ contract BrehonContract is
     stage = Stages.Negotiation;
   }
 
-  function acceptPrimaryBrehon()
+  function acceptContract()
     atStage(Stages.Negotiation)
-    eitherByParty(partyA, partyB)
+    eitherByParty(partyA, partyB, primaryBrehon, secondaryBrehon, tertiaryBrehon)
   {
       if (msg.sender == partyA.addr) {
           partyA.primaryBrehonApproval = true;
       } else if (msg.sender == partyB.addr) {
           partyA.primaryBrehonApproval = true;
-      }
-  }
-
-  function acceptSecondaryBrehon()
-    atStage(Stages.Negotiation)
-    eitherByParty(partyA, partyB)
-  {
-      if (msg.sender == partyA.addr) {
-          partyA.secondaryBrehonApproval = true;
-      } else if (msg.sender == partyB.addr) {
-          partyA.secondaryBrehonApproval = true;
-      }
-  }
-
-  function acceptTertiaryBrehon()
-    atStage(Stages.Negotiation)
-    eitherByParty(partyA, partyB)
-  {
-      if (msg.sender == partyA.addr) {
-          partyA.tertiaryBrehonApproval = true;
-      } else if (msg.sender == partyB.addr) {
-          partyA.tertiaryBrehonApproval = true;
       }
   }
 
