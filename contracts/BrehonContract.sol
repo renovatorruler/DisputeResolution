@@ -33,6 +33,8 @@ contract BrehonContract is
   Brehon tertiaryBrehon;
   Brehon activeBrehon;
 
+  event ExecutionStarted(address _partyA, address _partyB, uint _totalDeposits);
+
   modifier eitherByParty(Party _party1, Party _party2)
   {
       if (msg.sender != _party1.addr ||
@@ -138,6 +140,14 @@ contract BrehonContract is
   }
 
   function startContract() {
+      if ((partyA.deposit + partyB.deposit) >
+          (primaryBrehon.fixedFee + primaryBrehon.disputeFee +
+          secondaryBrehon.fixedFee + secondaryBrehon.disputeFee +
+          tertiaryBrehon.fixedFee + tertiaryBrehon.disputeFee) +
+          transactionAmount
+         ) {
+             ExecutionStarted(partyA.addr, partyB.addr, partyA.deposit + partyB.deposit);
+      }
   }
 
   function raiseDispute() {
