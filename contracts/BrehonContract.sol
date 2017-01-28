@@ -11,6 +11,7 @@ contract BrehonContract is
     accessRestricted {
   struct Party {
     address addr;
+    uint deposit;
     bool contractAccepted;
     bool primaryBrehonApproval;
     bool secondaryBrehonApproval;
@@ -72,16 +73,9 @@ contract BrehonContract is
       uint _tertiaryBrehonDisputeFee
   ) {
     partyA.addr = _partyA;
-    partyA.primaryBrehonApproval = false;
-    partyA.secondaryBrehonApproval = false;
-    partyA.tertiaryBrehonApproval = false;
-
     transactionAmount = _transactionAmount;
 
     partyB.addr = _partyB;
-    partyB.primaryBrehonApproval = false;
-    partyB.secondaryBrehonApproval = false;
-    partyB.tertiaryBrehonApproval = false;
 
     primaryBrehon.addr = _primaryBrehon;
     primaryBrehon.fixedFee = _primaryBrehonFixedFee;
@@ -98,7 +92,17 @@ contract BrehonContract is
     //Defaults
     stage = Stages.Negotiation;
     partyA.contractAccepted = false;
+    partyA.primaryBrehonApproval = false;
+    partyA.secondaryBrehonApproval = false;
+    partyA.tertiaryBrehonApproval = false;
+    partyA.deposit = 0;
+
     partyB.contractAccepted = false;
+    partyB.primaryBrehonApproval = false;
+    partyB.secondaryBrehonApproval = false;
+    partyB.tertiaryBrehonApproval = false;
+    partyB.deposit = 0;
+
     primaryBrehon.contractAccepted = false;
     secondaryBrehon.contractAccepted = false;
     tertiaryBrehon.contractAccepted = false;
@@ -122,7 +126,15 @@ contract BrehonContract is
       } else throw;
   }
 
-  function deposit() {
+  function deposit()
+    payable
+    eitherByParty(partyA, partyB)
+  {
+      if(msg.sender == partyA.addr) {
+          partyA.deposit += msg.value;
+      } else if (msg.sender == partyB.addr) {
+          partyB.deposit += msg.value;
+      } else throw;
   }
 
   function startContract() {
