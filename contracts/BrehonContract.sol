@@ -40,8 +40,8 @@ contract BrehonContract is
 
   Award award;
 
-  uint appealDurationInDays = 5;
-  uint public appealDurationStartTime;
+  uint appealPeriodInDays = 5;
+  uint public appealPeriodStartTime;
 
   event ExecutionStarted(address _partyA, address _partyB, uint _totalDeposits);
   event ContractDisputed(address _disputingParty, address _activeBrehon);
@@ -181,11 +181,14 @@ contract BrehonContract is
     atStage(Stages.Dispute)
     onlyByBrehon(activeBrehon)
   {
-    stage = Stages.Resolution;
-    appealDurationStartTime = now;
+    stage = Stages.AppealPeriod;
+    appealPeriodStartTime = now;
   }
 
   function claimFunds()
+    atStage(Stages.AppealPeriod)
+    timedTransition(appealPeriodStartTime, appealPeriodInDays, Stages.Completed)
+    atStage(Stages.Completed)
   {
   }
 

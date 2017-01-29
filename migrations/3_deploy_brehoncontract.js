@@ -13,6 +13,6 @@ module.exports = function(deployer) {
     1000000000000000000, //SecondaryBrehon Dispute Fee
     '0xd03ea8624c8c5987235048901fb614fdca89b117', //TertiaryBrehon
     100000000000000000, //TertiaryBrehon Fixed Fee
-    1000000000000000000, //TertiaryBrehon Dispute Fee
+    1000000000000000000 //TertiaryBrehon Dispute Fee
   );
 };

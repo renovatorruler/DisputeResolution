@@ -2,10 +2,11 @@ pragma solidity ^0.4.2;
 
 contract stateMachine {
   enum Stages {
-    Negotiation,
+    Negotiation, //Or Authoring or Pending Acceptance OR Approval
     Execution,
     Dispute,
     Resolution,
+    AppealPeriod,
     Appeal,
     Completed
   }
