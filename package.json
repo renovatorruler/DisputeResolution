@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "truffle serve"
+    "start": "truffle serve",
+    "testrpc" : "testrpc -m 'myth like bonus scare over problem client lizard pioneer submit female collect'"
   },
   "repository": "git@github.com:prashantpawar/truffle-octo-robot.git",
   "author": "Prashant Singh Pawar <prashantpawar@gmail.com>",
