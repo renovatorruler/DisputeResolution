@@ -4,9 +4,9 @@ contract stateMachine {
   enum Stages {
     Negotiation,
     Execution,
-    Disputed,
-    Resolved,
-    Appealed,
+    Dispute,
+    Resolution,
+    Appeal,
     Completed
   }
 

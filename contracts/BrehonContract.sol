@@ -9,6 +9,11 @@ contract BrehonContract is
     priced,
     stateMachine,
     accessRestricted {
+  struct Award {
+    uint partyA;
+    uint partyB;
+  }
+
   struct Party {
     address addr;
     uint deposit;
@@ -25,39 +30,48 @@ contract BrehonContract is
     uint disputeFee;
   }
 
-  uint transactionAmount;
-  Party partyA;
-  Party partyB;
-  Brehon primaryBrehon;
-  Brehon secondaryBrehon;
-  Brehon tertiaryBrehon;
-  Brehon activeBrehon;
+  uint public transactionAmount;
+  Party public partyA;
+  Party public partyB;
+  Brehon public primaryBrehon;
+  Brehon public secondaryBrehon;
+  Brehon public tertiaryBrehon;
+  Brehon public activeBrehon;
+
+  Award award;
+
+  uint appealDurationInDays = 5;
+  uint public appealDurationStartTime;
 
   event ExecutionStarted(address _partyA, address _partyB, uint _totalDeposits);
+  event ContractDisputed(address _disputingParty, address _activeBrehon);
 
   modifier eitherByParty(Party _party1, Party _party2)
   {
-      if (msg.sender != _party1.addr ||
-          msg.sender != _party2.addr)
-          throw;
-      _;
-
+    if (msg.sender != _party1.addr ||
+        msg.sender != _party2.addr)
+        throw;
+    _;
   }
 
   modifier eitherByBrehon(Brehon _brehon1, Brehon _brehon2, Brehon _brehon3)
   {
-      if (msg.sender != _brehon1.addr ||
-          msg.sender != _brehon2.addr ||
-          msg.sender != _brehon3.addr)
-          throw;
-      _;
-
+    if (msg.sender != _brehon1.addr ||
+        msg.sender != _brehon2.addr ||
+        msg.sender != _brehon3.addr)
+        throw;
+    _;
   }
 
-  modifier onlyByActiveBrehon() {
-      if (msg.sender != activeBrehon.addr)
-          throw;
-      _;
+  modifier timedTransition(uint startTime, uint durationInDays, Stages nextState)
+  {
+    _;
+  }
+
+  modifier onlyByBrehon(Brehon _brehon) {
+    if (msg.sender != _brehon.addr)
+        throw;
+    _;
   }
 
   function BrehonContract(
@@ -139,7 +153,10 @@ contract BrehonContract is
       } else throw;
   }
 
-  function startContract() {
+  function startContract()
+    atStage(Stages.Negotiation)
+    eitherByParty(partyA, partyB)
+  {
       if ((partyA.deposit + partyB.deposit) >
           (primaryBrehon.fixedFee + primaryBrehon.disputeFee +
           secondaryBrehon.fixedFee + secondaryBrehon.disputeFee +
@@ -147,19 +164,29 @@ contract BrehonContract is
           transactionAmount
          ) {
              ExecutionStarted(partyA.addr, partyB.addr, partyA.deposit + partyB.deposit);
+             stage = Stages.Execution;
       }
   }
 
-  function raiseDispute() {
+  function raiseDispute()
+    atStage(Stages.Execution)
+    eitherByParty(partyA, partyB)
+  {
+    stage = Stages.Dispute;
+    activeBrehon = primaryBrehon;
+    ContractDisputed(msg.sender, primaryBrehon.addr);
   }
 
-  function getActiveBrehon() {
+  function adjudicate(uint _partyAAward, uint _partyBAward)
+    atStage(Stages.Dispute)
+    onlyByBrehon(activeBrehon)
+  {
+    stage = Stages.Resolution;
+    appealDurationStartTime = now;
   }
 
-  function arbitrate() onlyByActiveBrehon() {
-  }
-
-  function claimFunds() {
+  function claimFunds()
+  {
   }
 
   function raiseAppeal() {
