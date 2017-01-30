@@ -9,10 +9,6 @@ contract BrehonContract is
     priced,
     stateMachine,
     accessRestricted {
-  struct Award {
-    uint partyA;
-    uint partyB;
-  }
 
   struct Party {
     address addr;
@@ -38,7 +34,7 @@ contract BrehonContract is
   Brehon public tertiaryBrehon;
   Brehon public activeBrehon;
 
-  Award award;
+  mapping (address => uint) awards;
 
   uint appealPeriodInDays = 5;
   uint public appealPeriodStartTime;
@@ -60,11 +56,6 @@ contract BrehonContract is
         msg.sender != _brehon2.addr ||
         msg.sender != _brehon3.addr)
         throw;
-    _;
-  }
-
-  modifier timedTransition(uint startTime, uint durationInDays, Stages nextState)
-  {
     _;
   }
 
@@ -183,13 +174,25 @@ contract BrehonContract is
   {
     stage = Stages.AppealPeriod;
     appealPeriodStartTime = now;
+
+    awards[partyA.addr] = _partyAAward;
+    awards[partyB.addr] = _partyBAward;
   }
 
   function claimFunds()
-    atStage(Stages.AppealPeriod)
-    timedTransition(appealPeriodStartTime, appealPeriodInDays, Stages.Completed)
+    timedTransition(appealPeriodStartTime, appealPeriodInDays, Stages.AppealPeriod, Stages.Completed)
     atStage(Stages.Completed)
+    eitherByParty(partyA, partyB)
+    returns (bool)
   {
+      uint amount = awards[msg.sender];
+      awards[msg.sender] = 0;
+      if(msg.sender.send(amount)) {
+        return true;
+      } else {
+        awards[msg.sender] = amount;
+        return false;
+      }
   }
 
   function raiseAppeal() {

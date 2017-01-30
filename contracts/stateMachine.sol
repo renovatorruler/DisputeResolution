@@ -18,6 +18,14 @@ contract stateMachine {
     _;
   }
 
+  modifier timedTransition(uint startTime, uint durationInDays, Stages _currStage, Stages _nextStage)
+  {
+    if (stage != _currStage) throw;
+    if (now >= startTime + (durationInDays * 1 days))
+        stage = _nextStage;
+    _;
+  }
+
   function nextStage() internal {
     stage = Stages(uint(stage) + 1);
   }
