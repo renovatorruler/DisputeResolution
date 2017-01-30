@@ -41,6 +41,7 @@ contract BrehonContract is
 
   event ExecutionStarted(address _partyA, address _partyB, uint _totalDeposits);
   event ContractDisputed(address _disputingParty, address _activeBrehon);
+  event AppealPeriodStarted(uint startTime, address activeBrehon, uint _awardPartyA, uint _awardPartyB);
 
   modifier eitherByParty(Party _party1, Party _party2)
   {
@@ -168,15 +169,17 @@ contract BrehonContract is
     ContractDisputed(msg.sender, primaryBrehon.addr);
   }
 
-  function adjudicate(uint _partyAAward, uint _partyBAward)
+  function adjudicate(uint _awardPartyA, uint _awardPartyB)
     atStage(Stages.Dispute)
     onlyByBrehon(activeBrehon)
   {
     stage = Stages.AppealPeriod;
     appealPeriodStartTime = now;
 
-    awards[partyA.addr] = _partyAAward;
-    awards[partyB.addr] = _partyBAward;
+    awards[partyA.addr] = _awardPartyA;
+    awards[partyB.addr] = _awardPartyB;
+    
+    AppealPeriodStarted(appealPeriodInDays, activeBrehon.addr, _awardPartyA, _awardPartyB);
   }
 
   function claimFunds()
@@ -185,20 +188,25 @@ contract BrehonContract is
     eitherByParty(partyA, partyB)
     returns (bool)
   {
-      uint amount = awards[msg.sender];
-      awards[msg.sender] = 0;
-      if(msg.sender.send(amount)) {
-        return true;
-      } else {
-        awards[msg.sender] = amount;
-        return false;
-      }
+    uint amount = awards[msg.sender];
+    awards[msg.sender] = 0;
+    if(msg.sender.send(amount)) {
+      return true;
+    } else {
+    awards[msg.sender] = amount;
+      return false;
+    }
   }
 
-  function raiseAppeal() {
+  function raiseAppeal()
+    atStage(Stages.AppealPeriod)
+    eitherByParty(partyA, partyB)
+  {
+    stage = Stages.Dispute;
   }
 
-  function raise2ndAppeal() {
+  function raise2ndAppeal()
+  {
   }
 
   function proposeSettlement() {
