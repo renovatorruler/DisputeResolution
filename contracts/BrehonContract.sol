@@ -53,6 +53,16 @@ contract BrehonContract is
     _;
   }
 
+  modifier atDisputeStages()
+  {
+    if(stage != Stages.Dispute &&
+       stage != Stages.Resolution &&
+       stage != Stages.AppealPeriod &&
+       stage != Stages.Appeal)
+        throw;
+    _;
+  }
+
   modifier eitherByBrehon(Brehon _brehon1, Brehon _brehon2, Brehon _brehon3)
   {
     if (msg.sender != _brehon1.addr ||
@@ -226,7 +236,9 @@ contract BrehonContract is
     AppealRaised(appealLevel, activeBrehon.addr);
   }
 
-  function proposeSettlement() {
+  function proposeSettlement()
+    atDisputeStages()
+  {
   }
 
   function acceptSettlement() {
