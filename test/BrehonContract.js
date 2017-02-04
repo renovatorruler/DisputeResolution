@@ -33,7 +33,7 @@ contract('BrehonContract', function (accounts) {
     });
   });
 
-  it("should set partyA' primaryBrehonApproval to false", function () {
+  it("should set partyA's primaryBrehonApproval to false", function () {
     return BrehonContract.deployed().then(function (brehonContract) {
       return brehonContract.partyA.call().then(function (partyA) {
         assert.equal(partyA[3], false);
@@ -53,6 +53,54 @@ contract('BrehonContract', function (accounts) {
     return BrehonContract.deployed().then(function (brehonContract) {
       return brehonContract.partyA.call().then(function (partyA) {
         assert.equal(partyA[5], false);
+      });
+    });
+  });
+
+  it("should set partyB's address properly", function () {
+    return BrehonContract.deployed().then(function (brehonContract) {
+      return brehonContract.partyB.call().then(function (partyB) {
+        assert.equal(partyB[0], accounts[1]);
+      });
+    });
+  });
+
+  it("should set partyB's deposit to 0", function () {
+    return BrehonContract.deployed().then(function (brehonContract) {
+      return brehonContract.partyB.call().then(function (partyB) {
+        assert.equal(partyB[1].valueOf(), 0);
+      });
+    });
+  });
+
+  it("should set partyB's contractAccepted to false", function () {
+    return BrehonContract.deployed().then(function (brehonContract) {
+      return brehonContract.partyB.call().then(function (partyB) {
+        assert.equal(partyB[2], false);
+      });
+    });
+  });
+
+  it("should set partyB's primaryBrehonApproval to false", function () {
+    return BrehonContract.deployed().then(function (brehonContract) {
+      return brehonContract.partyB.call().then(function (partyB) {
+        assert.equal(partyB[3], false);
+      });
+    });
+  });
+
+  it("should set partyB's secondaryBrehonApproval to false", function () {
+    return BrehonContract.deployed().then(function (brehonContract) {
+      return brehonContract.partyB.call().then(function (partyB) {
+        assert.equal(partyB[4], false);
+      });
+    });
+  });
+
+  it("should set partyB's tertiaryBrehonApproval to false", function () {
+    return BrehonContract.deployed().then(function (brehonContract) {
+      return brehonContract.partyB.call().then(function (partyB) {
+        assert.equal(partyB[5], false);
       });
     });
   });
