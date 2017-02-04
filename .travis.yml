@@ -1,4 +1,5 @@
 language: node_js
+install: travis_wait yarn
 node_js:
   - "6"
   - "6.1"
