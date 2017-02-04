@@ -1,52 +1,48 @@
-[account-selector] .uk-dropdown {
-    width: auto;
+body {
+  margin-left: 25%;
+  margin-right: 25%;
+  margin-top: 10%;
+  font-family: "Open Sans", sans-serif;
 }
 
-.entity-banner {
-    background: beige;
-    padding-top: 20px;
+label {
+  display: inline-block;
+  width: 100px;
 }
 
-.currency-panel {
-    background: white;
-    border: none;
+input {
+  width: 500px;
+  padding: 5px;
+  font-size: 16px;
 }
 
-.currency-banner {
-    padding-top: 20px;
+button {
+  font-size: 16px;
+  padding: 5px;
 }
 
-.signature {
+h1, h2 {
+  display: inline-block;
+  vertical-align: middle;
+  margin-top: 0px;
+  margin-bottom: 10px;
 }
 
-.buyer-signature {
-    font-family: 'Desyrel';
-    font-size: 4em;
-    margin: 1em auto;
+h2 {
+  color: #AAA;
+  font-size: 32px;
 }
 
-.seller-signature {
-    font-family: 'Journal';
-    font-size: 4em;
-    margin: 1em auto;
-    text-align:center;
+h3 {
+  font-weight: normal;
+  color: #AAA;
+  font-size: 24px;
 }
 
-.contract-setup-url {
-    word-wrap: break-word;
+.black {
+  color: black;
 }
 
-.qr-code {
-    width: 200px;
-    margin: auto;
+#balance {
+  color: black;
 }
-
-.not-signed, .signed {
-    font-size: 1.4em;
-    text-align: center;
-    line-height: 2em;
-}
-
-.accept-panel {
-    margin-top: 1em;
-  }
