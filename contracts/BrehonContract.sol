@@ -236,9 +236,12 @@ contract BrehonContract is
     AppealRaised(appealLevel, activeBrehon.addr);
   }
 
-  function proposeSettlement()
+  //Incomplete
+  function proposeSettlement(uint _awardPartyA, uint _awardPartyB)
     atDisputeStages()
   {
+      awards[partyA.addr] = _awardPartyA;
+      awards[partyB.addr] = _awardPartyB;
   }
 
   function acceptSettlement() {

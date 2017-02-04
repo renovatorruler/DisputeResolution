@@ -1,6 +1,11 @@
+//var ConvertLib = artifacts.require("./ConvertLib.sol");
+//var MetaCoin = artifacts.require("./MetaCoin.sol");
+var BrehonContract = artifacts.require("./BrehonContract.sol");
+
 module.exports = function(deployer) {
   //deployer.deploy(ConvertLib);
-  //deployer.autolink();
+  //deployer.link(ConvertLib, MetaCoin);
+  //deployer.deploy(MetaCoin);
   deployer.deploy(BrehonContract,
     '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1', //PartyA
     '0xffcf8fdee72ac11b5c542428b35eef5769c409f0', //PartyB
