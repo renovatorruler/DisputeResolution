@@ -1,6 +1,6 @@
 var BrehonContract = artifacts.require("./BrehonContract.sol");
 
-contract('BrehonContract', function (accounts) {
+contract('BrehonContract constructor', function (accounts) {
   it('should set appealLevel to -1', function () {
     return BrehonContract.deployed().then(function (instance) {
       return instance.appealLevel.call().then(function (appealLevel) {
@@ -101,6 +101,80 @@ contract('BrehonContract', function (accounts) {
     return BrehonContract.deployed().then(function (brehonContract) {
       return brehonContract.partyB.call().then(function (partyB) {
         assert.equal(partyB[5], false);
+      });
+    });
+  });
+
+  it("should set primaryBrehon's address properly", function () {
+    return BrehonContract.deployed().then(function (brehonContract) {
+      return brehonContract.primaryBrehon.call().then(function (primaryBrehon) {
+        assert.equal(primaryBrehon[0], accounts[2]);
+      });
+    });
+  });
+
+  it("should set primaryBrehon's contractAcceptance to false", function () {
+    return BrehonContract.deployed().then(function (brehonContract) {
+      return brehonContract.primaryBrehon.call().then(function (primaryBrehon) {
+        assert.equal(primaryBrehon[1], false);
+      });
+    });
+  });
+
+  it("should set primaryBrehon's fixedFee properly", function () {
+    return BrehonContract.deployed().then(function (brehonContract) {
+      return brehonContract.primaryBrehon.call().then(function (primaryBrehon) {
+        assert.equal(primaryBrehon[2].valueOf(), '100000000000000000');
+      });
+    });
+  });
+
+  it("should set primaryBrehon's disputeFee properly", function () {
+    return BrehonContract.deployed().then(function (brehonContract) {
+      return brehonContract.primaryBrehon.call().then(function (primaryBrehon) {
+        assert.equal(primaryBrehon[3].valueOf(), '1000000000000000000');
+      });
+    });
+  });
+
+  it("should set secondaryBrehon's address properly", function () {
+    return BrehonContract.deployed().then(function (brehonContract) {
+      return brehonContract.secondaryBrehon.call().then(function (secondaryBrehon) {
+        assert.equal(secondaryBrehon[0], accounts[3]);
+      });
+    });
+  });
+
+  it("should set secondaryBrehon's contractAcceptance to false", function () {
+    return BrehonContract.deployed().then(function (brehonContract) {
+      return brehonContract.secondaryBrehon.call().then(function (secondaryBrehon) {
+        assert.equal(secondaryBrehon[1], false);
+      });
+    });
+  });
+
+  it("should set secondaryBrehon's fixedFee properly", function () {
+    return BrehonContract.deployed().then(function (brehonContract) {
+      return brehonContract.secondaryBrehon.call().then(function (secondaryBrehon) {
+        assert.equal(secondaryBrehon[2].valueOf(), '100000000000000000');
+      });
+    });
+  });
+
+  it("should set secondaryBrehon's disputeFee properly", function () {
+    return BrehonContract.deployed().then(function (brehonContract) {
+      return brehonContract.secondaryBrehon.call().then(function (secondaryBrehon) {
+        assert.equal(secondaryBrehon[3].valueOf(), '1000000000000000000');
+      });
+    });
+  });
+});
+
+contract('BrehonContract constructor', function (accounts) {
+  it('should set appealLevel to -1', function () {
+    return BrehonContract.deployed().then(function (instance) {
+      return instance.appealLevel.call().then(function (appealLevel) {
+        assert.equal(appealLevel.valueOf(), -1);
       });
     });
   });
