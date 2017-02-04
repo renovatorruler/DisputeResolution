@@ -168,6 +168,38 @@ contract('BrehonContract constructor', function (accounts) {
       });
     });
   });
+
+  it("should set tertiaryBrehon's address properly", function () {
+    return BrehonContract.deployed().then(function (brehonContract) {
+      return brehonContract.tertiaryBrehon.call().then(function (tertiaryBrehon) {
+        assert.equal(tertiaryBrehon[0], accounts[4]);
+      });
+    });
+  });
+
+  it("should set tertiaryBrehon's contractAcceptance to false", function () {
+    return BrehonContract.deployed().then(function (brehonContract) {
+      return brehonContract.tertiaryBrehon.call().then(function (tertiaryBrehon) {
+        assert.equal(tertiaryBrehon[1], false);
+      });
+    });
+  });
+
+  it("should set tertiaryBrehon's fixedFee properly", function () {
+    return BrehonContract.deployed().then(function (brehonContract) {
+      return brehonContract.tertiaryBrehon.call().then(function (tertiaryBrehon) {
+        assert.equal(tertiaryBrehon[2].valueOf(), '100000000000000000');
+      });
+    });
+  });
+
+  it("should set tertiaryBrehon's disputeFee properly", function () {
+    return BrehonContract.deployed().then(function (brehonContract) {
+      return brehonContract.tertiaryBrehon.call().then(function (tertiaryBrehon) {
+        assert.equal(tertiaryBrehon[3].valueOf(), '1000000000000000000');
+      });
+    });
+  });
 });
 
 contract('BrehonContract constructor', function (accounts) {
