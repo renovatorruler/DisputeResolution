@@ -5,7 +5,8 @@
   "scripts": {
     "start": "truffle serve",
     "testrpc": "testrpc -m 'myth like bonus scare over problem client lizard pioneer submit female collect'",
-    "test" : "truffle test"
+    "truffletest": "truffle test",
+    "test": "run-p -r \"testrpc\" \"truffletest\""
   },
   "repository": "git@github.com:prashantpawar/truffle-octo-robot.git",
   "author": "Prashant Singh Pawar <prashantpawar@gmail.com>",
@@ -13,5 +14,8 @@
   "dependencies": {
     "truffle": "^3.0.5",
     "truffle-default-builder": "^2.0.0"
+  },
+  "devDependencies": {
+    "npm-run-all": "^4.0.1"
   }
 }
