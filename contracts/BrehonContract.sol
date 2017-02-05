@@ -162,8 +162,8 @@ contract BrehonContract is
       if ((partyA.deposit + partyB.deposit) >=
           (primaryBrehon.fixedFee + primaryBrehon.disputeFee +
           secondaryBrehon.fixedFee + secondaryBrehon.disputeFee +
-          tertiaryBrehon.fixedFee + tertiaryBrehon.disputeFee) +
-          transactionAmount
+          tertiaryBrehon.fixedFee + tertiaryBrehon.disputeFee +
+          transactionAmount)
          ) {
              ExecutionStarted(msg.sender, partyA.deposit + partyB.deposit);
              stage = Stages.Execution;

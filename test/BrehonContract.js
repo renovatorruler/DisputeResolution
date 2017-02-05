@@ -631,6 +631,32 @@ contract('BrehonContract should allow partyB to start the contract', function (a
   });
 });
 
+contract('BrehonContract should allow contract to be started with insufficient funds', function (accounts) {
+  it('by partyA', function () {
+    var brehonContract;
+    return BrehonContract.deployed().then(function (instance) {
+      brehonContract = instance;
+      return brehonContract.deposit({from: defaults.partyB_addr, value: 100});
+    }).then(function () {
+      return brehonContract.startContract({from: defaults.partyA_addr});
+    }).catch(function (err) {
+      assert.isNotNull(err, "Exception was thrown when partyA tried to start the contract");
+    });
+  });
+
+  it('by partyB', function () {
+    var brehonContract;
+    return BrehonContract.deployed().then(function (instance) {
+      brehonContract = instance;
+      return brehonContract.deposit({from: defaults.partyA_addr, value: 100});
+    }).then(function () {
+      return brehonContract.startContract({from: defaults.partyB_addr});
+    }).catch(function (err) {
+      assert.isNotNull(err, "Exception was thrown when partyB tried to start the contract");
+    });
+  });
+});
+
 contract("BrehonContract shouldn't allow anyone else", function (accounts) {
   it('to start the contract', function () {
     var brehonContract;
