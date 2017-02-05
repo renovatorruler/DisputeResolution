@@ -16,6 +16,7 @@
     "truffle-default-builder": "^2.0.0"
   },
   "devDependencies": {
+    "ethereumjs-testrpc": "^3.0.3",
     "npm-run-all": "^4.0.1"
   }
 }
