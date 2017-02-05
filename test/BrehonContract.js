@@ -657,7 +657,7 @@ contract('BrehonContract should allow contract to be started with insufficient f
   });
 });
 
-contract("BrehonContract shouldn't allow anyone else", function (accounts) {
+contract("BrehonContract startContract shouldn't allow anyone else", function (accounts) {
   it('to start the contract', function () {
     var brehonContract;
     return BrehonContract.deployed().then(function (instance) {
