@@ -339,3 +339,73 @@ contract('BrehonContract acceptContract method should allow primaryBrehon to acc
     });
   });
 });
+
+contract('BrehonContract acceptContract method should allow secondaryBrehon to accept the contract', function (accounts) {
+  it('by only setting secondaryBrehon\'s contractAccepted to true', function () {
+    var brehonContract;
+    return BrehonContract.deployed().then(function (instance) {
+      brehonContract = instance;
+      return brehonContract.acceptContract({from: defaults.secondaryBrehon_addr});
+    }).then(function () {
+      return brehonContract.partyA.call().then(function (partyA) {
+        assert.equal(partyA[PartyStruct.contractAccepted], false,
+          "partyA's contractAccepted is incorrectly set to true");
+      });
+    }).then(function () {
+      return brehonContract.partyB.call().then(function (partyB) {
+        assert.equal(partyB[PartyStruct.contractAccepted], false,
+          "partyB's contractAccepted is incorrectly set to true");
+      });
+    }).then(function () {
+      return brehonContract.primaryBrehon.call().then(function (primaryBrehon) {
+        assert.equal(primaryBrehon[BrehonStruct.contractAccepted], false,
+          "primaryBrehon's contractAccepted is incorrectly set to true");
+      });
+    }).then(function () {
+      return brehonContract.secondaryBrehon.call().then(function (secondaryBrehon) {
+        assert.equal(secondaryBrehon[BrehonStruct.contractAccepted], true,
+          "secondaryBrehon's contractAccepted is incorrectly set to false");
+      });
+    }).then(function () {
+      return brehonContract.tertiaryBrehon.call().then(function (tertiaryBrehon) {
+        assert.equal(tertiaryBrehon[BrehonStruct.contractAccepted], false,
+          "tertiaryBrehon's contractAccepted is incorrectly set to true");
+      });
+    });
+  });
+});
+
+contract('BrehonContract acceptContract method should allow tertiaryBrehon to accept the contract', function (accounts) {
+  it('by only setting tertiaryBrehon\'s contractAccepted to true', function () {
+    var brehonContract;
+    return BrehonContract.deployed().then(function (instance) {
+      brehonContract = instance;
+      return brehonContract.acceptContract({from: defaults.tertiaryBrehon_addr});
+    }).then(function () {
+      return brehonContract.partyA.call().then(function (partyA) {
+        assert.equal(partyA[PartyStruct.contractAccepted], false,
+          "partyA's contractAccepted is incorrectly set to true");
+      });
+    }).then(function () {
+      return brehonContract.partyB.call().then(function (partyB) {
+        assert.equal(partyB[PartyStruct.contractAccepted], false,
+          "partyB's contractAccepted is incorrectly set to true");
+      });
+    }).then(function () {
+      return brehonContract.primaryBrehon.call().then(function (primaryBrehon) {
+        assert.equal(primaryBrehon[BrehonStruct.contractAccepted], false,
+          "primaryBrehon's contractAccepted is incorrectly set to true");
+      });
+    }).then(function () {
+      return brehonContract.secondaryBrehon.call().then(function (secondaryBrehon) {
+        assert.equal(secondaryBrehon[BrehonStruct.contractAccepted], false,
+          "secondaryBrehon's contractAccepted is incorrectly set to true");
+      });
+    }).then(function () {
+      return brehonContract.tertiaryBrehon.call().then(function (tertiaryBrehon) {
+        assert.equal(tertiaryBrehon[BrehonStruct.contractAccepted], true,
+          "tertiaryBrehon's contractAccepted is incorrectly set to false");
+      });
+    });
+  });
+});
