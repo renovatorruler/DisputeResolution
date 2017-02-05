@@ -4,9 +4,6 @@ var BrehonContract = artifacts.require("./BrehonContract.sol");
 var defaults = require('../config/deployment_settings.js').defaults;
 
 module.exports = function(deployer) {
-  //deployer.deploy(ConvertLib);
-  //deployer.link(ConvertLib, MetaCoin);
-  //deployer.deploy(MetaCoin);
   deployer.deploy(BrehonContract,
     defaults.partyA_addr,
     defaults.partyB_addr,

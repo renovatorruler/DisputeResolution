@@ -1,4 +1,5 @@
 var BrehonContract = artifacts.require("./BrehonContract.sol");
+var defaults = require('../config/deployment_settings.js').defaults;
 
 contract('BrehonContract constructor', function (accounts) {
   it('should set appealLevel to -1', function () {
@@ -12,7 +13,7 @@ contract('BrehonContract constructor', function (accounts) {
   it("should set partyA's address properly", function () {
     return BrehonContract.deployed().then(function (brehonContract) {
       return brehonContract.partyA.call().then(function (partyA) {
-        assert.equal(partyA[0], accounts[0]);
+        assert.equal(partyA[0], defaults.partyA_addr);
       });
     });
   });
@@ -60,7 +61,7 @@ contract('BrehonContract constructor', function (accounts) {
   it("should set partyB's address properly", function () {
     return BrehonContract.deployed().then(function (brehonContract) {
       return brehonContract.partyB.call().then(function (partyB) {
-        assert.equal(partyB[0], accounts[1]);
+        assert.equal(partyB[0], defaults.partyB_addr);
       });
     });
   });
@@ -108,7 +109,7 @@ contract('BrehonContract constructor', function (accounts) {
   it("should set primaryBrehon's address properly", function () {
     return BrehonContract.deployed().then(function (brehonContract) {
       return brehonContract.primaryBrehon.call().then(function (primaryBrehon) {
-        assert.equal(primaryBrehon[0], accounts[2]);
+        assert.equal(primaryBrehon[0], defaults.primaryBrehon_addr);
       });
     });
   });
@@ -124,7 +125,7 @@ contract('BrehonContract constructor', function (accounts) {
   it("should set primaryBrehon's fixedFee properly", function () {
     return BrehonContract.deployed().then(function (brehonContract) {
       return brehonContract.primaryBrehon.call().then(function (primaryBrehon) {
-        assert.equal(primaryBrehon[2].valueOf(), '100000000000000000');
+        assert.equal(primaryBrehon[2].valueOf(), defaults.primaryBrehon_fixedFee);
       });
     });
   });
@@ -132,7 +133,7 @@ contract('BrehonContract constructor', function (accounts) {
   it("should set primaryBrehon's disputeFee properly", function () {
     return BrehonContract.deployed().then(function (brehonContract) {
       return brehonContract.primaryBrehon.call().then(function (primaryBrehon) {
-        assert.equal(primaryBrehon[3].valueOf(), '1000000000000000000');
+        assert.equal(primaryBrehon[3].valueOf(), defaults.primaryBrehon_disputeFee);
       });
     });
   });
@@ -140,7 +141,7 @@ contract('BrehonContract constructor', function (accounts) {
   it("should set secondaryBrehon's address properly", function () {
     return BrehonContract.deployed().then(function (brehonContract) {
       return brehonContract.secondaryBrehon.call().then(function (secondaryBrehon) {
-        assert.equal(secondaryBrehon[0], accounts[3]);
+        assert.equal(secondaryBrehon[0], defaults.secondaryBrehon_addr);
       });
     });
   });
@@ -156,7 +157,7 @@ contract('BrehonContract constructor', function (accounts) {
   it("should set secondaryBrehon's fixedFee properly", function () {
     return BrehonContract.deployed().then(function (brehonContract) {
       return brehonContract.secondaryBrehon.call().then(function (secondaryBrehon) {
-        assert.equal(secondaryBrehon[2].valueOf(), '100000000000000000');
+        assert.equal(secondaryBrehon[2].valueOf(), defaults.secondaryBrehon_fixedFee);
       });
     });
   });
@@ -164,7 +165,7 @@ contract('BrehonContract constructor', function (accounts) {
   it("should set secondaryBrehon's disputeFee properly", function () {
     return BrehonContract.deployed().then(function (brehonContract) {
       return brehonContract.secondaryBrehon.call().then(function (secondaryBrehon) {
-        assert.equal(secondaryBrehon[3].valueOf(), '1000000000000000000');
+        assert.equal(secondaryBrehon[3].valueOf(), defaults.secondaryBrehon_disputeFee);
       });
     });
   });
@@ -172,7 +173,7 @@ contract('BrehonContract constructor', function (accounts) {
   it("should set tertiaryBrehon's address properly", function () {
     return BrehonContract.deployed().then(function (brehonContract) {
       return brehonContract.tertiaryBrehon.call().then(function (tertiaryBrehon) {
-        assert.equal(tertiaryBrehon[0], accounts[4]);
+        assert.equal(tertiaryBrehon[0], defaults.tertiaryBrehon_addr);
       });
     });
   });
@@ -188,7 +189,7 @@ contract('BrehonContract constructor', function (accounts) {
   it("should set tertiaryBrehon's fixedFee properly", function () {
     return BrehonContract.deployed().then(function (brehonContract) {
       return brehonContract.tertiaryBrehon.call().then(function (tertiaryBrehon) {
-        assert.equal(tertiaryBrehon[2].valueOf(), '100000000000000000');
+        assert.equal(tertiaryBrehon[2].valueOf(), defaults.tertiaryBrehon_fixedFee);
       });
     });
   });
@@ -196,7 +197,7 @@ contract('BrehonContract constructor', function (accounts) {
   it("should set tertiaryBrehon's disputeFee properly", function () {
     return BrehonContract.deployed().then(function (brehonContract) {
       return brehonContract.tertiaryBrehon.call().then(function (tertiaryBrehon) {
-        assert.equal(tertiaryBrehon[3].valueOf(), '1000000000000000000');
+        assert.equal(tertiaryBrehon[3].valueOf(), defaults.tertiaryBrehon_disputeFee);
       });
     });
   });
