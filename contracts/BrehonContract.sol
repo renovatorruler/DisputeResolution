@@ -147,7 +147,6 @@ contract BrehonContract is
 
   function deposit()
     payable
-    eitherByParty(partyA, partyB)
   {
       if(msg.sender == partyA.addr) {
           partyA.deposit += msg.value;
