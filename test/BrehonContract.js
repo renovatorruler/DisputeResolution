@@ -1,5 +1,17 @@
 var BrehonContract = artifacts.require("./BrehonContract.sol");
 var defaults = require('../config/deployment_settings.js').defaults;
+var BigNumber = require('bignumber.js');
+var R = require('ramda');
+
+function getMinimumContractAmt(contract_settings) {
+    return new BigNumber(contract_settings.transactionAmount)
+      .add(new BigNumber(contract_settings.primaryBrehon_fixedFee))
+      .add(new BigNumber(contract_settings.primaryBrehon_fixedFee))
+      .add(new BigNumber(contract_settings.secondaryBrehon_disputeFee))
+      .add(new BigNumber(contract_settings.secondaryBrehon_disputeFee))
+      .add(new BigNumber(contract_settings.tertiaryBrehon_fixedFee))
+      .add(new BigNumber(contract_settings.tertiaryBrehon_disputeFee)).valueOf();
+}
 
 var PartyStruct = {
   addr: 0,
@@ -565,6 +577,25 @@ contract('BrehonContract shouldnt\'t accept funds from unauthorized addresses', 
       });
     }).catch(function (err) {
       assert.isNotNull(err, "Exception was not thrown when a rando tried to deposit funds to the contract");
+    });
+  });
+});
+
+contract('BrehonContract should allow startContract to start the contract', function (accounts) {
+  it('by partyA', function () {
+    var brehonContract;
+    return BrehonContract.deployed().then(function (instance) {
+      brehonContract = instance;
+      return brehonContract.deposit({from: defaults.partyA_addr, value: getMinimumContractAmt(defaults)});
+    }).then(function () {
+      return brehonContract.startContract({from: defaults.partyA_addr});
+    }).then(function (result) {
+      assert.equal(R.any(R.propEq('event', 'ExecutionStarted'), result.logs), true, "ExecutionStarted event was not emitted");
+      return brehonContract.stage.call().then(function (stage) {
+        assert.equal(stage.valueOf(), 1, "stage is not set to Stages.Execution");
+      });
+    }).catch(function (err) {
+      assert.isNull(err, "Exception was thrown when a partyA tried to start the contract");
     });
   });
 });

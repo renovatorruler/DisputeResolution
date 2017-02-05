@@ -159,7 +159,7 @@ contract BrehonContract is
     atStage(Stages.Negotiation)
     eitherByParty(partyA, partyB)
   {
-      if ((partyA.deposit + partyB.deposit) >
+      if ((partyA.deposit + partyB.deposit) >=
           (primaryBrehon.fixedFee + primaryBrehon.disputeFee +
           secondaryBrehon.fixedFee + secondaryBrehon.disputeFee +
           tertiaryBrehon.fixedFee + tertiaryBrehon.disputeFee) +
@@ -167,7 +167,7 @@ contract BrehonContract is
          ) {
              ExecutionStarted(partyA.addr, partyB.addr, partyA.deposit + partyB.deposit);
              stage = Stages.Execution;
-      }
+      } else throw;
   }
 
   function raiseDispute()
