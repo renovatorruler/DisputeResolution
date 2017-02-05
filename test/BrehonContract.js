@@ -446,3 +446,23 @@ contract('BrehonContract acceptContract method should not allow someone else to 
     });
   });
 });
+
+contract('BrehonContract should accept funds from partyA', function (accounts) {
+  it('by correctly setting partyA\'s deposit', function () {
+    var brehonContract;
+    return BrehonContract.deployed().then(function (instance) {
+      brehonContract = instance;
+      return brehonContract.deposit({from: defaults.partyA_addr, value: defaults.transactionAmount});
+    }).then(function () {
+      return brehonContract.partyA.call().then(function (partyA) {
+        assert.equal(partyA[PartyStruct.deposit].valueOf(), defaults.transactionAmount,
+          "partyA's contractAccepted is incorrectly set");
+      });
+    }).then(function () {
+      return brehonContract.partyB.call().then(function (partyB) {
+        assert.equal(partyB[PartyStruct.deposit].valueOf(), 0,
+          "partyB's contractAccepted is incorrectly set");
+      });
+    });
+  });
+});

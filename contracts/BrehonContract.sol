@@ -47,7 +47,7 @@ contract BrehonContract is
 
   modifier eitherByParty(Party _party1, Party _party2)
   {
-    if (msg.sender != _party1.addr ||
+    if (msg.sender != _party1.addr &&
         msg.sender != _party2.addr)
         throw;
     _;
