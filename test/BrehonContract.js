@@ -13,6 +13,11 @@ function getMinimumContractAmt(contract_settings) {
       .add(new BigNumber(contract_settings.tertiaryBrehon_disputeFee)).valueOf();
 }
 
+function getInsufficientContractAmt(contract_settings) {
+  return new BigNumber(getMinimumContractAmt(contract_settings))
+    .minus(new BigNumber(contract_settings.secondaryBrehon_disputeFee)).valueOf();
+}
+
 var PartyStruct = {
   addr: 0,
   deposit: 1,
@@ -611,7 +616,16 @@ contract('BrehonContract should allow partyB to start the contract', function (a
     var brehonContract;
     return BrehonContract.deployed().then(function (instance) {
       brehonContract = instance;
-      return brehonContract.deposit({from: defaults.partyB_addr, value: getMinimumContractAmt(defaults)});
+      return brehonContract.deposit({
+        from: defaults.partyA_addr,
+        value: new BigNumber(getMinimumContractAmt(defaults))
+          .minus(new BigNumber(defaults.secondaryBrehon_disputeFee)).valueOf()
+      });
+    }).then(function () {
+      return brehonContract.deposit({
+        from: defaults.partyB_addr,
+        value: defaults.secondaryBrehon_disputeFee
+      });
     }).then(function () {
       return brehonContract.startContract({from: defaults.partyB_addr});
     }).then(function (result) {
@@ -626,6 +640,7 @@ contract('BrehonContract should allow partyB to start the contract', function (a
         assert.equal(stage.valueOf(), 1, "stage is not set to Stages.Execution");
       });
     }).catch(function (err) {
+      console.log(err);
       assert.isNull(err, "Exception was thrown when partyB tried to start the contract");
     });
   });
