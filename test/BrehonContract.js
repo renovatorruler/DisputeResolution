@@ -631,7 +631,7 @@ contract('BrehonContract should allow partyB to start the contract', function (a
   });
 });
 
-contract("BrehonContract shouldn't allow anyone else", function (accounts) {
+contract("BrehonContract startContract shouldn't allow anyone else", function (accounts) {
   it('to start the contract', function () {
     var brehonContract;
     return BrehonContract.deployed().then(function (instance) {
