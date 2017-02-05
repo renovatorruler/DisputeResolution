@@ -10,7 +10,7 @@ contract('BrehonContract constructor', function (accounts) {
     });
   });
 
-  it('should set transactionAmount properly', function () {
+  it('should set transactionAmount to ' + defaults.transactionAmount, function () {
     return BrehonContract.deployed().then(function (instance) {
       return instance.transactionAmount.call().then(function (transactionAmount) {
         assert.equal(transactionAmount.valueOf(), defaults.transactionAmount);
@@ -18,7 +18,7 @@ contract('BrehonContract constructor', function (accounts) {
     });
   });
 
-  it('should set the stage properly', function () {
+  it('should set the stage to Negotiation', function () {
     return BrehonContract.deployed().then(function (instance) {
       return instance.stage.call().then(function (stage) {
         assert.equal(stage.valueOf(), 0);
@@ -202,7 +202,7 @@ contract('BrehonContract constructor', function (accounts) {
     });
   });
 
-  it("should set tertiaryBrehon's fixedFee properly", function () {
+  it("should set tertiaryBrehon's fixedFee to " + defaults.tertiaryBrehon_fixedFee, function () {
     return BrehonContract.deployed().then(function (brehonContract) {
       return brehonContract.tertiaryBrehon.call().then(function (tertiaryBrehon) {
         assert.equal(tertiaryBrehon[2].valueOf(), defaults.tertiaryBrehon_fixedFee);
@@ -219,11 +219,31 @@ contract('BrehonContract constructor', function (accounts) {
   });
 });
 
-contract('BrehonContract constructor', function (accounts) {
-  it('should set appealLevel to -1', function () {
+contract('BrehonContract acceptContract method', function (accounts) {
+  it('should allow partyA to accept the contract', function () {
+    var brehonContract;
     return BrehonContract.deployed().then(function (instance) {
-      return instance.appealLevel.call().then(function (appealLevel) {
-        assert.equal(appealLevel.valueOf(), -1);
+      brehonContract = instance;
+      return brehonContract.acceptContract(defaults.partyA_addr);
+    }).then(function () {
+      return brehonContract.partyB.call().then(function (partyB) {
+        assert.equal(partyB[2], false);
+      });
+    }).then(function () {
+      return brehonContract.primaryBrehon.call().then(function (primaryBrehon) {
+        assert.equal(primaryBrehon[1], false);
+      });
+    }).then(function () {
+      return brehonContract.secondaryBrehon.call().then(function (secondaryBrehon) {
+        assert.equal(secondaryBrehon[1], false);
+      });
+    }).then(function () {
+      return brehonContract.tertiaryBrehon.call().then(function (tertiaryBrehon) {
+        assert.equal(tertiaryBrehon[1], false);
+      });
+    }).then(function () {
+      return brehonContract.partyA.call().then(function (partyA) {
+        assert.equal(partyA[2], true);
       });
     });
   });

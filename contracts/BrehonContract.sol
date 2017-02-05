@@ -131,8 +131,6 @@ contract BrehonContract is
 
   function acceptContract()
     atStage(Stages.Negotiation)
-    eitherByParty(partyA, partyB)
-    eitherByBrehon(primaryBrehon, secondaryBrehon, tertiaryBrehon)
   {
       if (msg.sender == partyA.addr) {
           partyA.contractAccepted = true;
