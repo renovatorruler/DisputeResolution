@@ -409,3 +409,40 @@ contract('BrehonContract acceptContract method should allow tertiaryBrehon to ac
     });
   });
 });
+
+contract('BrehonContract acceptContract method should not allow someone else to accept the contract', function (accounts) {
+  it('by throwing an exception', function () {
+    var brehonContract;
+    return BrehonContract.deployed().then(function (instance) {
+      brehonContract = instance;
+      return brehonContract.acceptContract({from: accounts[6]});
+    }).then(function () {
+      return brehonContract.partyA.call().then(function (partyA) {
+        assert.equal(partyA[PartyStruct.contractAccepted], false,
+          "partyA's contractAccepted is incorrectly set to true");
+      });
+    }).then(function () {
+      return brehonContract.partyB.call().then(function (partyB) {
+        assert.equal(partyB[PartyStruct.contractAccepted], false,
+          "partyB's contractAccepted is incorrectly set to true");
+      });
+    }).then(function () {
+      return brehonContract.primaryBrehon.call().then(function (primaryBrehon) {
+        assert.equal(primaryBrehon[BrehonStruct.contractAccepted], false,
+          "primaryBrehon's contractAccepted is incorrectly set to true");
+      });
+    }).then(function () {
+      return brehonContract.secondaryBrehon.call().then(function (secondaryBrehon) {
+        assert.equal(secondaryBrehon[BrehonStruct.contractAccepted], false,
+          "secondaryBrehon's contractAccepted is incorrectly set to true");
+      });
+    }).then(function () {
+      return brehonContract.tertiaryBrehon.call().then(function (tertiaryBrehon) {
+        assert.equal(tertiaryBrehon[BrehonStruct.contractAccepted], false,
+          "tertiaryBrehon's contractAccepted is incorrectly set to true");
+      });
+    }).catch(function (err) {
+      assert.isNotNull(err, "Exception was not thrown when an unregistered party tried to accept the contract");
+    });
+  });
+});
