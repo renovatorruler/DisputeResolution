@@ -40,7 +40,7 @@ contract BrehonContract is
   uint appealPeriodInDays = 5;
   uint public appealPeriodStartTime;
 
-  event ExecutionStarted(address _partyA, address _partyB, uint _totalDeposits);
+  event ExecutionStarted(address _caller, uint _totalDeposits);
   event ContractDisputed(address _disputingParty, address _activeBrehon);
   event AppealPeriodStarted(int8 _appealLevel, uint _startTime, address _activeBrehon, uint _awardPartyA, uint _awardPartyB);
   event AppealRaised(int8 _appealLevel, address _activeBrehon);
@@ -165,7 +165,7 @@ contract BrehonContract is
           tertiaryBrehon.fixedFee + tertiaryBrehon.disputeFee) +
           transactionAmount
          ) {
-             ExecutionStarted(partyA.addr, partyB.addr, partyA.deposit + partyB.deposit);
+             ExecutionStarted(msg.sender, partyA.deposit + partyB.deposit);
              stage = Stages.Execution;
       } else throw;
   }

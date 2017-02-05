@@ -590,7 +590,13 @@ contract('BrehonContract should allow startContract to start the contract', func
     }).then(function () {
       return brehonContract.startContract({from: defaults.partyA_addr});
     }).then(function (result) {
-      assert.equal(R.any(R.propEq('event', 'ExecutionStarted'), result.logs), true, "ExecutionStarted event was not emitted");
+      var executionStartedEvent = R.find(R.propEq('event', 'ExecutionStarted'), result.logs);
+      assert.equal(executionStartedEvent.args._caller, defaults.partyA_addr,
+        "ExecutionStarted event did not correctly provide the party which called the contract");
+      assert.equal(executionStartedEvent.args._totalDeposits, getMinimumContractAmt(defaults),
+        "ExecutionStarted event did not correctly provide the deposits at the time of contract start");
+      assert.isDefined(executionStartedEvent, "ExecutionStarted event was not emitted");
+
       return brehonContract.stage.call().then(function (stage) {
         assert.equal(stage.valueOf(), 1, "stage is not set to Stages.Execution");
       });
