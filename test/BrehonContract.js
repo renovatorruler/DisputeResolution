@@ -10,6 +10,22 @@ contract('BrehonContract constructor', function (accounts) {
     });
   });
 
+  it('should set transactionAmount properly', function () {
+    return BrehonContract.deployed().then(function (instance) {
+      return instance.transactionAmount.call().then(function (transactionAmount) {
+        assert.equal(transactionAmount.valueOf(), defaults.transactionAmount);
+      });
+    });
+  });
+
+  it('should set the stage properly', function () {
+    return BrehonContract.deployed().then(function (instance) {
+      return instance.stage.call().then(function (stage) {
+        assert.equal(stage.valueOf(), 0);
+      });
+    });
+  });
+
   it("should set partyA's address properly", function () {
     return BrehonContract.deployed().then(function (brehonContract) {
       return brehonContract.partyA.call().then(function (partyA) {
