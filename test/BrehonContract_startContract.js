@@ -14,10 +14,10 @@ function getMinimumContractAmt(contract_settings) {
 }
 
 var startContract = R.curry(function startContract(from, value, brehonContract) {
-  var fullOptions = Object.assign({
+  var fullOptions = {
     from: R.defaultTo(defaults.partyA_addr, from),
     value: R.defaultTo(getMinimumContractAmt(defaults), value)
-  });
+  };
   return brehonContract.deposit(fullOptions).then(function () {
     return brehonContract.startContract({from: R.defaultTo(defaults.partyB_addr, from)});
   });
