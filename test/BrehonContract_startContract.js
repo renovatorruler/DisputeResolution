@@ -13,28 +13,39 @@ function getMinimumContractAmt(contract_settings) {
       .add(new BigNumber(contract_settings.tertiaryBrehon_disputeFee)).valueOf();
 }
 
+var startContract = R.curry(function startContract(from, value, brehonContract) {
+  var fullOptions = Object.assign({
+    from: R.defaultTo(defaults.partyA_addr, from),
+    value: R.defaultTo(getMinimumContractAmt(defaults), value)
+  });
+  return brehonContract.deposit(fullOptions).then(function () {
+    return brehonContract.startContract({from: R.defaultTo(defaults.partyB_addr, from)});
+  });
+});
+
 contract('BrehonContract should allow partyA to start the contract', function (accounts) {
   it('by letting partyA call startContract', function () {
     var brehonContract;
-    return BrehonContract.deployed().then(function (instance) {
-      brehonContract = instance;
-      return brehonContract.deposit({from: defaults.partyA_addr, value: getMinimumContractAmt(defaults)});
-    }).then(function () {
-      return brehonContract.startContract({from: defaults.partyA_addr});
-    }).then(function (result) {
-      var executionStartedEvent = R.find(R.propEq('event', 'ExecutionStarted'), result.logs);
-      assert.equal(executionStartedEvent.args._caller, defaults.partyA_addr,
-        "ExecutionStarted event did not correctly provide the party which called the contract");
-      assert.equal(executionStartedEvent.args._totalDeposits, getMinimumContractAmt(defaults),
-        "ExecutionStarted event did not correctly provide the deposits at the time of contract start");
-      assert.isDefined(executionStartedEvent, "ExecutionStarted event was not emitted");
+    return BrehonContract.deployed()
+      .then(function captureReference(instance) {
+        brehonContract = instance;
+        return instance;
+      })
+      .then(startContract(defaults.partyA_addr)(getMinimumContractAmt(defaults)))
+      .then(function (result) {
+        var executionStartedEvent = R.find(R.propEq('event', 'ExecutionStarted'), result.logs);
+        assert.equal(executionStartedEvent.args._caller, defaults.partyA_addr,
+          "ExecutionStarted event did not correctly provide the party which called the contract");
+        assert.equal(executionStartedEvent.args._totalDeposits, getMinimumContractAmt(defaults),
+          "ExecutionStarted event did not correctly provide the deposits at the time of contract start");
+        assert.isDefined(executionStartedEvent, "ExecutionStarted event was not emitted");
 
-      return brehonContract.stage.call().then(function (stage) {
-        assert.equal(stage.valueOf(), 1, "stage is not set to Stages.Execution");
+        return brehonContract.stage.call().then(function (stage) {
+          assert.equal(stage.valueOf(), 1, "stage is not set to Stages.Execution");
+        });
+      }).catch(function (err) {
+        assert.isNull(err, "Exception was thrown when partyA tried to start the contract");
       });
-    }).catch(function (err) {
-      assert.isNull(err, "Exception was thrown when partyA tried to start the contract");
-    });
   });
 });
 
@@ -73,7 +84,7 @@ contract('BrehonContract should allow partyB to start the contract', function (a
   });
 });
 
-contract('BrehonContract should allow contract to be started with insufficient funds', function (accounts) {
+contract('BrehonContract should not allow contract to be started with insufficient funds', function (accounts) {
   it('by partyA', function () {
     var brehonContract;
     return BrehonContract.deployed().then(function (instance) {
