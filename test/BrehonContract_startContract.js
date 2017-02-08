@@ -50,8 +50,37 @@ contract('BrehonContract should allow partyA to start the contract', function (a
           assert.equal(stage.valueOf(), 1, "stage is not set to Stages.Execution");
         });
       }).catch(function (err) {
-        console.log(err);
         assert.isNull(err, "Exception was thrown when partyA tried to start the contract");
+      });
+  });
+});
+
+contract('BrehonContract should allow partyB to start the contract', function (accounts) {
+  it('by only letting partyB fund the contract and triggerring startContract', function () {
+    var brehonContract;
+    return BrehonContract.deployed()
+      .then(function captureReference(instance) {
+        brehonContract = instance;
+        return instance;
+      })
+      .then(startContract([{
+        addr: defaults.partyB_addr,
+        value:getMinimumContractAmt(defaults)
+      }])(defaults.partyB_addr))
+      .then(function (result) {
+        var executionStartedEvent = R.find(R.propEq('event', 'ExecutionStarted'), result.logs);
+        assert.equal(executionStartedEvent.args._caller, defaults.partyB_addr,
+          "ExecutionStarted event did not correctly provide the party which called the contract");
+        assert.equal(executionStartedEvent.args._totalDeposits, getMinimumContractAmt(defaults),
+          "ExecutionStarted event did not correctly provide the deposits at the time of contract start");
+        assert.isDefined(executionStartedEvent, "ExecutionStarted event was not emitted");
+
+        return brehonContract.stage.call().then(function (stage) {
+          assert.equal(stage.valueOf(), 1, "stage is not set to Stages.Execution");
+        });
+      }).catch(function (err) {
+        console.log(err);
+        assert.isNull(err, "Exception was thrown when partyB tried to start the contract");
       });
   });
 });
