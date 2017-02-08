@@ -13,14 +13,18 @@ function getMinimumContractAmt(contract_settings) {
       .add(new BigNumber(contract_settings.tertiaryBrehon_disputeFee)).valueOf();
 }
 
-var startContract = R.curry(function startContract(from, value, brehonContract) {
-  var fullOptions = {
-    from: R.defaultTo(defaults.partyA_addr, from),
-    value: R.defaultTo(getMinimumContractAmt(defaults), value)
-  };
-  return brehonContract.deposit(fullOptions).then(function () {
-    return brehonContract.startContract({from: R.defaultTo(defaults.partyB_addr, from)});
-  });
+var startContract = R.curry(function startContract(party_contributions, starting_party_addr, brehonContract) {
+  return R.reduce(function(instance, party_tuple) {
+      return instance.deposit({
+        from: party_tuple.addr,
+        value: R.defaultTo(getMinimumContractAmt(defaults), party_tuple.value)
+      });
+    }, brehonContract, party_contributions)
+    .then(function () {
+      return brehonContract.startContract({
+        from: R.defaultTo(R.head(party_contributions), starting_party_addr)
+      });
+    });
 });
 
 contract('BrehonContract should allow partyA to start the contract', function (accounts) {
@@ -31,7 +35,9 @@ contract('BrehonContract should allow partyA to start the contract', function (a
         brehonContract = instance;
         return instance;
       })
-      .then(startContract(defaults.partyA_addr)(getMinimumContractAmt(defaults)))
+      .then(startContract([{
+        addr: defaults.partyA_addr,
+        value:getMinimumContractAmt(defaults)}])(defaults.partyA_addr))
       .then(function (result) {
         var executionStartedEvent = R.find(R.propEq('event', 'ExecutionStarted'), result.logs);
         assert.equal(executionStartedEvent.args._caller, defaults.partyA_addr,
@@ -44,6 +50,7 @@ contract('BrehonContract should allow partyA to start the contract', function (a
           assert.equal(stage.valueOf(), 1, "stage is not set to Stages.Execution");
         });
       }).catch(function (err) {
+        console.log(err);
         assert.isNull(err, "Exception was thrown when partyA tried to start the contract");
       });
   });
