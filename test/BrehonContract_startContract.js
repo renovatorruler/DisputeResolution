@@ -6,20 +6,20 @@ var R = require('ramda');
 function getMinimumContractAmt(contract_settings) {
     return new BigNumber(contract_settings.transactionAmount)
       .add(new BigNumber(contract_settings.primaryBrehon_fixedFee))
-      .add(new BigNumber(contract_settings.primaryBrehon_fixedFee))
-      .add(new BigNumber(contract_settings.secondaryBrehon_disputeFee))
+      .add(new BigNumber(contract_settings.primaryBrehon_disputeFee))
+      .add(new BigNumber(contract_settings.secondaryBrehon_fixedFee))
       .add(new BigNumber(contract_settings.secondaryBrehon_disputeFee))
       .add(new BigNumber(contract_settings.tertiaryBrehon_fixedFee))
       .add(new BigNumber(contract_settings.tertiaryBrehon_disputeFee)).valueOf();
 }
 
 var startContract = R.curry(function startContract(party_contributions, starting_party_addr, brehonContract) {
-  return R.reduce(function(instance, party_tuple) {
-      return instance.deposit({
-        from: party_tuple.addr,
-        value: R.defaultTo(getMinimumContractAmt(defaults), party_tuple.value)
-      });
-    }, brehonContract, party_contributions)
+  return Promise.all(R.map(function(party_tuple) {
+    return brehonContract.deposit({
+      from: party_tuple.addr,
+      value: R.defaultTo(getMinimumContractAmt(defaults), party_tuple.value)
+    });
+  }, party_contributions))
     .then(function () {
       return brehonContract.startContract({
         from: R.defaultTo(R.head(party_contributions), starting_party_addr)
@@ -28,7 +28,7 @@ var startContract = R.curry(function startContract(party_contributions, starting
 });
 
 contract('BrehonContract should allow partyA to start the contract', function (accounts) {
-  it('by letting partyA call startContract', function () {
+  it('by only letting partyA fund the contract and triggerring startContract', function () {
     var brehonContract;
     return BrehonContract.deployed()
       .then(function captureReference(instance) {
@@ -79,7 +79,6 @@ contract('BrehonContract should allow partyB to start the contract', function (a
           assert.equal(stage.valueOf(), 1, "stage is not set to Stages.Execution");
         });
       }).catch(function (err) {
-        console.log(err);
         assert.isNull(err, "Exception was thrown when partyB tried to start the contract");
       });
   });
@@ -88,35 +87,35 @@ contract('BrehonContract should allow partyB to start the contract', function (a
 contract('BrehonContract should allow partyB to start the contract', function (accounts) {
   it('by letting partyB call startContract', function () {
     var brehonContract;
-    return BrehonContract.deployed().then(function (instance) {
-      brehonContract = instance;
-      return brehonContract.deposit({
-        from: defaults.partyA_addr,
-        value: new BigNumber(getMinimumContractAmt(defaults))
-          .minus(new BigNumber(defaults.secondaryBrehon_disputeFee)).valueOf()
-      });
-    }).then(function () {
-      return brehonContract.deposit({
-        from: defaults.partyB_addr,
-        value: defaults.secondaryBrehon_disputeFee
-      });
-    }).then(function () {
-      return brehonContract.startContract({from: defaults.partyB_addr});
-    }).then(function (result) {
-      var executionStartedEvent = R.find(R.propEq('event', 'ExecutionStarted'), result.logs);
-      assert.equal(executionStartedEvent.args._caller, defaults.partyB_addr,
-        "ExecutionStarted event did not correctly provide the party which called the contract");
-      assert.equal(executionStartedEvent.args._totalDeposits, getMinimumContractAmt(defaults),
-        "ExecutionStarted event did not correctly provide the deposits at the time of contract start");
-      assert.isDefined(executionStartedEvent, "ExecutionStarted event was not emitted");
+    return BrehonContract.deployed()
+      .then(function captureReference(instance) {
+        brehonContract = instance;
+        return instance;
+      })
+      .then(startContract([
+        {
+          addr: defaults.partyA_addr,
+          value: new BigNumber(getMinimumContractAmt(defaults))
+            .minus(new BigNumber(defaults.secondaryBrehon_disputeFee)).valueOf()
+        }, {
+          addr: defaults.partyB_addr,
+          value: defaults.secondaryBrehon_disputeFee
+        }
+      ])(defaults.partyB_addr))
+      .then(function (result) {
+        var executionStartedEvent = R.find(R.propEq('event', 'ExecutionStarted'), result.logs);
+        assert.equal(executionStartedEvent.args._caller, defaults.partyB_addr,
+          "ExecutionStarted event did not correctly provide the party which called the contract");
+        assert.equal(executionStartedEvent.args._totalDeposits, getMinimumContractAmt(defaults),
+          "ExecutionStarted event did not correctly provide the deposits at the time of contract start");
+        assert.isDefined(executionStartedEvent, "ExecutionStarted event was not emitted");
 
-      return brehonContract.stage.call().then(function (stage) {
-        assert.equal(stage.valueOf(), 1, "stage is not set to Stages.Execution");
+        return brehonContract.stage.call().then(function (stage) {
+          assert.equal(stage.valueOf(), 1, "stage is not set to Stages.Execution");
+        });
+      }).catch(function (err) {
+        assert.isNull(err, "Exception was thrown when partyB tried to start the contract");
       });
-    }).catch(function (err) {
-      console.log(err);
-      assert.isNull(err, "Exception was thrown when partyB tried to start the contract");
-    });
   });
 });
 
