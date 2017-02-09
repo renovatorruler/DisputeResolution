@@ -84,8 +84,43 @@ contract('BrehonContract should allow partyB to start the contract', function (a
   });
 });
 
+contract('BrehonContract should allow partyA to start the contract', function (accounts) {
+  it('by letting both parties fund the contract and partyA call startContract', function () {
+    var brehonContract;
+    return BrehonContract.deployed()
+      .then(function captureReference(instance) {
+        brehonContract = instance;
+        return instance;
+      })
+      .then(startContract([
+        {
+          addr: defaults.partyA_addr,
+          value: defaults.secondaryBrehon_disputeFee
+        }, {
+          addr: defaults.partyB_addr,
+          value: new BigNumber(getMinimumContractAmt(defaults))
+            .minus(new BigNumber(defaults.secondaryBrehon_disputeFee)).valueOf()
+        }
+      ])(defaults.partyA_addr))
+      .then(function (result) {
+        var executionStartedEvent = R.find(R.propEq('event', 'ExecutionStarted'), result.logs);
+        assert.equal(executionStartedEvent.args._caller, defaults.partyA_addr,
+          "ExecutionStarted event did not correctly provide the party which called the contract");
+        assert.equal(executionStartedEvent.args._totalDeposits, getMinimumContractAmt(defaults),
+          "ExecutionStarted event did not correctly provide the deposits at the time of contract start");
+        assert.isDefined(executionStartedEvent, "ExecutionStarted event was not emitted");
+
+        return brehonContract.stage.call().then(function (stage) {
+          assert.equal(stage.valueOf(), 1, "stage is not set to Stages.Execution");
+        });
+      }).catch(function (err) {
+        assert.isNull(err, "Exception was thrown when partyA tried to start the contract");
+      });
+  });
+});
+
 contract('BrehonContract should allow partyB to start the contract', function (accounts) {
-  it('by letting partyB call startContract', function () {
+  it('by letting both parties fund the contract and partyB call startContract', function () {
     var brehonContract;
     return BrehonContract.deployed()
       .then(function captureReference(instance) {
