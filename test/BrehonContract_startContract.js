@@ -27,7 +27,7 @@ var startContract = R.curry(function startContract(party_contributions, starting
     });
 });
 
-contract('BrehonContract should allow partyA to start the contract', function (accounts) {
+contract('BrehonContract should allow partyA to self fund and start the contract', function (accounts) {
   it('by only letting partyA fund the contract and triggerring startContract', function () {
     var brehonContract;
     return BrehonContract.deployed()
@@ -55,7 +55,7 @@ contract('BrehonContract should allow partyA to start the contract', function (a
   });
 });
 
-contract('BrehonContract should allow partyB to start the contract', function (accounts) {
+contract('BrehonContract should allow partyB to self fund and start the contract', function (accounts) {
   it('by only letting partyB fund the contract and triggerring startContract', function () {
     var brehonContract;
     return BrehonContract.deployed()
