@@ -200,3 +200,24 @@ contract("BrehonContract startContract shouldn't allow anyone else", function (a
     });
   });
 });
+
+contract('BrehonContract startContract should ', function (accounts) {
+  it('only be executed at Negotiation stage', function () {
+    var brehonContract;
+    return BrehonContract.deployed()
+      .then(function captureReference(instance) {
+        brehonContract = instance;
+        return instance;
+      })
+      .then(startContract([{
+        addr: defaults.partyB_addr,
+        value:getMinimumContractAmt(defaults)
+      }])(defaults.partyB_addr))
+      .then(function () {
+        return brehonContract.startContract({from: defaults.partyA_addr});
+      })
+    .catch(function (err) {
+      assert.isNotNull(err, "Exception was not thrown when startContract was triggerred at a stage which was not Negotiation stage");
+    });
+  });
+});
