@@ -210,3 +210,36 @@ contract('BrehonContract raiseDispute should not be raised by unauthorized addre
       });
   });
 });
+
+contract('BrehonContract should set appealLevel to 0', (accounts) => {
+  it('when dispute is first raised', () => {
+    var brehonContract;
+    return BrehonContract.deployed()
+      .then(function captureReference(instance) {
+        brehonContract = instance;
+        return instance;
+      })
+      .then(startContractAndRaiseDispute(
+        [{
+          addr: defaults.partyA_addr,
+          value: getMinimumContractAmt(defaults)
+        }], defaults.partyA_addr, defaults.partyA_addr))
+      .then(() => {
+        return brehonContract.appealLevel.call().then((appealLevel) => {
+          assert.equal(appealLevel.valueOf(), 0, 'appealLevel is not set to 0 when dispute  is raised'); 
+        });
+      });
+  });
+});
+
+contract('BrehonContract should set primaryBrehon as the activeBrehon', (accounts) => {
+  it('when dispute is first raised', () => {
+      
+  });
+});
+
+contract('BrehonContract should trigger ContractDisputed event', (accounts) => {
+  it('when dispute is first raised', () => {
+      
+  });
+});
