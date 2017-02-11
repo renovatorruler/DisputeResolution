@@ -12,7 +12,7 @@ contract('BrehonContract acceptContract method should allow partyA to accept the
     let brehonContract;
     return BrehonContract.deployed().then((instance) => {
       brehonContract = instance;
-      return brehonContract.acceptContract(defaults.partyA_addr);
+      return brehonContract.acceptContract({from: defaults.partyA_addr});
     }).then(() => {
       return brehonContract.partyB.call().then((partyB) => {
         assert.equal(partyB[PartyStruct.contractAccepted], false,
