@@ -17,7 +17,7 @@ contract('BrehonContract should allow partyA to self fund and start the contract
       })
       .then(startContract([{
         addr: defaults.partyA_addr,
-        value:getMinimumContractAmt(defaults)}])(defaults.partyA_addr))
+        value: getMinimumContractAmt(defaults)}])(defaults.partyA_addr))
       .then((result) => {
         var executionStartedEvent = R.find(R.propEq('event', 'ExecutionStarted'), result.logs);
         assert.equal(executionStartedEvent.args._caller, defaults.partyA_addr,
