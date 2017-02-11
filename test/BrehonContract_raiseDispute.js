@@ -155,7 +155,58 @@ contract('BrehonContract raiseDispute should not be raised by unauthorized addre
           value: getMinimumContractAmt(defaults)
         }], defaults.partyA_addr, defaults.primaryBrehon_addr))
       .catch((err) => {
-        assert.isNotNull(err, "Exception was not thrown when partyA tried to raise a dispute");
+        assert.isNotNull(err, "Exception was not thrown when primaryBrehon tried to raise a dispute");
+      });
+  });
+
+  it('by preventing secondaryBrehon from raising a dispute', () => {
+    var brehonContract;
+    return BrehonContract.deployed()
+      .then(function captureReference(instance) {
+        brehonContract = instance;
+        return instance;
+      })
+      .then(startContractAndRaiseDispute(
+        [{
+          addr: defaults.partyA_addr,
+          value: getMinimumContractAmt(defaults)
+        }], defaults.partyA_addr, defaults.secondaryBrehon_addr))
+      .catch((err) => {
+        assert.isNotNull(err, "Exception was not thrown when secondaryBrehon tried to raise a dispute");
+      });
+  });
+
+  it('by preventing tertiaryBrehon from raising a dispute', () => {
+    var brehonContract;
+    return BrehonContract.deployed()
+      .then(function captureReference(instance) {
+        brehonContract = instance;
+        return instance;
+      })
+      .then(startContractAndRaiseDispute(
+        [{
+          addr: defaults.partyA_addr,
+          value: getMinimumContractAmt(defaults)
+        }], defaults.partyA_addr, defaults.tertiaryBrehon_addr))
+      .catch((err) => {
+        assert.isNotNull(err, "Exception was not thrown when tertiaryBrehon tried to raise a dispute");
+      });
+  });
+
+  it('by preventing a rando from raising a dispute', () => {
+    var brehonContract;
+    return BrehonContract.deployed()
+      .then(function captureReference(instance) {
+        brehonContract = instance;
+        return instance;
+      })
+      .then(startContractAndRaiseDispute(
+        [{
+          addr: defaults.partyA_addr,
+          value: getMinimumContractAmt(defaults)
+        }], defaults.partyA_addr, accounts[6]))
+      .catch((err) => {
+        assert.isNotNull(err, "Exception was not thrown when a rando tried to raise a dispute");
       });
   });
 });
