@@ -183,12 +183,16 @@ contract('BrehonContract should not allow contract to be started with insufficie
 contract("BrehonContract startContract shouldn't allow anyone else", function (accounts) {
   it('to start the contract', function () {
     var brehonContract;
-    return BrehonContract.deployed().then(function (instance) {
-      brehonContract = instance;
-      return brehonContract.deposit({from: defaults.partyB_addr, value: getMinimumContractAmt(defaults)});
-    }).then(function () {
-      return brehonContract.startContract({from: accounts[6]});
-    }).catch(function (err) {
+    return BrehonContract.deployed()
+      .then(function captureReference(instance) {
+        brehonContract = instance;
+        return instance;
+      })
+      .then(startContract([{
+        addr: defaults.partyB_addr,
+        value:getMinimumContractAmt(defaults)
+      }])(accounts[6]))
+    .catch(function (err) {
       assert.isNotNull(err, "Exception was not thrown when a rando tried to start the contract");
       return brehonContract.stage.call().then(function (stage) {
         assert.equal(stage.valueOf(), 0, "stage is not set to Stages.Negotiation");
