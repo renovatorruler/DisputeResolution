@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "start": "truffle serve",
-    "testrpc": "testrpc -m 'myth like bonus scare over problem client lizard pioneer submit female collect' --hostname 0.0.0.0",
+    "testrpc": "testrpc -m 'myth like bonus scare over problem client lizard pioneer submit female collect' --hostname 0.0.0.0 --gasPrice 20",
     "truffletest": "truffle test",
     "test": "run-p -r \"testrpc\" \"truffletest\""
   },
