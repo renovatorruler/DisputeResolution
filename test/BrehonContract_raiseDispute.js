@@ -1,3 +1,5 @@
+const R = require('ramda');
+
 const BrehonContract = artifacts.require("./BrehonContract.sol");
 const defaults = require('../config/deployment_settings.js').defaults;
 
@@ -224,7 +226,14 @@ contract('BrehonContract should set appealLevel to 0', (accounts) => {
           addr: defaults.partyA_addr,
           value: getMinimumContractAmt(defaults)
         }], defaults.partyA_addr, defaults.partyA_addr))
-      .then(() => {
+      .then((result) => {
+        var contractDisputedEvent = R.find(R.propEq('event', 'ContractDisputed'), result.logs);
+        assert.equal(contractDisputedEvent.args._disputingParty, defaults.partyA_addr,
+          "ContractDisputed event did not correctly provide the party disputed the contract");
+        assert.equal(contractDisputedEvent.args._activeBrehon, defaults.primaryBrehon_addr,
+          "ContractDisputed event did not correctly provide the deposits at the time of contract start");
+        assert.isDefined(contractDisputedEvent, "ContractStarted event was not emitted");
+
         return brehonContract.appealLevel.call().then((appealLevel) => {
           assert.equal(appealLevel.valueOf(), 0, 'appealLevel is not set to 0 when dispute  is raised'); 
         });
@@ -234,12 +243,20 @@ contract('BrehonContract should set appealLevel to 0', (accounts) => {
 
 contract('BrehonContract should set primaryBrehon as the activeBrehon', (accounts) => {
   it('when dispute is first raised', () => {
-      
-  });
-});
-
-contract('BrehonContract should trigger ContractDisputed event', (accounts) => {
-  it('when dispute is first raised', () => {
-      
+    return BrehonContract.deployed()
+      .then(function captureReference(instance) {
+        brehonContract = instance;
+        return instance;
+      })
+      .then(startContractAndRaiseDispute(
+        [{
+          addr: defaults.partyA_addr,
+          value: getMinimumContractAmt(defaults)
+        }], defaults.partyA_addr, defaults.partyA_addr))
+      .then(() => {
+        return brehonContract.appealLevel.call().then((appealLevel) => {
+          assert.equal(appealLevel.valueOf(), 0, 'appealLevel is not set to 0 when dispute  is raised'); 
+        });
+      });
   });
 });
