@@ -1,5 +1,3 @@
-const R = require('ramda');
-
 const BrehonContract = artifacts.require("./BrehonContract.sol");
 const defaults = require('../config/deployment_settings.js').defaults;
 
@@ -29,7 +27,6 @@ contract('BrehonContract should allow partyA to raise the dispute', (accounts) =
         });
       })
       .catch((err) => {
-        console.log(err);
         assert.isNull(err, "Exception was thrown when partyA tried to raise a dispute");
       });
   });
@@ -130,6 +127,11 @@ contract('BrehonContract raiseDispute should only be raised at Execution stage',
         brehonContract = instance;
         return instance;
       })
+      .then(startContractAndRaiseDispute(
+        [{
+          addr: defaults.partyA_addr,
+          value: getMinimumContractAmt(defaults)
+        }], defaults.partyA_addr, defaults.partyA_addr))
       .then(() => {
         return brehonContract.raiseDispute({from: defaults.partyA_addr});
       })
@@ -140,4 +142,20 @@ contract('BrehonContract raiseDispute should only be raised at Execution stage',
 });
 
 contract('BrehonContract raiseDispute should not be raised by unauthorized addresses', (accounts) => {
+  it('by preventing primaryBrehon from raising a dispute', () => {
+    var brehonContract;
+    return BrehonContract.deployed()
+      .then(function captureReference(instance) {
+        brehonContract = instance;
+        return instance;
+      })
+      .then(startContractAndRaiseDispute(
+        [{
+          addr: defaults.partyA_addr,
+          value: getMinimumContractAmt(defaults)
+        }], defaults.partyA_addr, defaults.primaryBrehon_addr))
+      .catch((err) => {
+        assert.isNotNull(err, "Exception was not thrown when partyA tried to raise a dispute");
+      });
+  });
 });
