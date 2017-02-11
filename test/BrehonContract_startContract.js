@@ -3,29 +3,9 @@ var defaults = require('../config/deployment_settings.js').defaults;
 var BigNumber = require('bignumber.js');
 var R = require('ramda');
 
-function getMinimumContractAmt(contract_settings) {
-    return new BigNumber(contract_settings.transactionAmount)
-      .add(new BigNumber(contract_settings.primaryBrehon_fixedFee))
-      .add(new BigNumber(contract_settings.primaryBrehon_disputeFee))
-      .add(new BigNumber(contract_settings.secondaryBrehon_fixedFee))
-      .add(new BigNumber(contract_settings.secondaryBrehon_disputeFee))
-      .add(new BigNumber(contract_settings.tertiaryBrehon_fixedFee))
-      .add(new BigNumber(contract_settings.tertiaryBrehon_disputeFee)).valueOf();
-}
-
-var startContract = R.curry(function startContract(party_contributions, starting_party_addr, brehonContract) {
-  return Promise.all(R.map(function(party_tuple) {
-    return brehonContract.deposit({
-      from: party_tuple.addr,
-      value: R.defaultTo(getMinimumContractAmt(defaults), party_tuple.value)
-    });
-  }, party_contributions))
-    .then(function () {
-      return brehonContract.startContract({
-        from: R.defaultTo(R.head(party_contributions), starting_party_addr)
-      });
-    });
-});
+var contractHelpers = require('../lib/contractHelpers.js');
+var startContract = contractHelpers.startContract;
+var getMinimumContractAmt = contractHelpers.getMinimumContractAmt;
 
 contract('BrehonContract should allow partyA to self fund and start the contract', function (accounts) {
   it('by only letting partyA fund the contract and triggerring startContract', function () {
