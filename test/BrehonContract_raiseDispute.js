@@ -114,3 +114,20 @@ contract('BrehonContract should allow partyB to raise the dispute', (accounts) =
       });
   });
 });
+
+contract('BrehonContract raiseDispute should only be raised at Execution stage', (accounts) => {
+  it('by preventing it from being raised at Negotiaton stage', () => {
+    var brehonContract;
+    return BrehonContract.deployed()
+      .then(function captureReference(instance) {
+        brehonContract = instance;
+        return instance;
+      })
+      .then(() => {
+        return brehonContract.raiseDispute({from: defaults.partyA_addr});
+      })
+    .catch((err) => {
+      assert.isNotNull(err, "Exception was not thrown when raiseDispute was triggerred at the Negotiation stage");
+    });
+  });
+});
