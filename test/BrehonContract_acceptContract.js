@@ -1,29 +1,15 @@
-var BrehonContract = artifacts.require("./BrehonContract.sol");
-var defaults = require('../config/deployment_settings.js').defaults;
+const BrehonContract = artifacts.require("./BrehonContract.sol");
+const defaults = require('../config/deployment_settings.js').defaults;
 
-var contractHelpers = require('../lib/contractHelpers.js');
-var startContract = contractHelpers.startContract;
-var getMinimumContractAmt = contractHelpers.getMinimumContractAmt;
-
-var PartyStruct = {
-  addr: 0,
-  deposit: 1,
-  contractAccepted: 2,
-  primaryBrehonApproval: 3,
-  secondaryBrehonApproval: 4,
-  tertiaryBrehonApproval: 5
-};
-
-var BrehonStruct = {
-  addr: 0,
-  contractAccepted: 1,
-  fixedFee: 2,
-  disputeFee: 3
-};
+const contractHelpers = require('../lib/contractHelpers.js');
+const startContract = contractHelpers.startContract;
+const getMinimumContractAmt = contractHelpers.getMinimumContractAmt;
+const PartyStruct = contractHelpers.PartyStruct;
+const BrehonStruct = contractHelpers.BrehonStruct;
 
 contract('BrehonContract acceptContract method should allow partyA to accept the contract', function (accounts) {
   it('by only setting partyA\'s contractAccepted to true', function () {
-    var brehonContract;
+    let brehonContract;
     return BrehonContract.deployed().then(function (instance) {
       brehonContract = instance;
       return brehonContract.acceptContract(defaults.partyA_addr);
@@ -58,7 +44,7 @@ contract('BrehonContract acceptContract method should allow partyA to accept the
 
 contract('BrehonContract acceptContract method should allow partyB to accept the contract', function (accounts) {
   it('by only setting partyB\'s contractAccepted to true', function () {
-    var brehonContract;
+    let brehonContract;
     return BrehonContract.deployed().then(function (instance) {
       brehonContract = instance;
       return brehonContract.acceptContract({from: defaults.partyB_addr});
@@ -93,7 +79,7 @@ contract('BrehonContract acceptContract method should allow partyB to accept the
 
 contract('BrehonContract acceptContract method should allow primaryBrehon to accept the contract', function (accounts) {
   it('by only setting primaryBrehon\'s contractAccepted to true', function () {
-    var brehonContract;
+    let brehonContract;
     return BrehonContract.deployed().then(function (instance) {
       brehonContract = instance;
       return brehonContract.acceptContract({from: defaults.primaryBrehon_addr});
@@ -128,7 +114,7 @@ contract('BrehonContract acceptContract method should allow primaryBrehon to acc
 
 contract('BrehonContract acceptContract method should allow secondaryBrehon to accept the contract', function (accounts) {
   it('by only setting secondaryBrehon\'s contractAccepted to true', function () {
-    var brehonContract;
+    let brehonContract;
     return BrehonContract.deployed().then(function (instance) {
       brehonContract = instance;
       return brehonContract.acceptContract({from: defaults.secondaryBrehon_addr});
@@ -163,7 +149,7 @@ contract('BrehonContract acceptContract method should allow secondaryBrehon to a
 
 contract('BrehonContract acceptContract method should allow tertiaryBrehon to accept the contract', function (accounts) {
   it('by only setting tertiaryBrehon\'s contractAccepted to true', function () {
-    var brehonContract;
+    let brehonContract;
     return BrehonContract.deployed().then(function (instance) {
       brehonContract = instance;
       return brehonContract.acceptContract({from: defaults.tertiaryBrehon_addr});
@@ -198,7 +184,7 @@ contract('BrehonContract acceptContract method should allow tertiaryBrehon to ac
 
 contract('BrehonContract acceptContract method should not allow someone else to accept the contract', function (accounts) {
   it('by throwing an exception', function () {
-    var brehonContract;
+    let brehonContract;
     return BrehonContract.deployed().then(function (instance) {
       brehonContract = instance;
       return brehonContract.acceptContract({from: accounts[6]});
@@ -235,7 +221,7 @@ contract('BrehonContract acceptContract method should not allow someone else to 
 
 contract('BrehonContract acceptContract should ', function (accounts) {
   it('only be executed at Negotiation stage', function () {
-    var brehonContract;
+    let brehonContract;
     return BrehonContract.deployed()
       .then(function captureReference(instance) {
         brehonContract = instance;
