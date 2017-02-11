@@ -5,22 +5,10 @@ const defaults = require('../config/deployment_settings.js').defaults;
 
 const contractHelpers = require('../lib/contractHelpers.js');
 const startContract = contractHelpers.startContract;
+const startContractAndRaiseDispute = contractHelpers.startContractAndRaiseDispute;
 const getMinimumContractAmt = contractHelpers.getMinimumContractAmt;
 const PartyStruct = contractHelpers.PartyStruct;
 const BrehonStruct = contractHelpers.BrehonStruct;
-
-const raiseDispute = R.curry(function raiseDispute(disputing_party_addr, brehonContract) {
-  return brehonContract.raiseDispute({
-    from: disputing_party_addr
-  });
-});
-
-const startContractAndRaiseDispute = R.curry(function startContractAndRaiseDispute(party_contributions, starting_party_addr, disputing_party_addr, brehonContract) {
-    return startContract(party_contributions)(starting_party_addr)(brehonContract)
-      .then(() => {
-          return raiseDispute(disputing_party_addr)(brehonContract);
-      });
-});
 
 contract('BrehonContract should allow partyA to raise the dispute', (accounts) => {
   it('when partyA deposited the funds', () => {
@@ -55,14 +43,11 @@ contract('BrehonContract should allow partyB to raise the dispute', (accounts) =
         brehonContract = instance;
         return instance;
       })
-      .then(startContract([{
-        addr: defaults.partyB_addr,
-        value:getMinimumContractAmt(defaults)}])(defaults.partyB_addr))
-      .then(() => {
-        return brehonContract.raiseDispute({
-            from: defaults.partyB_addr
-        })
-      })
+      .then(startContractAndRaiseDispute(
+        [{
+          addr: defaults.partyB_addr,
+          value: getMinimumContractAmt(defaults)
+        }], defaults.partyB_addr, defaults.partyB_addr))
       .then(() => {
         return brehonContract.stage.call().then((stage) => {
             assert.equal(stage.valueOf(), 2, "stage is not set to Stages.Dispute");
@@ -82,14 +67,11 @@ contract('BrehonContract should allow partyA to raise the dispute', (accounts) =
         brehonContract = instance;
         return instance;
       })
-      .then(startContract([{
-        addr: defaults.partyB_addr,
-        value: getMinimumContractAmt(defaults)}])(defaults.partyB_addr))
-      .then(() => {
-        return brehonContract.raiseDispute({
-            from: defaults.partyA_addr
-        })
-      })
+      .then(startContractAndRaiseDispute(
+        [{
+          addr: defaults.partyB_addr,
+          value: getMinimumContractAmt(defaults)
+        }], defaults.partyA_addr, defaults.partyA_addr))
       .then(() => {
         return brehonContract.stage.call().then((stage) => {
             assert.equal(stage.valueOf(), 2, "stage is not set to Stages.Dispute");
@@ -109,14 +91,11 @@ contract('BrehonContract should allow partyB to raise the dispute', (accounts) =
         brehonContract = instance;
         return instance;
       })
-      .then(startContract([{
-        addr: defaults.partyA_addr,
-        value: getMinimumContractAmt(defaults)}])(defaults.partyA_addr))
-      .then(() => {
-        return brehonContract.raiseDispute({
-            from: defaults.partyB_addr
-        })
-      })
+      .then(startContractAndRaiseDispute(
+        [{
+          addr: defaults.partyA_addr,
+          value: getMinimumContractAmt(defaults)
+        }], defaults.partyA_addr, defaults.partyB_addr))
       .then(() => {
         return brehonContract.stage.call().then((stage) => {
             assert.equal(stage.valueOf(), 2, "stage is not set to Stages.Dispute");
