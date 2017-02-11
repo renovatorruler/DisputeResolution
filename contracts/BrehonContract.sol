@@ -159,6 +159,12 @@ contract BrehonContract is
     atStage(Stages.Negotiation)
     eitherByParty(partyA, partyB)
   {
+      if(!partyA.contractAccepted ||
+         !partyB.contractAccepted ||
+         !primaryBrehon.contractAccepted ||
+         !secondaryBrehon.contractAccepted ||
+         !tertiaryBrehon.contractAccepted) throw;
+
       if ((partyA.deposit + partyB.deposit) >=
           (primaryBrehon.fixedFee + primaryBrehon.disputeFee +
           secondaryBrehon.fixedFee + secondaryBrehon.disputeFee +
