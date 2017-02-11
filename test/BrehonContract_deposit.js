@@ -1,25 +1,13 @@
-var BrehonContract = artifacts.require("./BrehonContract.sol");
-var defaults = require('../config/deployment_settings.js').defaults;
+const BrehonContract = artifacts.require("./BrehonContract.sol");
+const defaults = require('../config/deployment_settings.js').defaults;
 
-var PartyStruct = {
-  addr: 0,
-  deposit: 1,
-  contractAccepted: 2,
-  primaryBrehonApproval: 3,
-  secondaryBrehonApproval: 4,
-  tertiaryBrehonApproval: 5
-};
-
-var BrehonStruct = {
-  addr: 0,
-  contractAccepted: 1,
-  fixedFee: 2,
-  disputeFee: 3
-};
+const contractHelpers = require('../lib/contractHelpers.js');
+const PartyStruct = contractHelpers.PartyStruct;
+const BrehonStruct = contractHelpers.BrehonStruct;
 
 contract('BrehonContract should accept funds from partyA', function (accounts) {
   it('by correctly setting partyA\'s deposit', function () {
-    var brehonContract;
+    let brehonContract;
     return BrehonContract.deployed().then(function (instance) {
       brehonContract = instance;
       return brehonContract.deposit({from: defaults.partyA_addr, value: defaults.transactionAmount});
@@ -39,7 +27,7 @@ contract('BrehonContract should accept funds from partyA', function (accounts) {
 
 contract('BrehonContract should accept funds from partyB', function (accounts) {
   it('by correctly setting partyB\'s deposit', function () {
-    var brehonContract;
+    let brehonContract;
     return BrehonContract.deployed().then(function (instance) {
       brehonContract = instance;
       return brehonContract.deposit({from: defaults.partyB_addr, value: defaults.transactionAmount});
@@ -59,7 +47,7 @@ contract('BrehonContract should accept funds from partyB', function (accounts) {
 
 contract('BrehonContract shouldnt\'t accept funds from unauthorized addresses', function (accounts) {
   it('like from the primaryBrehon', function () {
-    var brehonContract;
+    let brehonContract;
     return BrehonContract.deployed().then(function (instance) {
       brehonContract = instance;
       return brehonContract.deposit({from: defaults.primaryBrehon_addr, value: defaults.transactionAmount});
@@ -79,7 +67,7 @@ contract('BrehonContract shouldnt\'t accept funds from unauthorized addresses', 
   });
 
   it('or from the secondaryBrehon', function () {
-    var brehonContract;
+    let brehonContract;
     return BrehonContract.deployed().then(function (instance) {
       brehonContract = instance;
       return brehonContract.deposit({from: defaults.secondaryBrehon_addr, value: defaults.transactionAmount});
@@ -99,7 +87,7 @@ contract('BrehonContract shouldnt\'t accept funds from unauthorized addresses', 
   });
 
   it('or from the tertiaryBrehon', function () {
-    var brehonContract;
+    let brehonContract;
     return BrehonContract.deployed().then(function (instance) {
       brehonContract = instance;
       return brehonContract.deposit({from: defaults.tertiaryBrehon_addr, value: defaults.transactionAmount});
@@ -119,7 +107,7 @@ contract('BrehonContract shouldnt\'t accept funds from unauthorized addresses', 
   });
 
   it('or from a rando', function () {
-    var brehonContract;
+    let brehonContract;
     return BrehonContract.deployed().then(function (instance) {
       brehonContract = instance;
       return brehonContract.deposit({from: accounts[6], value: defaults.transactionAmount});
