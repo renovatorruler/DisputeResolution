@@ -1,6 +1,10 @@
 var BrehonContract = artifacts.require("./BrehonContract.sol");
 var defaults = require('../config/deployment_settings.js').defaults;
 
+var contractHelpers = require('../lib/contractHelpers.js');
+var startContract = contractHelpers.startContract;
+var getMinimumContractAmt = contractHelpers.getMinimumContractAmt;
+
 var PartyStruct = {
   addr: 0,
   deposit: 1,
@@ -225,6 +229,27 @@ contract('BrehonContract acceptContract method should not allow someone else to 
       });
     }).catch(function (err) {
       assert.isNotNull(err, "Exception was not thrown when an unregistered party tried to accept the contract");
+    });
+  });
+});
+
+contract('BrehonContract acceptContract should ', function (accounts) {
+  it('only be executed at Negotiation stage', function () {
+    var brehonContract;
+    return BrehonContract.deployed()
+      .then(function captureReference(instance) {
+        brehonContract = instance;
+        return instance;
+      })
+      .then(startContract([{
+        addr: defaults.partyB_addr,
+        value: getMinimumContractAmt(defaults)
+      }])(defaults.partyB_addr))
+      .then(function () {
+        return brehonContract.acceptContract({from: defaults.partyA_addr});
+      })
+    .catch(function (err) {
+      assert.isNotNull(err, "Exception was not thrown when acceptContract was triggerred at a stage which was not Negotiation stage");
     });
   });
 });
