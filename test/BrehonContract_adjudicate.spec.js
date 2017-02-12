@@ -36,6 +36,16 @@ contract('BrehonContract should allow primaryBrehon to adjudicate the contract',
             assert.equal(stage.valueOf(), 4, "stage is not set to Stages.AppealPeriod");
         });
       })
+      .then(() => {
+        return brehonContract.getActiveJudgmentByParty.call(defaults.partyA_addr).then((award) => {
+            assert.equal(award.valueOf(), getSplitForPrimaryBrehon(100), "Award for partyA not accurately set");
+        });
+      })
+      .then(() => {
+        return brehonContract.getActiveJudgmentByParty.call(defaults.partyB_addr).then((award) => {
+            assert.equal(award.valueOf(), getSplitForPrimaryBrehon(0), "Award for partyB not accurately set");
+        });
+      })
       .catch((err) => {
         assert.isNull(err, "Exception was thrown when primaryBrehon tried to adjudicate a dispute");
       });

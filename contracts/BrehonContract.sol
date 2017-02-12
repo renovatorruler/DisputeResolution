@@ -199,6 +199,14 @@ contract BrehonContract is
     AppealPeriodStarted(appealLevel, appealPeriodInDays, activeBrehon.addr, _awardPartyA, _awardPartyB);
   }
 
+  function getActiveJudgmentByParty(address _partyAddress)
+    returns (uint)
+  {
+      if(_partyAddress != partyA.addr &&
+         _partyAddress != partyB.addr) throw;
+    return awards[_partyAddress];
+  }
+
   function claimFunds()
     timedTransition(appealPeriodStartTime, appealPeriodInDays, Stages.AppealPeriod, Stages.Completed)
     atStage(Stages.Completed)
