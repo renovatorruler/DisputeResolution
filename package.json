@@ -5,8 +5,9 @@
   "scripts": {
     "start": "truffle serve",
     "testrpc": "testrpc -m 'myth like bonus scare over problem client lizard pioneer submit female collect' --hostname 0.0.0.0 --gasPrice 20",
+    "testrpc-silent": "testrpc -m 'myth like bonus scare over problem client lizard pioneer submit female collect' --hostname 0.0.0.0 --gasPrice 20 > /dev/null",
     "truffletest": "truffle test",
-    "test": "run-p -r \"testrpc \\> /dev/null\" \"truffletest\""
+    "test": "run-p -r \"testrpc-silent\" \"truffletest\""
   },
   "repository": "git@github.com:prashantpawar/DisputeResolution.git",
   "author": "Prashant Singh Pawar <prashantpawar@gmail.com>",
