@@ -213,7 +213,7 @@ contract('BrehonContract raiseDispute should not be raised by unauthorized addre
   });
 });
 
-contract('BrehonContract should set appealLevel to 0', (accounts) => {
+contract('BrehonContract should set appealLevel to 0 and trigger ContractDisputed event', (accounts) => {
   it('when dispute is first raised', () => {
     var brehonContract;
     return BrehonContract.deployed()
@@ -254,8 +254,11 @@ contract('BrehonContract should set primaryBrehon as the activeBrehon', (account
           value: getMinimumContractAmt(defaults)
         }], defaults.partyA_addr, defaults.partyA_addr))
       .then(() => {
-        return brehonContract.appealLevel.call().then((appealLevel) => {
-          assert.equal(appealLevel.valueOf(), 0, 'appealLevel is not set to 0 when dispute  is raised'); 
+        return brehonContract.activeBrehon.call().then((activeBrehon) => {
+            assert.equal(activeBrehon[BrehonStruct.contractAccepted], true, 'activeBrehon\'s contractAccepted should be set to true');
+            assert.equal(activeBrehon[BrehonStruct.addr], defaults.primaryBrehon_addr, 'activeBrehon\'s address not set to primaryBrehon correctly');
+            assert.equal(activeBrehon[BrehonStruct.fixedFee], defaults.primaryBrehon_fixedFee, 'activeBrehon\'s fixedFee not set to primaryBrehon\'s fixedFee');
+            assert.equal(activeBrehon[BrehonStruct.disputeFee], defaults.primaryBrehon_disputeFee, 'activeBrehon\'s disputeFee not set to primaryBrehon\'s disputeFee');
         });
       });
   });
