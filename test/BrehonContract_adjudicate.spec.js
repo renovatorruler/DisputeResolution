@@ -24,29 +24,29 @@ contract('BrehonContract should allow primaryBrehon to adjudicate the contract',
           addr: defaults.partyA_addr,
           value: getMinimumContractAmt(defaults)
         }], defaults.partyA_addr, defaults.partyA_addr))
-      .then(() => {
+      .then(function adjudicate() {
         return brehonContract.adjudicate(
             getSplitForPrimaryBrehon(100),
             getSplitForPrimaryBrehon(0),
             {from: defaults.primaryBrehon_addr}
         );
       })
-      .then(() => {
+      .then(function verifyStage() {
         return brehonContract.stage.call().then((stage) => {
             assert.equal(stage.valueOf(), 4, "stage is not set to Stages.AppealPeriod");
         });
       })
-      .then(() => {
+      .then(function verifyPartyASplit() {
         return brehonContract.getActiveJudgmentByParty.call(defaults.partyA_addr).then((award) => {
             assert.equal(award.valueOf(), getSplitForPrimaryBrehon(100), "Award for partyA not accurately set");
         });
       })
-      .then(() => {
+      .then(function verifyPartyBSplit() {
         return brehonContract.getActiveJudgmentByParty.call(defaults.partyB_addr).then((award) => {
             assert.equal(award.valueOf(), getSplitForPrimaryBrehon(0), "Award for partyB not accurately set");
         });
       })
-      .catch((err) => {
+      .catch(function handleException(err) {
         assert.isNull(err, "Exception was thrown when primaryBrehon tried to adjudicate a dispute");
       });
   });
@@ -65,29 +65,29 @@ contract('BrehonContract should allow primaryBrehon to adjudicate the contract',
           addr: defaults.partyB_addr,
           value: getMinimumContractAmt(defaults)
         }], defaults.partyB_addr, defaults.partyB_addr))
-      .then(() => {
+      .then(function adjudicate() {
         return brehonContract.adjudicate(
             getSplitForPrimaryBrehon(0),
             getSplitForPrimaryBrehon(100),
             {from: defaults.primaryBrehon_addr}
         );
       })
-      .then(() => {
+      .then(function verifyStage() {
         return brehonContract.stage.call().then((stage) => {
             assert.equal(stage.valueOf(), 4, "stage is not set to Stages.AppealPeriod");
         });
       })
-      .then(() => {
+      .then(function verifyPartyBSplit() {
         return brehonContract.getActiveJudgmentByParty.call(defaults.partyB_addr).then((award) => {
             assert.equal(award.valueOf(), getSplitForPrimaryBrehon(100), "Award for partyB not accurately set");
         });
       })
-      .then(() => {
+      .then(function verifyPartyASplit() {
         return brehonContract.getActiveJudgmentByParty.call(defaults.partyA_addr).then((award) => {
             assert.equal(award.valueOf(), getSplitForPrimaryBrehon(0), "Award for partyA not accurately set");
         });
       })
-      .catch((err) => {
+      .catch(function handleException(err) {
         assert.isNull(err, "Exception was thrown when primaryBrehon tried to adjudicate a dispute");
       });
   });
@@ -106,29 +106,29 @@ contract('BrehonContract should allow primaryBrehon to adjudicate the contract',
           addr: defaults.partyB_addr,
           value: getMinimumContractAmt(defaults)
         }], defaults.partyB_addr, defaults.partyB_addr))
-      .then(() => {
+      .then(function adjudicate() {
         return brehonContract.adjudicate(
             getSplitForPrimaryBrehon(50),
             getSplitForPrimaryBrehon(-50),
             {from: defaults.primaryBrehon_addr}
         );
       })
-      .then(() => {
+      .then(function verifyStage() {
         return brehonContract.stage.call().then((stage) => {
             assert.equal(stage.valueOf(), 4, "stage is not set to Stages.AppealPeriod");
         });
       })
-      .then(() => {
+      .then(function verifyPartyBSplit() {
         return brehonContract.getActiveJudgmentByParty.call(defaults.partyB_addr).then((award) => {
             assert.equal(award.valueOf(), getSplitForPrimaryBrehon(-50), "Award for partyB not accurately set");
         });
       })
-      .then(() => {
+      .then(function verifyPartyASplit() {
         return brehonContract.getActiveJudgmentByParty.call(defaults.partyA_addr).then((award) => {
             assert.equal(award.valueOf(), getSplitForPrimaryBrehon(50), "Award for partyA not accurately set");
         });
       })
-      .catch((err) => {
+      .catch(function handleException(err) {
         assert.isNull(err, "Exception was thrown when primaryBrehon tried to adjudicate a dispute");
       });
   });
@@ -147,14 +147,14 @@ contract('BrehonContract should not allow primaryBrehon to adjudicate the contra
           addr: defaults.partyA_addr,
           value: getMinimumContractAmt(defaults)
         }], defaults.partyA_addr, defaults.partyA_addr))
-      .then(() => {
+      .then(function adjudicate() {
         return brehonContract.adjudicate(
             getSplitForPrimaryBrehon(60),
             getSplitForPrimaryBrehon(60),
             {from: defaults.primaryBrehon_addr}
         );
       })
-      .catch((err) => {
+      .catch(function handleException(err) {
         assert.isNotNull(err, "Exception was not thrown when primaryBrehon tried to award more funds than the contract held");
       });
   });
