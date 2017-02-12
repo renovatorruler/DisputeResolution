@@ -190,6 +190,8 @@ contract BrehonContract is
     atStage(Stages.Dispute)
     onlyByBrehon(activeBrehon)
   {
+    if((_awardPartyA + _awardPartyB) > (partyA.deposit + partyB.deposit)) throw;
+
     stage = Stages.AppealPeriod;
     appealPeriodStartTime = now;
 
