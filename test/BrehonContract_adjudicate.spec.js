@@ -7,17 +7,9 @@ const defaults = require('../config/deployment_settings.js').defaults;
 const contractHelpers = require('../lib/contractHelpers.js');
 const startContractAndRaiseDispute = contractHelpers.startContractAndRaiseDispute;
 const getMinimumContractAmt = contractHelpers.getMinimumContractAmt;
-
-const getPercentageSplit = (percent, appealLevel, contract_settings) => {
-    let splitAmount = new BigNumber(contract_settings.transactionAmount);
-    if(appealLevel < 1) {
-      splitAmount = splitAmount.add(new BigNumber(contract_settings.secondaryBrehon_disputeFee));
-    }
-    if(appealLevel < 2) {
-      splitAmount = splitAmount.add(new BigNumber(contract_settings.tertiaryBrehon_disputeFee));
-    }
-    return splitAmount.times(percent/100);
-};
+const getSplitForPrimaryBrehon = contractHelpers.getPercentageSplit(defaults, 0);
+const getSplitForSecondaryBrehon = contractHelpers.getPercentageSplit(defaults, 1);
+const getSplitForTertiaryBrehon = contractHelpers.getPercentageSplit(defaults, 2);
 
 contract('BrehonContract should allow primaryBrehon to adjudicate the contract', (accounts) => {
   it('in the favor of partyA completely', () => {
@@ -34,8 +26,8 @@ contract('BrehonContract should allow primaryBrehon to adjudicate the contract',
         }], defaults.partyA_addr, defaults.partyA_addr))
       .then(() => {
         return brehonContract.adjudicate(
-            getPercentageSplit(100, 0, defaults),
-            getPercentageSplit(0, 0, defaults),
+            getSplitForPrimaryBrehon(100),
+            getSplitForPrimaryBrehon(0),
             {from: defaults.primaryBrehon_addr}
         );
       })
@@ -45,7 +37,6 @@ contract('BrehonContract should allow primaryBrehon to adjudicate the contract',
         });
       })
       .catch((err) => {
-        console.log(err);
         assert.isNull(err, "Exception was thrown when primaryBrehon tried to adjudicate a dispute");
       });
   });
