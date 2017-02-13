@@ -5,6 +5,7 @@ const BrehonContract = artifacts.require("./BrehonContract.sol");
 const defaults = require('../config/deployment_settings.js').defaults;
 
 const contractHelpers = require('../lib/contractHelpers.js');
+const startContract = contractHelpers.startContract;
 const startContractAndRaiseDispute = contractHelpers.startContractAndRaiseDispute;
 const getMinimumContractAmt = contractHelpers.getMinimumContractAmt;
 const getSplitForPrimaryBrehon = contractHelpers.getPercentageSplit(defaults, 0);
@@ -21,15 +22,34 @@ contract('BrehonContract raiseAppeal should only be allowed at Dispute stage', (
       })
       .then(function raiseAppeal() {
         return brehonContract.raiseAppeal(
-            {from: defaults.primaryBrehon_addr}
+            {from: defaults.partyA}
         );
       })
       .catch((err) => {
-        assert.isNotNull(err, "Exception was not thrown when adjudicate() was triggerred at the Negotiation stage");
+        assert.isNotNull(err, "Exception was not thrown when raiseAppeal() was triggerred at the Negotiation stage");
       });
   });
 
   it('by preventing it from being called at Execution stage', () => {
+    var brehonContract;
+    return BrehonContract.deployed()
+      .then(function captureReference(instance) {
+        brehonContract = instance;
+        return instance;
+      })
+      .then(startContract(
+        [{
+          addr: defaults.partyA_addr,
+          value: getMinimumContractAmt(defaults)
+        }], defaults.partyA_addr))
+      .then(function raiseAppeal() {
+        return brehonContract.raiseAppeal(
+            {from: defaults.partyA_addr}
+        );
+      })
+      .catch((err) => {
+        assert.isNotNull(err, "Exception was not thrown when raiseAppeal() was triggerred at the Execution stage");
+      });
   });
 
   it('by preventing it from being called at AppealPeriod stage', () => {
