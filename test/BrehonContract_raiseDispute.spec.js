@@ -253,7 +253,7 @@ contract('BrehonContract should set primaryBrehon as the activeBrehon', (account
           addr: defaults.partyA_addr,
           value: getMinimumContractAmt(defaults)
         }], defaults.partyA_addr, defaults.partyA_addr))
-      .then(() => {
+      .then(function verifyActiveBrehon() {
         return brehonContract.activeBrehon.call().then((activeBrehon) => {
             assert.equal(activeBrehon[BrehonStruct.contractAccepted], true, 'activeBrehon\'s contractAccepted should be set to true');
             assert.equal(activeBrehon[BrehonStruct.addr], defaults.primaryBrehon_addr, 'activeBrehon\'s address not set to primaryBrehon correctly');

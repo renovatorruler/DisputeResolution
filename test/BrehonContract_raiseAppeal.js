@@ -8,6 +8,8 @@ const contractHelpers = require('../lib/contractHelpers.js');
 const startContractAndRaiseDispute = contractHelpers.startContractAndRaiseDispute;
 const getMinimumContractAmt = contractHelpers.getMinimumContractAmt;
 const getSplitForPrimaryBrehon = contractHelpers.getPercentageSplit(defaults, 0);
+const PartyStruct = contractHelpers.PartyStruct;
+const BrehonStruct = contractHelpers.BrehonStruct;
 
 contract('BrehonContract should not allow any party to raise an appeal', (accounts) => {
   it('when stage is set to Negotiation', () => {
@@ -40,23 +42,31 @@ contract('BrehonContract should allow partyA to raise an appeal', (accounts) => 
             {from: defaults.primaryBrehon_addr}
         );
       })
+      .then(function raiseAppeal() {
+        return brehonContract.raiseAppeal(
+            {from: defaults.partyA_addr}
+        );
+      })
       .then(function verifyStage() {
         return brehonContract.stage.call().then((stage) => {
-            assert.equal(stage.valueOf(), 4, "stage is not set to Stages.AppealPeriod");
+            assert.equal(stage.valueOf(), 2, "stage is not set to Stages.Dispute");
         });
       })
-      .then(function verifyPartyASplit() {
-        return brehonContract.getActiveJudgmentByParty.call(defaults.partyA_addr).then((award) => {
-            assert.equal(award.valueOf(), getSplitForPrimaryBrehon(100), "Award for partyA not accurately set");
+      .then(function verifyAppealLevel() {
+        return brehonContract.appealLevel.call().then((appealLevel) => {
+            assert.equal(appealLevel.valueOf(), 1, "Appeal level not set correctly");
         });
       })
-      .then(function verifyPartyBSplit() {
-        return brehonContract.getActiveJudgmentByParty.call(defaults.partyB_addr).then((award) => {
-            assert.equal(award.valueOf(), getSplitForPrimaryBrehon(0), "Award for partyB not accurately set");
+      .then(function verifyActiveBrehon() {
+        return brehonContract.activeBrehon.call().then((activeBrehon) => {
+            assert.equal(activeBrehon[BrehonStruct.contractAccepted], true, 'activeBrehon\'s contractAccepted should be set to true');
+            assert.equal(activeBrehon[BrehonStruct.addr], defaults.secondaryBrehon_addr, 'activeBrehon\'s address not set to secondaryBrehon correctly');
+            assert.equal(activeBrehon[BrehonStruct.fixedFee], defaults.secondaryBrehon_fixedFee, 'activeBrehon\'s fixedFee not set to secondaryBrehon\'s fixedFee');
+            assert.equal(activeBrehon[BrehonStruct.disputeFee], defaults.secondaryBrehon_disputeFee, 'activeBrehon\'s disputeFee not set to secondaryBrehon\'s disputeFee');
         });
       })
       .catch(function handleException(err) {
-          console.log(err);
+        console.log(err);
         assert.isNull(err, "Exception was thrown when primaryBrehon tried to adjudicate a dispute");
       });
   });
