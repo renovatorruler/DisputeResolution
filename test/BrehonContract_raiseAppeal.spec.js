@@ -53,6 +53,27 @@ contract('BrehonContract raiseAppeal should only be allowed at Dispute stage', (
   });
 
   it('by preventing it from being called at AppealPeriod stage', () => {
+    var brehonContract;
+    return BrehonContract.deployed()
+      .then(function captureReference(instance) {
+        brehonContract = instance;
+        return instance;
+      })
+      .then(startContract(
+        [{
+          addr: defaults.partyA_addr,
+          value: getMinimumContractAmt(defaults)
+        }], defaults.partyA_addr))
+      .then(function adjudicate() {
+        return brehonContract.adjudicate(
+            getSplitForPrimaryBrehon(60),
+            getSplitForPrimaryBrehon(60),
+            {from: defaults.primaryBrehon_addr}
+        );
+      })
+      .catch((err) => {
+        assert.isNotNull(err, "Exception was not thrown when raiseAppeal() was triggerred at the AppealPeriod stage");
+      });
   });
 });
 
