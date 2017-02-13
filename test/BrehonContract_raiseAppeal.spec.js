@@ -47,6 +47,15 @@ contract('BrehonContract should allow partyA to raise an appeal', (accounts) => 
             {from: defaults.partyA_addr}
         );
       })
+      .then(function verifyAppealRaisedEvent(result) {
+        var appealRaisedEvent = R.find(R.propEq('event', 'AppealRaised'), result.logs);
+        assert.equal(appealRaisedEvent.args._appealLevel, 1,
+          "AppealRaised event did not correctly provide the appealLevel");
+        assert.equal(appealRaisedEvent.args._activeBrehon, defaults.secondaryBrehon_addr,
+          "AppealRaised event did not correctly provide the activeBrehon's address");
+        assert.isDefined(appealRaisedEvent, "ContractStarted event was not emitted");
+        return result;
+      })
       .then(function verifyStage() {
         return brehonContract.stage.call().then((stage) => {
             assert.equal(stage.valueOf(), 2, "stage is not set to Stages.Dispute");
