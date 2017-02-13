@@ -43,6 +43,7 @@ contract BrehonContract is
   event ExecutionStarted(address _caller, uint _totalDeposits);
   event ContractDisputed(address _disputingParty, address _activeBrehon);
   event AppealPeriodStarted(int8 _appealLevel, uint _startTime, address _activeBrehon, uint _awardPartyA, uint _awardPartyB);
+  //TODO: Provide the information about the party which appaled
   event AppealRaised(int8 _appealLevel, address _activeBrehon);
 
   modifier eitherByParty(Party _party1, Party _party2)
