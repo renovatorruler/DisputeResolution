@@ -13,6 +13,20 @@ const BrehonStruct = contractHelpers.BrehonStruct;
 
 contract('BrehonContract raiseAppeal should only be allowed at Dispute stage', (accounts) => {
   it('by preventing it from being called at Negotiation stage', () => {
+    var brehonContract;
+    return BrehonContract.deployed()
+      .then(function captureReference(instance) {
+        brehonContract = instance;
+        return instance;
+      })
+      .then(function raiseAppeal() {
+        return brehonContract.raiseAppeal(
+            {from: defaults.primaryBrehon_addr}
+        );
+      })
+      .catch((err) => {
+        assert.isNotNull(err, "Exception was not thrown when adjudicate() was triggerred at the Negotiation stage");
+      });
   });
 
   it('by preventing it from being called at Execution stage', () => {
