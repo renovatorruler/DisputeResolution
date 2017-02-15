@@ -314,16 +314,6 @@ contract('BrehonContract should allow partyB to raise an appeal', (accounts) => 
 });
 
 contract('BrehonContract should allow partyA to raise an appeal', (accounts) => {
-  it('when he is dissatisfied by the resolution provided by the secondaryBrehon', () => {
-  });
-});
-
-contract('BrehonContract should allow partyB to raise an appeal', (accounts) => {
-  it('when he is dissatisfied by the resolution provided by the secondaryBrehon', () => {
-  });
-});
-
-contract('BrehonContract should allow partyA to raise an appeal', (accounts) => {
   it('when he is dissatisfied by the resolution provided by the tertiaryBrehon', () => {
   });
 });
