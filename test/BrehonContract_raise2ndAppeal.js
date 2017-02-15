@@ -45,6 +45,11 @@ contract('BrehonContract should allow partyA to raise an appeal', (accounts) => 
             {from: defaults.secondaryBrehon_addr}
         );
       })
+      .then(function raise2ndAppeal() {
+        return brehonContract.raise2ndAppeal(
+            {from: defaults.partyA_addr}
+        );
+      })
       .then(function verifyAppealRaisedEvent(result) {
         var appealRaisedEvent = R.find(R.propEq('event', 'AppealRaised'), result.logs);
         assert.equal(appealRaisedEvent.args._appealLevel, 2,
@@ -67,9 +72,9 @@ contract('BrehonContract should allow partyA to raise an appeal', (accounts) => 
       .then(function verifyActiveBrehon() {
         return brehonContract.activeBrehon.call().then((activeBrehon) => {
             assert.equal(activeBrehon[BrehonStruct.contractAccepted], true, 'activeBrehon\'s contractAccepted should be set to true');
-            assert.equal(activeBrehon[BrehonStruct.addr], defaults.secondaryBrehon_addr, 'activeBrehon\'s address not set to secondaryBrehon correctly');
-            assert.equal(activeBrehon[BrehonStruct.fixedFee], defaults.secondaryBrehon_fixedFee, 'activeBrehon\'s fixedFee not set to secondaryBrehon\'s fixedFee');
-            assert.equal(activeBrehon[BrehonStruct.disputeFee], defaults.secondaryBrehon_disputeFee, 'activeBrehon\'s disputeFee not set to secondaryBrehon\'s disputeFee');
+            assert.equal(activeBrehon[BrehonStruct.addr], defaults.tertiaryBrehon_addr, 'activeBrehon\'s address not set to tertiaryBrehon correctly');
+            assert.equal(activeBrehon[BrehonStruct.fixedFee], defaults.tertiaryBrehon_fixedFee, 'activeBrehon\'s fixedFee not set to tertiaryBrehon\'s fixedFee');
+            assert.equal(activeBrehon[BrehonStruct.disputeFee], defaults.tertiaryBrehon_disputeFee, 'activeBrehon\'s disputeFee not set to tertiaryBrehon\'s disputeFee');
         });
       })
       .catch(function handleException(err) {
