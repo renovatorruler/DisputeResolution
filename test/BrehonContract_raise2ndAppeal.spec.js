@@ -13,6 +13,169 @@ const getSplitForSecondaryBrehon = contractHelpers.getPercentageSplit(defaults, 
 const PartyStruct = contractHelpers.PartyStruct;
 const BrehonStruct = contractHelpers.BrehonStruct;
 
+//TODO: Abstract out startContractRaiseDisputeAnd Adjudicate
+contract('BrehonContract raiseAppeal should only be allowed at Dispute stage', (accounts) => {
+  it('by preventing it from being called at Negotiation stage', () => {
+    var brehonContract;
+    return BrehonContract.deployed()
+      .then(function captureReference(instance) {
+        brehonContract = instance;
+        return instance;
+      })
+      .then(function raise2ndAppeal() {
+        return brehonContract.raise2ndAppeal(
+            {from: defaults.partyA}
+        );
+      })
+      .catch((err) => {
+        assert.isNotNull(err, "Exception was not thrown when raiseAppeal() was triggerred at the Negotiation stage");
+      });
+  });
+
+
+    //TODO: Add handling of other stages
+  it('by preventing it from being called at Execution stage', () => {
+    var brehonContract;
+    return BrehonContract.deployed()
+      .then(function captureReference(instance) {
+        brehonContract = instance;
+        return instance;
+      })
+      .then(startContract(
+        [{
+          addr: defaults.partyA_addr,
+          value: getMinimumContractAmt(defaults)
+        }], defaults.partyA_addr))
+      .then(function raise2ndAppeal() {
+        return brehonContract.raise2ndAppeal(
+            {from: defaults.partyA_addr}
+        );
+      })
+      .catch((err) => {
+        assert.isNotNull(err, "Exception was not thrown when raiseAppeal() was triggerred at the Execution stage");
+      });
+  });
+
+});
+
+contract('BrehonContract should not allow an unauthorized party to raise an appeal', (accounts) => {
+  it('like the primaryBrehon', () => {
+    var brehonContract;
+    return BrehonContract.deployed()
+      .then(function captureReference(instance) {
+        brehonContract = instance;
+        return instance;
+      })
+      .then(startContractAndRaiseDispute(
+        [{
+          addr: defaults.partyA_addr,
+          value: getMinimumContractAmt(defaults)
+        }], defaults.partyA_addr, defaults.partyA_addr))
+      .then(function adjudicate() {
+        return brehonContract.adjudicate(
+            getSplitForPrimaryBrehon(100),
+            getSplitForPrimaryBrehon(0),
+            {from: defaults.primaryBrehon_addr}
+        );
+      })
+      .then(function raiseAppeal() {
+        return brehonContract.raiseAppeal(
+            {from: defaults.primaryBrehon_addr}
+        );
+      })
+      .catch(function handleException(err) {
+        assert.isNotNull(err, "Exception was not thrown when primaryBrehon tried to raise an appeal");
+      });
+  });
+
+  it('like the secondaryBrehon', () => {
+    var brehonContract;
+    return BrehonContract.deployed()
+      .then(function captureReference(instance) {
+        brehonContract = instance;
+        return instance;
+      })
+      .then(startContractAndRaiseDispute(
+        [{
+          addr: defaults.partyA_addr,
+          value: getMinimumContractAmt(defaults)
+        }], defaults.partyA_addr, defaults.partyA_addr))
+      .then(function adjudicate() {
+        return brehonContract.adjudicate(
+            getSplitForPrimaryBrehon(100),
+            getSplitForPrimaryBrehon(0),
+            {from: defaults.primaryBrehon_addr}
+        );
+      })
+      .then(function raiseAppeal() {
+        return brehonContract.raiseAppeal(
+            {from: defaults.secondaryBrehon_addr}
+        );
+      })
+      .catch(function handleException(err) {
+        assert.isNotNull(err, "Exception was not thrown when secondaryBrehon tried to raise an appeal");
+      });
+  });
+
+  it('like the tertiaryBrehon', () => {
+    var brehonContract;
+    return BrehonContract.deployed()
+      .then(function captureReference(instance) {
+        brehonContract = instance;
+        return instance;
+      })
+      .then(startContractAndRaiseDispute(
+        [{
+          addr: defaults.partyA_addr,
+          value: getMinimumContractAmt(defaults)
+        }], defaults.partyA_addr, defaults.partyA_addr))
+      .then(function adjudicate() {
+        return brehonContract.adjudicate(
+            getSplitForPrimaryBrehon(100),
+            getSplitForPrimaryBrehon(0),
+            {from: defaults.primaryBrehon_addr}
+        );
+      })
+      .then(function raiseAppeal() {
+        return brehonContract.raiseAppeal(
+            {from: defaults.tertiaryBrehon_addr}
+        );
+      })
+      .catch(function handleException(err) {
+        assert.isNotNull(err, "Exception was not thrown when tertiaryBrehon tried to raise an appeal");
+      });
+  });
+
+  it('or like a rando', () => {
+    var brehonContract;
+    return BrehonContract.deployed()
+      .then(function captureReference(instance) {
+        brehonContract = instance;
+        return instance;
+      })
+      .then(startContractAndRaiseDispute(
+        [{
+          addr: defaults.partyA_addr,
+          value: getMinimumContractAmt(defaults)
+        }], defaults.partyA_addr, defaults.partyA_addr))
+      .then(function adjudicate() {
+        return brehonContract.adjudicate(
+            getSplitForPrimaryBrehon(100),
+            getSplitForPrimaryBrehon(0),
+            {from: defaults.primaryBrehon_addr}
+        );
+      })
+      .then(function raiseAppeal() {
+        return brehonContract.raiseAppeal(
+            {from: defaults.accounts[6]}
+        );
+      })
+      .catch(function handleException(err) {
+        assert.isNotNull(err, "Exception was not thrown when a rando tried to raise an appeal");
+      });
+  });
+});
+
 contract('BrehonContract should allow partyA to raise an appeal', (accounts) => {
   it('when he is dissatisfied by the resolution provided by the secondaryBrehon', () => {
     var brehonContract;
@@ -154,4 +317,3 @@ contract('BrehonContract should allow partyB to raise an appeal', (accounts) => 
       });
   });
 });
-

@@ -59,16 +59,21 @@ contract('BrehonContract raiseAppeal should only be allowed at Dispute stage', (
         brehonContract = instance;
         return instance;
       })
-      .then(startContract(
+      .then(startContractAndRaiseDispute(
         [{
           addr: defaults.partyA_addr,
           value: getMinimumContractAmt(defaults)
-        }], defaults.partyA_addr))
+        }], defaults.partyA_addr, defaults.partyA_addr))
       .then(function adjudicate() {
         return brehonContract.adjudicate(
-            getSplitForPrimaryBrehon(60),
-            getSplitForPrimaryBrehon(60),
+            getSplitForPrimaryBrehon(100),
+            getSplitForPrimaryBrehon(0),
             {from: defaults.primaryBrehon_addr}
+        );
+      })
+      .then(function raiseAppeal() {
+        return brehonContract.raiseAppeal(
+            {from: defaults.partyA_addr}
         );
       })
       .catch((err) => {
@@ -310,15 +315,5 @@ contract('BrehonContract should allow partyB to raise an appeal', (accounts) => 
         console.log(err);
         assert.isNull(err, "Exception was thrown when partyB tried to raise an appeal");
       });
-  });
-});
-
-contract('BrehonContract should allow partyA to raise an appeal', (accounts) => {
-  it('when he is dissatisfied by the resolution provided by the tertiaryBrehon', () => {
-  });
-});
-
-contract('BrehonContract should allow partyB to raise an appeal', (accounts) => {
-  it('when he is dissatisfied by the resolution provided by the tertiaryBrehon', () => {
   });
 });
