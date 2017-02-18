@@ -80,7 +80,7 @@ contract('BrehonContract raiseAppeal should only be allowed at Dispute stage', (
         assert.isNotNull(err, "Exception was not thrown when raiseAppeal() was triggerred at the AppealPeriod stage");
       });
   });
-});
+})
 
 contract('BrehonContract should not allow an unauthorized party to raise an appeal', (accounts) => {
   it('like the primaryBrehon', () => {

@@ -13,7 +13,6 @@ const getSplitForSecondaryBrehon = contractHelpers.getPercentageSplit(defaults, 
 const PartyStruct = contractHelpers.PartyStruct;
 const BrehonStruct = contractHelpers.BrehonStruct;
 
-//TODO: Abstract out startContractRaiseDisputeAnd Adjudicate
 contract('BrehonContract raiseAppeal should only be allowed at Dispute stage', (accounts) => {
   it('by preventing it from being called at Negotiation stage', () => {
     var brehonContract;
@@ -31,7 +30,6 @@ contract('BrehonContract raiseAppeal should only be allowed at Dispute stage', (
         assert.isNotNull(err, "Exception was not thrown when raiseAppeal() was triggerred at the Negotiation stage");
       });
   });
-
 
     //TODO: Add handling of other stages
   it('by preventing it from being called at Execution stage', () => {
@@ -56,6 +54,34 @@ contract('BrehonContract raiseAppeal should only be allowed at Dispute stage', (
       });
   });
 
+  it('by preventing it from being called at AppealPeriod stage with appealLevel == 1', () => {
+    var brehonContract;
+    return BrehonContract.deployed()
+      .then(function captureReference(instance) {
+        brehonContract = instance;
+        return instance;
+      })
+      .then(startContractAndRaiseDispute(
+        [{
+          addr: defaults.partyA_addr,
+          value: getMinimumContractAmt(defaults)
+        }], defaults.partyA_addr, defaults.partyA_addr))
+      .then(function adjudicate() {
+        return brehonContract.adjudicate(
+            getSplitForPrimaryBrehon(100),
+            getSplitForPrimaryBrehon(0),
+            {from: defaults.primaryBrehon_addr}
+        );
+      })
+      .then(function raise2ndAppeal() {
+        return brehonContract.raiseAppeal(
+            {from: defaults.partyA_addr}
+        );
+      })
+      .catch((err) => {
+        assert.isNotNull(err, "Exception was not thrown when raiseAppeal() was triggerred at the AppealPeriod stage");
+      });
+  });
 });
 
 contract('BrehonContract should not allow an unauthorized party to raise an appeal', (accounts) => {
