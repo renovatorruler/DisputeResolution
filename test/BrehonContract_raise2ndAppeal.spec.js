@@ -31,7 +31,6 @@ contract('BrehonContract raiseAppeal should only be allowed at Dispute stage', (
       });
   });
 
-    //TODO: Add handling of other stages
   it('by preventing it from being called at Execution stage', () => {
     var brehonContract;
     return BrehonContract.deployed()
@@ -109,6 +108,18 @@ contract('BrehonContract should not allow an unauthorized party to raise an appe
             {from: defaults.primaryBrehon_addr}
         );
       })
+      .then(function adjudicate() {
+        return brehonContract.adjudicate(
+            getSplitForSecondaryBrehon(100),
+            getSplitForSecondaryBrehon(0),
+            {from: defaults.secondaryBrehon_addr}
+        );
+      })
+      .then(function raise2ndAppeal() {
+        return brehonContract.raiseAppeal(
+            {from: defaults.primaryBrehon_addr}
+        );
+      })
       .catch(function handleException(err) {
         assert.isNotNull(err, "Exception was not thrown when primaryBrehon tried to raise an appeal");
       });
@@ -136,6 +147,18 @@ contract('BrehonContract should not allow an unauthorized party to raise an appe
       .then(function raiseAppeal() {
         return brehonContract.raiseAppeal(
             {from: defaults.secondaryBrehon_addr}
+        );
+      })
+      .then(function adjudicate() {
+        return brehonContract.adjudicate(
+            getSplitForSecondaryBrehon(100),
+            getSplitForSecondaryBrehon(0),
+            {from: defaults.secondaryBrehon_addr}
+        );
+      })
+      .then(function raise2ndAppeal() {
+        return brehonContract.raiseAppeal(
+            {from: defaults.primaryBrehon_addr}
         );
       })
       .catch(function handleException(err) {
@@ -167,6 +190,18 @@ contract('BrehonContract should not allow an unauthorized party to raise an appe
             {from: defaults.tertiaryBrehon_addr}
         );
       })
+      .then(function adjudicate() {
+        return brehonContract.adjudicate(
+            getSplitForSecondaryBrehon(100),
+            getSplitForSecondaryBrehon(0),
+            {from: defaults.secondaryBrehon_addr}
+        );
+      })
+      .then(function raise2ndAppeal() {
+        return brehonContract.raiseAppeal(
+            {from: defaults.primaryBrehon_addr}
+        );
+      })
       .catch(function handleException(err) {
         assert.isNotNull(err, "Exception was not thrown when tertiaryBrehon tried to raise an appeal");
       });
@@ -194,6 +229,18 @@ contract('BrehonContract should not allow an unauthorized party to raise an appe
       .then(function raiseAppeal() {
         return brehonContract.raiseAppeal(
             {from: defaults.accounts[6]}
+        );
+      })
+      .then(function adjudicate() {
+        return brehonContract.adjudicate(
+            getSplitForSecondaryBrehon(100),
+            getSplitForSecondaryBrehon(0),
+            {from: defaults.secondaryBrehon_addr}
+        );
+      })
+      .then(function raise2ndAppeal() {
+        return brehonContract.raiseAppeal(
+            {from: defaults.primaryBrehon_addr}
         );
       })
       .catch(function handleException(err) {
