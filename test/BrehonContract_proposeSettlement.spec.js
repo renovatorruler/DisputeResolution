@@ -1,29 +1,35 @@
 const R = require('ramda');
-const BigNumber = require('bignumber.js');
 
-const BrehonContract = artifacts.require("./BrehonContract.sol");
+const BrehonContract = artifacts.require('./BrehonContract.sol');
 const defaults = require('../config/deployment_settings.js').defaults;
 
 const contractHelpers = require('../lib/contractHelpers.js');
+
 const startContractAndRaiseDispute = contractHelpers.startContractAndRaiseDispute;
 const getMinimumContractAmt = contractHelpers.getMinimumContractAmt;
 const getSplitForPrimaryBrehon = contractHelpers.getPercentageSplit(defaults, 0);
-const getSplitForSecondaryBrehon = contractHelpers.getPercentageSplit(defaults, 1);
-const PartyStruct = contractHelpers.PartyStruct;
-const BrehonStruct = contractHelpers.BrehonStruct;
+
+const ResolutionStruct = {
+  proposerAddr: 0,
+  awardPartyA: 1,
+  awardPartyB: 2,
+};
 
 const verifyEvent = R.curry((eventName, expectedArgs, resultObj) => {
-    var event = R.find(R.propEq('event', eventName), result.logs);
-    assert.isNotNull(event, eventName + " was not emitted");
+  const event = R.find(R.propEq('event', eventName), resultObj.logs);
+  assert.isDefined(event, `${eventName} event was not emitted`);
+  if (event) {
     R.mapObjIndexed((expectedArgValue, expectedArgName) => {
-        assert.equal(event.args[expectedArgName], expectedArgValue, "");
+      let actual = event.args[expectedArgName];
+      let expected = expectedArgValue;
+      if (actual.toString) {
+        actual = actual.toString();
+        expected = expected.toString();
+      }
+      assert.equal(actual, expected, `${eventName} event did not correctly set ${expectedArgName}`);
     }, expectedArgs);
-    assert.equal(event.args._appealLevel, 2,
-        "SettlementProposed event did not correctly provide the appealLevel");
-    assert.equal(settlementProposedEvent.args._activeBrehon, defaults.tertiaryBrehon_addr,
-        "SettlementProposed event did not correctly provide the activeBrehon's address");
-    assert.isDefined(settlementProposedEvent, "ContractStarted event was not emitted");
-    return result;
+  }
+  return resultObj;
 });
 
 contract('BrehonContract should allow partyA to propose a settlement', (accounts) => {
@@ -47,28 +53,35 @@ contract('BrehonContract should allow partyA to propose a settlement', (accounts
         return brehonContract.proposeSettlement(
             settlement.partyA,
             settlement.partyB,
-            {from: defaults.primaryBrehon_addr}
+            { from: defaults.partyA_addr }
         );
       })
-      .then(function verifySettlementProposedEvent(result) {
-        var settlementProposedEvent = R.find(R.propEq('event', 'SettlementProposed'), result.logs);
-        assert.equal(settlementProposedEvent.args._appealLevel, 2,
-          "SettlementProposed event did not correctly provide the appealLevel");
-        assert.equal(settlementProposedEvent.args._activeBrehon, defaults.tertiaryBrehon_addr,
-          "SettlementProposed event did not correctly provide the activeBrehon's address");
-        assert.isDefined(settlementProposedEvent, "ContractStarted event was not emitted");
-        return result;
-      })
-      /**
-      .then(function verifyAppealLevel() {
-        return brehonContract.proposedSettlements.call().then((proposedSettlements) => {
-            assert.equal(proposedSettlements[0].valueOf(), 2, "Appeal level not set correctly");
+      .then(verifyEvent('SettlementProposed', {
+        '_proposingParty': defaults.partyA_addr,
+        '_awardPartyA': settlement.partyA,
+        '_awardPartyB': settlement.partyB,
+      }))
+      .then(function verifySettlementRecord() {
+        return brehonContract.proposedSettlement.call().then((proposedSettlement) => {
+            assert.equal(proposedSettlement[ResolutionStruct.awardPartyA].valueOf(),
+              settlement.partyA.valueOf(), 'proposedSettlement not recorded correctly for partyA');
         });
       })
-      **/
+      .then(function verifySettlementRecord() {
+        return brehonContract.proposedSettlement.call().then((proposedSettlement) => {
+            assert.equal(proposedSettlement[ResolutionStruct.awardPartyB].valueOf(),
+              settlement.partyB.valueOf(), 'proposedSettlement not recorded correctly for partyB');
+        });
+      })
+      .then(function verifySettlementRecord() {
+        return brehonContract.proposedSettlement.call().then((proposedSettlement) => {
+            assert.equal(proposedSettlement[ResolutionStruct.proposerAddr],
+              defaults.partyA_addr, 'proposedSettlement\'s proposer address not recorded correctly');
+        });
+      })
       .catch(function handleException(err) {
         console.log(err);
-        assert.isNull(err, "Exception was thrown when partyA tried to raise an appeal");
+        assert.isNull(err, 'Exception was thrown when partyA tried to raise an appeal');
       });
   });
 });

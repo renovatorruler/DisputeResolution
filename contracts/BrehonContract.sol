@@ -26,6 +26,12 @@ contract BrehonContract is
     uint disputeFee;
   }
 
+  struct Resolution {
+    address proposerAddr;
+    uint awardPartyA;
+    uint awardPartyB;
+  }
+
   int8 public appealLevel;
   uint public transactionAmount;
   Party public partyA;
@@ -36,6 +42,7 @@ contract BrehonContract is
   Brehon public activeBrehon;
 
   mapping (address => uint) awards;
+  Resolution public proposedSettlement;
 
   uint appealPeriodInDays = 5;
   uint public appealPeriodStartTime;
@@ -45,6 +52,7 @@ contract BrehonContract is
   event AppealPeriodStarted(int8 _appealLevel, uint _startTime, address _activeBrehon, uint _awardPartyA, uint _awardPartyB);
   //TODO: Provide the information about the party which appaled
   event AppealRaised(int8 _appealLevel, address _activeBrehon);
+  event SettlementProposed(address _proposingParty, uint _awardPartyA, uint _awardPartyB);
 
   modifier eitherByParty(Party _party1, Party _party2)
   {
@@ -250,12 +258,15 @@ contract BrehonContract is
     AppealRaised(appealLevel, activeBrehon.addr);
   }
 
-  //Incomplete
   function proposeSettlement(uint _awardPartyA, uint _awardPartyB)
     atDisputeStages()
+    eitherByParty(partyA, partyB)
   {
-      awards[partyA.addr] = _awardPartyA;
-      awards[partyB.addr] = _awardPartyB;
+      proposedSettlement.proposerAddr = msg.sender;
+      proposedSettlement.awardPartyA = _awardPartyA;
+      proposedSettlement.awardPartyB = _awardPartyB;
+
+      SettlementProposed(msg.sender, _awardPartyA, _awardPartyB);
   }
 
   function acceptSettlement() {
