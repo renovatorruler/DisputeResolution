@@ -30,6 +30,8 @@ contract BrehonContract is
     address proposerAddr;
     uint awardPartyA;
     uint awardPartyB;
+    bool partyAAccepted;
+    bool partyBAccepted;
   }
 
   int8 public appealLevel;
@@ -65,7 +67,6 @@ contract BrehonContract is
   modifier atDisputeStages()
   {
     if(stage != Stages.Dispute &&
-       stage != Stages.Resolution &&
        stage != Stages.AppealPeriod &&
        stage != Stages.Appeal)
         throw;
@@ -265,6 +266,13 @@ contract BrehonContract is
       proposedSettlement.proposerAddr = msg.sender;
       proposedSettlement.awardPartyA = _awardPartyA;
       proposedSettlement.awardPartyB = _awardPartyB;
+      if (msg.sender == partyA.addr) {
+          proposedSettlement.partyAAccepted = true;
+          proposedSettlement.partyBAccepted = false;
+      } else if (msg.sender == partyB.addr) {
+          proposedSettlement.partyAAccepted = false;
+          proposedSettlement.partyBAccepted = true;
+      }
 
       SettlementProposed(msg.sender, _awardPartyA, _awardPartyB);
   }

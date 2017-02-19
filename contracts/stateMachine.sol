@@ -5,7 +5,7 @@ contract stateMachine {
     Negotiation, //Or Authoring or Pending Acceptance OR Approval
     Execution,
     Dispute,
-    Resolution,
+    Resolved,
     AppealPeriod,
     Appeal,
     Completed

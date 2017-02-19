@@ -13,6 +13,8 @@ const ResolutionStruct = {
   proposerAddr: 0,
   awardPartyA: 1,
   awardPartyB: 2,
+  partyAAccepted: 3,
+  partyBAccepted: 4,
 };
 
 const verifyEvent = R.curry((eventName, expectedArgs, resultObj) => {
@@ -34,8 +36,8 @@ const verifyEvent = R.curry((eventName, expectedArgs, resultObj) => {
 
 contract('BrehonContract should allow partyA to propose a settlement', (accounts) => {
   const settlement = {
-      'partyA': getSplitForPrimaryBrehon(60),
-      'partyB': getSplitForPrimaryBrehon(40)
+    'partyA': getSplitForPrimaryBrehon(60),
+    'partyB': getSplitForPrimaryBrehon(40)
   };
   it('at Dispute stage', () => {
     var brehonContract;
@@ -51,9 +53,9 @@ contract('BrehonContract should allow partyA to propose a settlement', (accounts
         }], defaults.partyA_addr, defaults.partyA_addr))
       .then(function proposeSettlement() {
         return brehonContract.proposeSettlement(
-            settlement.partyA,
-            settlement.partyB,
-            { from: defaults.partyA_addr }
+          settlement.partyA,
+          settlement.partyB,
+          { from: defaults.partyA_addr }
         );
       })
       .then(verifyEvent('SettlementProposed', {
@@ -63,20 +65,16 @@ contract('BrehonContract should allow partyA to propose a settlement', (accounts
       }))
       .then(function verifySettlementRecord() {
         return brehonContract.proposedSettlement.call().then((proposedSettlement) => {
-            assert.equal(proposedSettlement[ResolutionStruct.awardPartyA].valueOf(),
-              settlement.partyA.valueOf(), 'proposedSettlement not recorded correctly for partyA');
-        });
-      })
-      .then(function verifySettlementRecord() {
-        return brehonContract.proposedSettlement.call().then((proposedSettlement) => {
-            assert.equal(proposedSettlement[ResolutionStruct.awardPartyB].valueOf(),
-              settlement.partyB.valueOf(), 'proposedSettlement not recorded correctly for partyB');
-        });
-      })
-      .then(function verifySettlementRecord() {
-        return brehonContract.proposedSettlement.call().then((proposedSettlement) => {
-            assert.equal(proposedSettlement[ResolutionStruct.proposerAddr],
-              defaults.partyA_addr, 'proposedSettlement\'s proposer address not recorded correctly');
+          assert.equal(proposedSettlement[ResolutionStruct.awardPartyA].valueOf(),
+            settlement.partyA.valueOf(), 'proposedSettlement not recorded correctly for partyA');
+          assert.equal(proposedSettlement[ResolutionStruct.awardPartyB].valueOf(),
+            settlement.partyB.valueOf(), 'proposedSettlement not recorded correctly for partyB');
+          assert.equal(proposedSettlement[ResolutionStruct.proposerAddr],
+            defaults.partyA_addr, 'proposedSettlement\'s proposer address not recorded correctly');
+          assert.equal(proposedSettlement[ResolutionStruct.partyAAccepted],
+            true, 'proposedSettlement should set calling party\'s acceptance to true');
+          assert.equal(proposedSettlement[ResolutionStruct.partyBAccepted],
+            false, 'proposedSettlement should set non-calling party\'s acceptance to false');
         });
       })
       .catch(function handleException(err) {
