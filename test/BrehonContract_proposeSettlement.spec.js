@@ -6,6 +6,7 @@ const defaults = require('../config/deployment_settings.js').defaults;
 const contractHelpers = require('../lib/contractHelpers.js');
 
 const startContractAndRaiseDispute = contractHelpers.startContractAndRaiseDispute;
+const verifyEvent = contractHelpers.verifyEvent;
 const getMinimumContractAmt = contractHelpers.getMinimumContractAmt;
 const getSplitForPrimaryBrehon = contractHelpers.getPercentageSplit(defaults, 0);
 
@@ -16,23 +17,6 @@ const ResolutionStruct = {
   partyAAccepted: 3,
   partyBAccepted: 4,
 };
-
-const verifyEvent = R.curry((eventName, expectedArgs, resultObj) => {
-  const event = R.find(R.propEq('event', eventName), resultObj.logs);
-  assert.isDefined(event, `${eventName} event was not emitted`);
-  if (event) {
-    R.mapObjIndexed((expectedArgValue, expectedArgName) => {
-      let actual = event.args[expectedArgName];
-      let expected = expectedArgValue;
-      if (actual.toString) {
-        actual = actual.toString();
-        expected = expected.toString();
-      }
-      assert.equal(actual, expected, `${eventName} event did not correctly set ${expectedArgName}`);
-    }, expectedArgs);
-  }
-  return resultObj;
-});
 
 contract('BrehonContract should allow partyA to propose a settlement', (accounts) => {
   const settlement = {
@@ -84,7 +68,7 @@ contract('BrehonContract should allow partyA to propose a settlement', (accounts
   });
 });
 
-contract('BrehonContract should allow partyA to propose a settlement', (accounts) => {
+contract('BrehonContract should allow partyB to propose a settlement', (accounts) => {
   const settlement = {
     'partyA': getSplitForPrimaryBrehon(40),
     'partyB': getSplitForPrimaryBrehon(60)
