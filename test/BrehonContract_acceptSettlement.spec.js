@@ -49,7 +49,13 @@ contract('BrehonContract acceptSettlement should only be allowed at one of the c
       })
       .catch(assertError('Exception was not thrown when acceptSettlement was triggered at Negotiation stage'));
   });
+});
 
+contract('BrehonContract acceptSettlement should only be allowed at one of the conflict stages', (accounts) => {
+  const settlement = {
+    'partyA': getSplitForPrimaryBrehon(50),
+    'partyB': getSplitForPrimaryBrehon(50)
+  };
   it('by preventing it from being called at Execution stage', () => {
     var brehonContract;
     return BrehonContract.deployed()
@@ -71,9 +77,14 @@ contract('BrehonContract acceptSettlement should only be allowed at one of the c
       })
       .catch(assertError('Exception was not thrown when acceptSettlement was triggered at Execution stage'));
   });
+});
 
-  //TODO Add test for Resolved state
-  it('by preventing it from being called at Resolved stage', () => {
+contract('BrehonContract acceptSettlement should only be allowed at one of the conflict stages', (accounts) => {
+  const settlement = {
+    'partyA': getSplitForPrimaryBrehon(50),
+    'partyB': getSplitForPrimaryBrehon(50)
+  };
+  it('by preventing it from being called at Completed stage', () => {
     var brehonContract;
     return BrehonContract.deployed()
       .then(function captureReference(instance) {
@@ -85,16 +96,25 @@ contract('BrehonContract acceptSettlement should only be allowed at one of the c
           addr: defaults.partyA_addr,
           value: getMinimumContractAmt(defaults)
         }], defaults.partyA_addr, defaults.partyA_addr))
-      .then(function adjudicate() {
-        return brehonContract.adjudicate(
-            getSplitForPrimaryBrehon(100),
-            getSplitForPrimaryBrehon(0),
-            {from: defaults.primaryBrehon_addr}
+      .then(function proposeSettlement() {
+        return brehonContract.proposeSettlement(
+          settlement.partyA,
+          settlement.partyB,
+          { from: defaults.partyB_addr }
         );
       })
-      .then(function raise2ndAppeal() {
-        return brehonContract.raiseAppeal(
-            {from: defaults.partyA_addr}
+      .then(function acceptSettlement() {
+        return brehonContract.acceptSettlement(
+          settlement.partyA,
+          settlement.partyB,
+          { from: defaults.partyA_addr }
+        );
+      })
+      .then(function acceptSettlement() {
+        return brehonContract.acceptSettlement(
+          settlement.partyA,
+          settlement.partyB,
+          { from: defaults.partyA_addr }
         );
       })
       .catch(assertError('Exception was not thrown when raiseAppeal() was triggerred at the AppealPeriod stage'));
