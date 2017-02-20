@@ -20,6 +20,13 @@ const ResolutionStruct = {
   partyBAccepted: 4,
 };
 
+/**
+ * Spec:
+ * + Must use verifyEvent method
+ * + Error verification should happen via assertError
+ * - Must check for all stages
+ **/
+
 contract('BrehonContract proposeSettlement should only be allowed at one of the conflict stages', (accounts) => {
   const settlement = {
     'partyA': getSplitForPrimaryBrehon(50),

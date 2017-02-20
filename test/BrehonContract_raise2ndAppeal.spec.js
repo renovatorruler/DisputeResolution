@@ -18,8 +18,8 @@ const BrehonStruct = contractHelpers.BrehonStruct;
 
 /**
  * Spec:
- * - Must use verifyEvent method
- * - Error verification should happen via assertError
+ * + Must use verifyEvent method
+ * + Error verification should happen via assertError
  * - Must check for all stages
  **/
 
