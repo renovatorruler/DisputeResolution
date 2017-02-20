@@ -9,6 +9,7 @@ const startContract = contractHelpers.startContract;
 const raiseDispute = contractHelpers.raiseDispute;
 const assertError = contractHelpers.assertError;
 const assertNoError = contractHelpers.assertNoError;
+const assertNoErrorWithMsg = assertNoError('No Exception must be thrown');
 const StagesEnum = contractHelpers.StagesEnum;
 const startContractAndRaiseDispute = contractHelpers.startContractAndRaiseDispute;
 const verifyEvent = contractHelpers.verifyEvent;
@@ -70,7 +71,7 @@ contract('BrehonContract acceptSettlement should only be allowed at one of the c
           addr: defaults.partyA_addr,
           value: getMinimumContractAmt(defaults)
         }], defaults.partyA_addr))
-      .catch(assertNoError('No Exception must be thrown'))
+      .catch(assertNoErrorWithMsg)
       .then(function proposeSettlement() {
         return brehonContract.proposeSettlement(
           settlement.partyA,
@@ -89,7 +90,7 @@ contract('BrehonContract acceptSettlement should only be allowed at one of the c
         return instance;
       })
       .then(raiseDispute(defaults.partyA_addr))
-      .catch(assertNoError('No Exception must be thrown'))
+      .catch(assertNoErrorWithMsg)
       .then(function proposeSettlement() {
         return brehonContract.proposeSettlement(
           settlement.partyA,
@@ -97,7 +98,7 @@ contract('BrehonContract acceptSettlement should only be allowed at one of the c
           { from: defaults.partyB_addr }
         );
       })
-      .catch(assertNoError('No Exception must be thrown'))
+      .catch(assertNoErrorWithMsg)
       .then(function acceptSettlement() {
         return brehonContract.acceptSettlement(
           settlement.partyA,
@@ -105,7 +106,7 @@ contract('BrehonContract acceptSettlement should only be allowed at one of the c
           { from: defaults.partyA_addr}
         );
       })
-      .catch(assertNoError('No Exception must be thrown'))
+      .catch(assertNoErrorWithMsg)
       .then(function acceptSettlement() {
         return brehonContract.acceptSettlement(
           settlement.partyA,
@@ -134,6 +135,7 @@ contract('BrehonContract should allow partyA to accepted a proposed settlement',
           addr: defaults.partyA_addr,
           value: getMinimumContractAmt(defaults)
         }], defaults.partyA_addr, defaults.partyA_addr))
+      .catch(assertNoErrorWithMsg)
       .then(function proposeSettlement() {
         return brehonContract.proposeSettlement(
           settlement.partyA,
@@ -141,6 +143,7 @@ contract('BrehonContract should allow partyA to accepted a proposed settlement',
           { from: defaults.partyB_addr }
         );
       })
+      .catch(assertNoErrorWithMsg)
       .then(function acceptSettlement() {
         return brehonContract.acceptSettlement(
           settlement.partyA,
@@ -181,6 +184,7 @@ contract('BrehonContract should allow partyB to accepted a proposed settlement',
           addr: defaults.partyA_addr,
           value: getMinimumContractAmt(defaults)
         }], defaults.partyA_addr, defaults.partyA_addr))
+      .catch(assertNoErrorWithMsg)
       .then(function proposeSettlement() {
         return brehonContract.proposeSettlement(
           settlement.partyA,
@@ -188,6 +192,7 @@ contract('BrehonContract should allow partyB to accepted a proposed settlement',
           { from: defaults.partyA_addr }
         );
       })
+      .catch(assertNoErrorWithMsg)
       .then(function acceptSettlement() {
         return brehonContract.acceptSettlement(
           settlement.partyA,
