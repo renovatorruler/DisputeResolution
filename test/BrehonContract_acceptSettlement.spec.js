@@ -97,9 +97,7 @@ contract('BrehonContract acceptSettlement should only be allowed at one of the c
             {from: defaults.partyA_addr}
         );
       })
-      .catch((err) => {
-        assert.isNotNull(err, "Exception was not thrown when raiseAppeal() was triggerred at the AppealPeriod stage");
-      });
+      .catch(assertError('Exception was not thrown when raiseAppeal() was triggerred at the AppealPeriod stage'));
   });
 });
 
