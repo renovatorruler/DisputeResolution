@@ -28,8 +28,7 @@ const ResolutionStruct = {
  * - Must check for all stages
  **/
 
-/**
-contract('BrehonContract proposeSettlement should only be allowed at one of the conflict stages', (accounts) => {
+contract('BrehonContract acceptSettlement should only be allowed at one of the conflict stages', (accounts) => {
   const settlement = {
     'partyA': getSplitForPrimaryBrehon(50),
     'partyB': getSplitForPrimaryBrehon(50)
@@ -41,14 +40,14 @@ contract('BrehonContract proposeSettlement should only be allowed at one of the 
         brehonContract = instance;
         return instance;
       })
-      .then(function proposeSettlement() {
-        return brehonContract.proposeSettlement(
+      .then(function acceptSettlement() {
+        return brehonContract.acceptSettlement(
           settlement.partyA,
           settlement.partyB,
-          {from: defaults.partyA_addr}
+          { from: defaults.partyA_addr }
         );
       })
-      .catch(assertError('Exception was not thrown when proposeSettlement was triggered at Negotiation stage'));
+      .catch(assertError('Exception was not thrown when acceptSettlement was triggered at Negotiation stage'));
   });
 
   it('by preventing it from being called at Execution stage', () => {
@@ -70,11 +69,11 @@ contract('BrehonContract proposeSettlement should only be allowed at one of the 
           {from: defaults.partyA_addr}
         );
       })
-      .catch(assertError('Exception was not thrown when proposeSettlement was triggered at Execution stage'));
+      .catch(assertError('Exception was not thrown when acceptSettlement was triggered at Execution stage'));
   });
 
   //TODO Add test for Resolved state
-  it('by preventing it from being called at ', () => {
+  it('by preventing it from being called at Resolved stage', () => {
     var brehonContract;
     return BrehonContract.deployed()
       .then(function captureReference(instance) {
@@ -103,7 +102,6 @@ contract('BrehonContract proposeSettlement should only be allowed at one of the 
       });
   });
 });
-   **/
 
 contract('BrehonContract should allow partyA to accepted a proposed settlement', (accounts) => {
   const settlement = {
