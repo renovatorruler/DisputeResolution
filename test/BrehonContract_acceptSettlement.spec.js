@@ -152,3 +152,49 @@ contract('BrehonContract should allow partyA to accepted a proposed settlement',
   });
 });
 
+contract('BrehonContract should allow partyB to accepted a proposed settlement', (accounts) => {
+  const settlement = {
+    'partyA': getSplitForPrimaryBrehon(40),
+    'partyB': getSplitForPrimaryBrehon(60)
+  };
+  it('at Dispute stage', () => {
+    var brehonContract;
+    return BrehonContract.deployed()
+      .then(function captureReference(instance) {
+        brehonContract = instance;
+        return instance;
+      })
+      .then(startContractAndRaiseDispute(
+        [{
+          addr: defaults.partyA_addr,
+          value: getMinimumContractAmt(defaults)
+        }], defaults.partyA_addr, defaults.partyA_addr))
+      .then(function proposeSettlement() {
+        return brehonContract.proposeSettlement(
+          settlement.partyA,
+          settlement.partyB,
+          { from: defaults.partyA_addr }
+        );
+      })
+      .then(function acceptSettlement() {
+        return brehonContract.acceptSettlement(
+          settlement.partyA,
+          settlement.partyB,
+          { from: defaults.partyB_addr }
+        );
+      })
+      .then(verifyEvent('DisputeResolved', {
+        '_awardPartyA': settlement.partyA,
+        '_awardPartyB': settlement.partyB,
+      }))
+      .then(function verifyDisputeResolution() {
+        return brehonContract.stage.call().then((stage) => {
+          assert.equal(stage, StagesEnum.Completed, 'acceptSettlement not correctly changed the state');
+        });
+      })
+      .catch(function handleException(err) {
+        console.log(err);
+        assert.isNull(err, 'Exception was thrown when partyA tried to accept settlement');
+      });
+  });
+});
