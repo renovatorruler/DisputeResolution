@@ -6,7 +6,9 @@ const defaults = require('../config/deployment_settings.js').defaults;
 const contractHelpers = require('../lib/contractHelpers.js');
 
 const startContract = contractHelpers.startContract;
+const raiseDispute = contractHelpers.raiseDispute;
 const assertError = contractHelpers.assertError;
+const assertNoError = contractHelpers.assertNoError;
 const StagesEnum = contractHelpers.StagesEnum;
 const startContractAndRaiseDispute = contractHelpers.startContractAndRaiseDispute;
 const verifyEvent = contractHelpers.verifyEvent;
@@ -68,6 +70,7 @@ contract('BrehonContract acceptSettlement should only be allowed at one of the c
           addr: defaults.partyA_addr,
           value: getMinimumContractAmt(defaults)
         }], defaults.partyA_addr))
+      .catch(assertNoError('No Exception must be thrown'))
       .then(function proposeSettlement() {
         return brehonContract.proposeSettlement(
           settlement.partyA,
@@ -77,13 +80,7 @@ contract('BrehonContract acceptSettlement should only be allowed at one of the c
       })
       .catch(assertError('Exception was not thrown when acceptSettlement was triggered at Execution stage'));
   });
-});
 
-contract('BrehonContract acceptSettlement should only be allowed at one of the conflict stages', (accounts) => {
-  const settlement = {
-    'partyA': getSplitForPrimaryBrehon(50),
-    'partyB': getSplitForPrimaryBrehon(50)
-  };
   it('by preventing it from being called at Completed stage', () => {
     var brehonContract;
     return BrehonContract.deployed()
@@ -91,11 +88,8 @@ contract('BrehonContract acceptSettlement should only be allowed at one of the c
         brehonContract = instance;
         return instance;
       })
-      .then(startContractAndRaiseDispute(
-        [{
-          addr: defaults.partyA_addr,
-          value: getMinimumContractAmt(defaults)
-        }], defaults.partyA_addr, defaults.partyA_addr))
+      .then(raiseDispute(defaults.partyA_addr))
+      .catch(assertNoError('No Exception must be thrown'))
       .then(function proposeSettlement() {
         return brehonContract.proposeSettlement(
           settlement.partyA,
@@ -103,13 +97,15 @@ contract('BrehonContract acceptSettlement should only be allowed at one of the c
           { from: defaults.partyB_addr }
         );
       })
+      .catch(assertNoError('No Exception must be thrown'))
       .then(function acceptSettlement() {
         return brehonContract.acceptSettlement(
           settlement.partyA,
           settlement.partyB,
-          { from: defaults.partyA_addr }
+          { from: defaults.partyA_addr}
         );
       })
+      .catch(assertNoError('No Exception must be thrown'))
       .then(function acceptSettlement() {
         return brehonContract.acceptSettlement(
           settlement.partyA,
