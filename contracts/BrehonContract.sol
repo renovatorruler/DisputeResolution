@@ -279,14 +279,24 @@ contract BrehonContract is
   }
 
   function acceptSettlement(uint _awardPartyA, uint _awardPartyB)
-    atStage(Stages.Resolved)
+    atConflictStages()
     eitherByParty(partyA, partyB)
   {
       if((proposedSettlement.awardPartyA != _awardPartyA) ||
          (proposedSettlement.awardPartyB != _awardPartyB))
           throw;
 
-      stage = Stages.Resolved;
-      DisputeResolved(_awardPartyA, _awardPartyA);
+      if(msg.sender == partyA.addr) {
+        proposedSettlement.partyAAccepted = true;
+      }
+
+      if(msg.sender == partyB.addr) {
+        proposedSettlement.partyBAccepted = true;
+      }
+
+      if(proposedSettlement.partyAAccepted && proposedSettlement.partyBAccepted) {
+        stage = Stages.Completed;
+        DisputeResolved(_awardPartyA, _awardPartyB);
+      }
   }
 }
