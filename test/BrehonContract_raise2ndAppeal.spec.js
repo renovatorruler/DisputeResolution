@@ -7,6 +7,7 @@ const defaults = require('../config/deployment_settings.js').defaults;
 const contractHelpers = require('../lib/contractHelpers.js');
 
 const assertError = contractHelpers.assertError;
+const verifyEvent = contractHelpers.verifyEvent;
 const startContract = contractHelpers.startContract;
 const startContractAndRaiseDispute = contractHelpers.startContractAndRaiseDispute;
 const getMinimumContractAmt = contractHelpers.getMinimumContractAmt;
@@ -281,15 +282,10 @@ contract('BrehonContract should allow partyA to raise an appeal', (accounts) => 
             {from: defaults.partyA_addr}
         );
       })
-      .then(function verifyAppealRaisedEvent(result) {
-        var appealRaisedEvent = R.find(R.propEq('event', 'AppealRaised'), result.logs);
-        assert.equal(appealRaisedEvent.args._appealLevel, 2,
-          "AppealRaised event did not correctly provide the appealLevel");
-        assert.equal(appealRaisedEvent.args._activeBrehon, defaults.tertiaryBrehon_addr,
-          "AppealRaised event did not correctly provide the activeBrehon's address");
-        assert.isDefined(appealRaisedEvent, "ContractStarted event was not emitted");
-        return result;
-      })
+      .then(verifyEvent('AppealRaised', {
+        '_appealLevel': 2,
+        '_activeBrehon': defaults.tertiaryBrehon_addr
+      }))
       .then(function verifyStage() {
         return brehonContract.stage.call().then((stage) => {
             assert.equal(stage.valueOf(), 2, "stage is not set to Stages.Dispute");
@@ -352,15 +348,10 @@ contract('BrehonContract should allow partyB to raise an appeal', (accounts) => 
             {from: defaults.partyB_addr}
         );
       })
-      .then(function verifyAppealRaisedEvent(result) {
-        var appealRaisedEvent = R.find(R.propEq('event', 'AppealRaised'), result.logs);
-        assert.equal(appealRaisedEvent.args._appealLevel, 2,
-          "AppealRaised event did not correctly provide the appealLevel");
-        assert.equal(appealRaisedEvent.args._activeBrehon, defaults.tertiaryBrehon_addr,
-          "AppealRaised event did not correctly provide the activeBrehon's address");
-        assert.isDefined(appealRaisedEvent, "ContractStarted event was not emitted");
-        return result;
-      })
+      .then(verifyEvent('AppealRaised', {
+        '_appealLevel': 2,
+        '_activeBrehon': defaults.tertiaryBrehon_addr
+      }))
       .then(function verifyStage() {
         return brehonContract.stage.call().then((stage) => {
             assert.equal(stage.valueOf(), 2, "stage is not set to Stages.Dispute");
