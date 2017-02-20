@@ -55,6 +55,7 @@ contract BrehonContract is
   //TODO: Provide the information about the party which appaled
   event AppealRaised(int8 _appealLevel, address _activeBrehon);
   event SettlementProposed(address _proposingParty, uint _awardPartyA, uint _awardPartyB);
+  event DisputeResolved(uint _awardPartyA, uint _awardPartyB);
 
   modifier eitherByParty(Party _party1, Party _party2)
   {
@@ -64,7 +65,7 @@ contract BrehonContract is
     _;
   }
 
-  modifier atDisputeStages()
+  modifier atConflictStages()
   {
     if(stage != Stages.Dispute &&
        stage != Stages.AppealPeriod &&
@@ -260,7 +261,7 @@ contract BrehonContract is
   }
 
   function proposeSettlement(uint _awardPartyA, uint _awardPartyB)
-    atDisputeStages()
+    atConflictStages()
     eitherByParty(partyA, partyB)
   {
       proposedSettlement.proposerAddr = msg.sender;
@@ -277,6 +278,15 @@ contract BrehonContract is
       SettlementProposed(msg.sender, _awardPartyA, _awardPartyB);
   }
 
-  function acceptSettlement() {
+  function acceptSettlement(uint _awardPartyA, uint _awardPartyB)
+    atStage(Stages.Resolved)
+    eitherByParty(partyA, partyB)
+  {
+      if((proposedSettlement.awardPartyA != _awardPartyA) ||
+         (proposedSettlement.awardPartyB != _awardPartyB))
+          throw;
+
+      stage = Stages.Resolved;
+      DisputeResolved(_awardPartyA, _awardPartyA);
   }
 }
