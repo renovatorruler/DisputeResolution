@@ -61,7 +61,7 @@ contract('BrehonContract proposeSettlement should only be allowed at one of the 
           {from: defaults.partyA_addr}
         );
       })
-      .catch(assertError('Exception was not thrown when proposeSettlement was triggered at Negotiation stage'));
+      .catch(assertError('Exception was not thrown when proposeSettlement was triggered at Execution stage'));
   });
 
   //TODO Add test for Resolved state

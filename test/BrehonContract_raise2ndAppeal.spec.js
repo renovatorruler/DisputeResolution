@@ -5,6 +5,8 @@ const BrehonContract = artifacts.require("./BrehonContract.sol");
 const defaults = require('../config/deployment_settings.js').defaults;
 
 const contractHelpers = require('../lib/contractHelpers.js');
+
+const assertError = contractHelpers.assertError;
 const startContract = contractHelpers.startContract;
 const startContractAndRaiseDispute = contractHelpers.startContractAndRaiseDispute;
 const getMinimumContractAmt = contractHelpers.getMinimumContractAmt;
@@ -12,6 +14,13 @@ const getSplitForPrimaryBrehon = contractHelpers.getPercentageSplit(defaults, 0)
 const getSplitForSecondaryBrehon = contractHelpers.getPercentageSplit(defaults, 1);
 const PartyStruct = contractHelpers.PartyStruct;
 const BrehonStruct = contractHelpers.BrehonStruct;
+
+/**
+ * Spec:
+ * - Must use verifyEvent method
+ * - Error verification should happen via assertError
+ * - Must check for all stages
+ **/
 
 contract('BrehonContract raiseAppeal should only be allowed at Dispute stage', (accounts) => {
   it('by preventing it from being called at Negotiation stage', () => {
@@ -23,12 +32,10 @@ contract('BrehonContract raiseAppeal should only be allowed at Dispute stage', (
       })
       .then(function raise2ndAppeal() {
         return brehonContract.raise2ndAppeal(
-            {from: defaults.partyA}
+            {from: defaults.partyA_addr}
         );
       })
-      .catch((err) => {
-        assert.isNotNull(err, "Exception was not thrown when raiseAppeal() was triggerred at the Negotiation stage");
-      });
+      .catch(assertError('Exception was not thrown when proposeSettlement was triggered at Negotiation stage'));
   });
 
   it('by preventing it from being called at Execution stage', () => {
@@ -48,9 +55,7 @@ contract('BrehonContract raiseAppeal should only be allowed at Dispute stage', (
             {from: defaults.partyA_addr}
         );
       })
-      .catch((err) => {
-        assert.isNotNull(err, "Exception was not thrown when raiseAppeal() was triggerred at the Execution stage");
-      });
+      .catch(assertError('Exception was not thrown when proposeSettlement was triggered at Execution stage'));
   });
 
   it('by preventing it from being called at AppealPeriod stage with appealLevel == 1', () => {
@@ -77,9 +82,7 @@ contract('BrehonContract raiseAppeal should only be allowed at Dispute stage', (
             {from: defaults.partyA_addr}
         );
       })
-      .catch((err) => {
-        assert.isNotNull(err, "Exception was not thrown when raiseAppeal() was triggerred at the AppealPeriod stage");
-      });
+      .catch(assertError("Exception was not thrown when raiseAppeal() was triggerred at the AppealPeriod stage"));
   });
 });
 
@@ -120,9 +123,7 @@ contract('BrehonContract should not allow an unauthorized party to raise an appe
             {from: defaults.primaryBrehon_addr}
         );
       })
-      .catch(function handleException(err) {
-        assert.isNotNull(err, "Exception was not thrown when primaryBrehon tried to raise an appeal");
-      });
+      .catch(assertError("Exception was not thrown when primaryBrehon tried to raise an appeal"));
   });
 
   it('like the secondaryBrehon', () => {
@@ -161,9 +162,7 @@ contract('BrehonContract should not allow an unauthorized party to raise an appe
             {from: defaults.primaryBrehon_addr}
         );
       })
-      .catch(function handleException(err) {
-        assert.isNotNull(err, "Exception was not thrown when secondaryBrehon tried to raise an appeal");
-      });
+      .catch(assertError("Exception was not thrown when secondaryBrehon tried to raise an appeal"));
   });
 
   it('like the tertiaryBrehon', () => {
@@ -202,9 +201,7 @@ contract('BrehonContract should not allow an unauthorized party to raise an appe
             {from: defaults.primaryBrehon_addr}
         );
       })
-      .catch(function handleException(err) {
-        assert.isNotNull(err, "Exception was not thrown when tertiaryBrehon tried to raise an appeal");
-      });
+      .catch(assertError("Exception was not thrown when tertiaryBrehon tried to raise an appeal"));
   });
 
   it('or like a rando', () => {
@@ -243,9 +240,7 @@ contract('BrehonContract should not allow an unauthorized party to raise an appe
             {from: defaults.primaryBrehon_addr}
         );
       })
-      .catch(function handleException(err) {
-        assert.isNotNull(err, "Exception was not thrown when a rando tried to raise an appeal");
-      });
+      .catch(assertError("Exception was not thrown when a rando tried to raise an appeal"));
   });
 });
 
