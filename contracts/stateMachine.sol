@@ -22,7 +22,7 @@ contract stateMachine {
   {
     if (stage != _nextStage) {
         if (stage != _currStage) throw;
-        //if (now >= startTime + (durationInDays * 1 days))
+        if (now >= startTime + (durationInDays * 1 days))
             stage = _nextStage;
     }
     _;

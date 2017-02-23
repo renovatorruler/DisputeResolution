@@ -7,6 +7,7 @@ const defaults = require('../config/deployment_settings.js').defaults;
 const contractHelpers = require('../lib/contractHelpers.js');
 
 const startContract = contractHelpers.startContract;
+const fastForwardTime = contractHelpers.fastForwardTime;
 const raiseDispute = contractHelpers.raiseDispute;
 const assertError = contractHelpers.assertError;
 const assertNoError = contractHelpers.assertNoError;
@@ -145,6 +146,8 @@ contract('BrehonContract should allow partyA to be able to withdraw funds', (acc
         startingBalance = web3.eth.getBalance(defaults.partyA_addr);
       })
       .catch(assertNoErrorWithMsg)
+      .then(fastForwardTime(web3, 60 * 60 * 24 * 5))
+      .catch(vAssertNoErrorWithMsg)
       .then(function claimFunds() {
         return brehonContract.claimFunds(
             {from: defaults.partyA_addr}
