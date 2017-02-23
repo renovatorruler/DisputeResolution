@@ -20,9 +20,11 @@ contract stateMachine {
 
   modifier timedTransition(uint startTime, uint durationInDays, Stages _currStage, Stages _nextStage)
   {
-    if (stage != _currStage) throw;
-    if (now >= startTime + (durationInDays * 1 days))
-        stage = _nextStage;
+    if (stage != _nextStage) {
+        if (stage != _currStage) throw;
+        //if (now >= startTime + (durationInDays * 1 days))
+            stage = _nextStage;
+    }
     _;
   }
 

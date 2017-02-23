@@ -231,7 +231,7 @@ contract BrehonContract is
     if(msg.sender.send(amount)) {
       return true;
     } else {
-    awards[msg.sender] = amount;
+      awards[msg.sender] = amount;
       return false;
     }
   }
