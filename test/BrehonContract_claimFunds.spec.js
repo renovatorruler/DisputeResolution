@@ -121,6 +121,7 @@ contract('BrehonContract should allow partyA to be able to withdraw funds', (acc
     'partyA': getSplitForPrimaryBrehon(60),
     'partyB': getSplitForPrimaryBrehon(40)
   };
+  const sufficientTime = 60 * 60 * 24 * 5;
   it('after appealPeriod', () => {
     let brehonContract,
       startingBalance;
@@ -146,8 +147,8 @@ contract('BrehonContract should allow partyA to be able to withdraw funds', (acc
         startingBalance = web3.eth.getBalance(defaults.partyA_addr);
       })
       .catch(assertNoErrorWithMsg)
-      .then(fastForwardTime(web3, 60 * 60 * 24 * 5))
-      .catch(vAssertNoErrorWithMsg)
+      .then(fastForwardTime(web3, sufficientTime))
+      .catch(assertNoErrorWithMsg)
       .then(function claimFunds() {
         return brehonContract.claimFunds(
             {from: defaults.partyA_addr}
@@ -161,5 +162,46 @@ contract('BrehonContract should allow partyA to be able to withdraw funds', (acc
         assert.isTrue(startingBalance.minus(gasPaid).plus(settlement.partyA).eq(newBalance));
       })
       .catch(assertNoErrorWithMsg);
+  });
+});
+
+contract('BrehonContract should not allow partyA to be able to withdraw funds', (accounts) => {
+  const settlement = {
+    'partyA': getSplitForPrimaryBrehon(60),
+    'partyB': getSplitForPrimaryBrehon(40)
+  };
+  const insufficientTime = 60 * 60 * 24 * 2;
+  it('before appealPeriod', () => {
+    let brehonContract,
+      startingBalance;
+    return BrehonContract.deployed()
+      .then(function captureReference(instance) {
+        brehonContract = instance;
+        return instance;
+      })
+      .then(startContractAndRaiseDispute(
+        [{
+          addr: defaults.partyA_addr,
+          value: getMinimumContractAmt(defaults)
+        }], defaults.partyA_addr, defaults.partyA_addr))
+      .catch(assertNoErrorWithMsg)
+      .then(function adjudicate() {
+        return brehonContract.adjudicate(
+          settlement.partyA,
+          settlement.partyB,
+          {from: defaults.primaryBrehon_addr}
+        );
+      })
+      .then(() => {
+        startingBalance = web3.eth.getBalance(defaults.partyA_addr);
+      })
+      .catch(assertNoErrorWithMsg)
+      .then(fastForwardTime(web3, insufficientTime))
+      .then(function claimFunds() {
+        return brehonContract.claimFunds(
+            {from: defaults.partyA_addr}
+        );
+      })
+      .catch(assertError('Exception was not thrown when acceptSettlement was triggered at Negotiation stage'));
   });
 });
