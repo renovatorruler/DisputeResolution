@@ -27,12 +27,7 @@ const getSplitForPrimaryBrehon = contractHelpers.getPercentageSplit(defaults, 0)
  * - Must check for all stages
  **/
 
-/**
-contract('BrehonContract acceptSettlement should only be allowed at one of the conflict stages', (accounts) => {
-  const settlement = {
-    'partyA': getSplitForPrimaryBrehon(50),
-    'partyB': getSplitForPrimaryBrehon(50)
-  };
+contract('BrehonContract claimFunds should only be allowed at one of the conflict resolved stages', (accounts) => {
   it('by preventing it from being called at Negotiation stage', () => {
     let brehonContract;
     return BrehonContract.deployed()
@@ -40,22 +35,16 @@ contract('BrehonContract acceptSettlement should only be allowed at one of the c
         brehonContract = instance;
         return instance;
       })
-      .then(function acceptSettlement() {
-        return brehonContract.acceptSettlement(
-          settlement.partyA,
-          settlement.partyB,
-          { from: defaults.partyA_addr }
+      .then(function claimFunds() {
+        return brehonContract.claimFunds(
+            {from: defaults.partyB_addr}
         );
       })
-      .catch(assertError('Exception was not thrown when acceptSettlement was triggered at Negotiation stage'));
+      .catch(assertError('Exception was not thrown when claimFunds was triggered during the Negotiation state'));
   });
 });
 
-contract('BrehonContract acceptSettlement should only be allowed at one of the conflict stages', (accounts) => {
-  const settlement = {
-    'partyA': getSplitForPrimaryBrehon(50),
-    'partyB': getSplitForPrimaryBrehon(50)
-  };
+contract('BrehonContract claimFunds should only be allowed at one of the conflict resolved stages', (accounts) => {
   it('by preventing it from being called at Execution stage', () => {
     var brehonContract;
     return BrehonContract.deployed()
@@ -69,52 +58,14 @@ contract('BrehonContract acceptSettlement should only be allowed at one of the c
           value: getMinimumContractAmt(defaults)
         }], defaults.partyA_addr))
       .catch(assertNoErrorWithMsg)
-      .then(function proposeSettlement() {
-        return brehonContract.proposeSettlement(
-          settlement.partyA,
-          settlement.partyB,
-          {from: defaults.partyA_addr}
+      .then(function claimFunds() {
+        return brehonContract.claimFunds(
+            {from: defaults.partyB_addr}
         );
       })
-      .catch(assertError('Exception was not thrown when acceptSettlement was triggered at Execution stage'));
-  });
-
-  it('by preventing it from being called at Completed stage', () => {
-    var brehonContract;
-    return BrehonContract.deployed()
-      .then(function captureReference(instance) {
-        brehonContract = instance;
-        return instance;
-      })
-      .then(raiseDispute(defaults.partyA_addr))
-      .catch(assertNoErrorWithMsg)
-      .then(function proposeSettlement() {
-        return brehonContract.proposeSettlement(
-          settlement.partyA,
-          settlement.partyB,
-          { from: defaults.partyB_addr }
-        );
-      })
-      .catch(assertNoErrorWithMsg)
-      .then(function acceptSettlement() {
-        return brehonContract.acceptSettlement(
-          settlement.partyA,
-          settlement.partyB,
-          { from: defaults.partyA_addr}
-        );
-      })
-      .catch(assertNoErrorWithMsg)
-      .then(function acceptSettlement() {
-        return brehonContract.acceptSettlement(
-          settlement.partyA,
-          settlement.partyB,
-          { from: defaults.partyA_addr }
-        );
-      })
-      .catch(assertError('Exception was not thrown when raiseAppeal() was triggerred at the AppealPeriod stage'));
+      .catch(assertError('Exception was not thrown when claimFunds was triggered during the Execution state'));
   });
 });
-**/
 
 contract('BrehonContract should allow partyA to be able to withdraw funds', (accounts) => {
   const settlement = {
@@ -199,7 +150,7 @@ contract('BrehonContract should not allow partyA to be able to withdraw funds', 
             {from: defaults.partyA_addr}
         );
       })
-      .catch(assertError('Exception was not thrown when acceptSettlement was triggered at Negotiation stage'));
+      .catch(assertError('Exception was not thrown when claimFunds was triggered before the appealPeriod was over'));
   });
 });
 
@@ -286,6 +237,6 @@ contract('BrehonContract should not allow partyB to be able to withdraw funds', 
             {from: defaults.partyB_addr}
         );
       })
-      .catch(assertError('Exception was not thrown when acceptSettlement was triggered at Negotiation stage'));
+      .catch(assertError('Exception was not thrown when claimFunds was triggered before the appealPeriod was over'));
   });
 });
