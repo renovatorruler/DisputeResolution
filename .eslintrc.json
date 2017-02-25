@@ -1,13 +1,16 @@
 {
-    "extends": "airbnb",
-    'prefer-arrow-callback': ['error', {
-      allowNamedFunctions: true,
-      allowUnboundThis: true,
-    }],
-    "globals": {
-        "artifacts": false,
-        "contract": false,
-        "it": false,
-        "assert": false
+  "extends": "airbnb",
+  "prefer-arrow-callback": [
+    "error",
+    {
+      "allowNamedFunctions": true,
+      "allowUnboundThis": true
     }
+  ],
+  "globals": {
+    "artifacts": false,
+    "contract": false,
+    "it": false,
+    "assert": false
+  }
 }
