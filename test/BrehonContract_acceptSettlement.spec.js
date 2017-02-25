@@ -1,5 +1,6 @@
 const R = require('ramda');
 
+const brehonContractArtifact = artifacts.require('./BrehonContract.sol');
 const BrehonContract = require('../app/javascripts/BrehonAPI.js');
 const defaults = require('../config/deployment_settings.js').defaults;
 
@@ -9,7 +10,7 @@ const startContract = contractHelpers.startContract;
 const raiseDispute = contractHelpers.raiseDispute;
 const assertError = contractHelpers.assertError;
 const assertNoError = contractHelpers.assertNoError;
-const assertNoErrorWithMsg = assertNoError('No Exception must be thrown');
+const assertNoErrorWithMsg = assertNoError(false, 'No Exception must be thrown');
 const StagesEnum = contractHelpers.StagesEnum;
 const startContractAndRaiseDispute = contractHelpers.startContractAndRaiseDispute;
 const verifyEvent = contractHelpers.verifyEvent;
@@ -31,6 +32,7 @@ const ResolutionStruct = {
  * - Must check for all stages
  **/
 
+/**
 contract('BrehonContract acceptSettlement should only be allowed at one of the conflict stages', (accounts) => {
   const settlement = {
     'partyA': getSplitForPrimaryBrehon(50),
@@ -73,8 +75,8 @@ contract('BrehonContract acceptSettlement should only be allowed at one of the c
         }], defaults.partyA_addr))
       .catch(assertNoErrorWithMsg)
       .then(function proposeSettlement() {
-        console.log("STOPPPED", Object.keys(brehonContract));
-        process.exit(1);
+        //console.log("STOPPPED", Object.keys(brehonContract));
+        //process.exit(1);
         return brehonContract.proposeSettlement(
           settlement.partyA,
           settlement.partyB,
@@ -119,14 +121,15 @@ contract('BrehonContract acceptSettlement should only be allowed at one of the c
       .catch(assertError('Exception was not thrown when raiseAppeal() was triggerred at the AppealPeriod stage'));
   });
 });
+**/
 
-contract('BrehonContract should allow partyA to accepted a proposed settlement', (accounts) => {
+contract('BrehonContract should allow partyA to accept a proposed settlement', (accounts) => {
   const settlement = {
     'partyA': getSplitForPrimaryBrehon(60),
     'partyB': getSplitForPrimaryBrehon(40)
   };
   it('at Dispute stage', () => {
-    var brehonContract;
+    let brehonContract = new BrehonContract(brehonContractArtifact);
     return BrehonContract.deployed()
       .then(function captureReference(instance) {
         brehonContract = instance;
@@ -137,7 +140,8 @@ contract('BrehonContract should allow partyA to accepted a proposed settlement',
           addr: defaults.partyA_addr,
           value: getMinimumContractAmt(defaults)
         }], defaults.partyA_addr, defaults.partyA_addr))
-      .catch(assertNoErrorWithMsg)
+    .catch(assertNoError(true, 'No Error during startContract and raise Dispute'))
+    /**
       .then(function proposeSettlement() {
         return brehonContract.proposeSettlement(
           settlement.partyA,
@@ -166,9 +170,11 @@ contract('BrehonContract should allow partyA to accepted a proposed settlement',
         console.log(err);
         assert.isNull(err, 'Exception was thrown when partyA tried to accept settlement');
       });
+      **/
   });
 });
 
+/**
 contract('BrehonContract should allow partyB to accepted a proposed settlement', (accounts) => {
   const settlement = {
     'partyA': getSplitForPrimaryBrehon(40),
@@ -217,3 +223,4 @@ contract('BrehonContract should allow partyB to accepted a proposed settlement',
       });
   });
 });
+**/
