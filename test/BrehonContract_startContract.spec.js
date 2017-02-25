@@ -1,4 +1,4 @@
-var BrehonContract = artifacts.require("./BrehonContract.sol");
+const BrehonContract = require('../app/javascripts/BrehonAPI.js');
 var defaults = require('../config/deployment_settings.js').defaults;
 var BigNumber = require('bignumber.js');
 var R = require('ramda');

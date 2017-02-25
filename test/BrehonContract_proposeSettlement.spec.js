@@ -1,6 +1,6 @@
 const R = require('ramda');
 
-const BrehonContract = artifacts.require('./BrehonContract.sol');
+const BrehonContract = require('../app/javascripts/BrehonAPI.js');
 const defaults = require('../config/deployment_settings.js').defaults;
 
 const contractHelpers = require('../lib/contractHelpers.js');
