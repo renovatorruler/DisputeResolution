@@ -73,6 +73,8 @@ contract('BrehonContract acceptSettlement should only be allowed at one of the c
         }], defaults.partyA_addr))
       .catch(assertNoErrorWithMsg)
       .then(function proposeSettlement() {
+        console.log("STOPPPED", Object.keys(brehonContract));
+        process.exit(1);
         return brehonContract.proposeSettlement(
           settlement.partyA,
           settlement.partyB,
