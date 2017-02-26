@@ -13,11 +13,11 @@
 .brehonlist { 
   flex-direction: column;
   justify-content: space-around;
-  align-items: center;:set
+  align-items: center;
 }
 
 .party {
-  width: 7vw;
+  width: 30vw;
 }
 
 .party figure {
@@ -29,3 +29,34 @@
   border: 1px solid gray;
   border-radius: 2px;
 }
+
+@media only screen and (min-width: 320px) {
+  .party {
+    width: 52vw;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .party {
+    width: 22vw;
+  }
+}
+
+@media only screen and (min-width: 1200px) {
+  .party {
+    width: 16vw;
+  }
+}
+
+@media only screen and (min-width: 1800px) {
+  .party {
+    width: 12vw;
+  }
+}
+
+@media only screen and (min-width: 2500px) {
+  .party {
+    width: 10vw;
+  }
+}
+
