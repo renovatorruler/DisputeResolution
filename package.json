@@ -10,7 +10,7 @@
     "test": "run-p -r \"testrpc-silent\" \"truffletest\"",
     "build": "webpack",
     "lint": "eslint ./",
-    "dev": "webpack-dev-server"
+    "dev": "webpack-dev-server --host 0.0.0.0"
   },
   "repository": "git@github.com:prashantpawar/DisputeResolution.git",
   "author": "Prashant Singh Pawar <prashantpawar@gmail.com>",
@@ -18,6 +18,7 @@
   "dependencies": {
     "bignumber.js": "^4.0.0",
     "ramda": "^0.23.0",
+    "truffle-contract": "^1.1.10",
     "web3": "^0.18.2"
   },
   "devDependencies": {
@@ -41,12 +42,13 @@
     "eslint-plugin-react": "^6.10.0",
     "eslint-plugin-standard": "^2.0.1",
     "ethereumjs-testrpc": "^3.0.3",
+    "html-loader": "^0.4.5",
     "html-webpack-plugin": "^2.28.0",
     "json-loader": "^0.5.4",
     "npm-run-all": "^4.0.1",
     "style-loader": "^0.13.2",
     "truffle": "^3.0.5",
-    "truffle-contract": "^1.1.10",
+    "url-loader": "^0.5.8",
     "webpack": "^2.2.1",
     "webpack-dev-server": "^2.4.1"
   }
