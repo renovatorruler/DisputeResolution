@@ -1,0 +1,31 @@
+.partylist, .brehonlist { 
+  display: flex;
+  flex-wrap: nowrap;
+  align-content: stretch;
+}
+
+.partylist { 
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: flex-start;
+}
+
+.brehonlist { 
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;:set
+}
+
+.party {
+  width: 7vw;
+}
+
+.party figure {
+  text-align: center;
+}
+
+.party-active {
+  background: #AAA;
+  border: 1px solid gray;
+  border-radius: 2px;
+}

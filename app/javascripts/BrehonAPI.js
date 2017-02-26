@@ -13,7 +13,7 @@ export default class BrehonAPI {
   }
 
   start() {
-    console.log('started');
+    console.info('started');
     return this;
   }
 }
