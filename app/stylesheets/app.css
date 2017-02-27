@@ -47,6 +47,10 @@ h3 {
   color: #4A4A4A;
 }
 
+.title h2 {
+  font-weight: 200;
+}
+
 .title .contract {
   color: #3B98CC;
 }

@@ -24,6 +24,10 @@
   text-align: center;
 }
 
+.party address {
+  font-style: normal;
+}
+
 .party-active {
   background: #AAA;
   border: 1px solid gray;

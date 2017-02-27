@@ -12,10 +12,62 @@ let brehonApp;
 
 window.App = {
   start: () => {
+    const self = window.App;
+    self.accounts = web3.eth.accounts;
+    self.selectedAccount = web3.eth.accounts[0];
+
     brehonApp.start();
+    self.updateInterface();
+    setInterval(() => {
+      if (self.accounts[0] !== self.selectedAccount) {
+        self.selectedAccount = self.accounts[0];
+        self.updateInterface();
+      }
+    }, 1000);
+  },
+
+  updateInterface: () => {
+    const self = window.App;
     brehonApp.getDeployed().then((instance) => {
+      console.debug(instance);
+      console.debug('Selected Account:', self.selectedAccount);
       $('contract-address').text(instance.address);
-    });
+      return instance;
+    })
+    .then(instance =>
+      brehonApp.getPartyA().then((partyA) => {
+        $('address[party="partyA"]').text(partyA.addr);
+        $('section.partyA').attr('addr', partyA.addr);
+        return instance;
+      }))
+    .then(instance =>
+      brehonApp.getPartyB().then((partyB) => {
+        $('address[party="partyB"]').text(partyB.addr);
+        $('section.partyB').attr('addr', partyB.addr);
+        return instance;
+      }))
+    .then(instance =>
+      brehonApp.getPrimaryBrehon().then((primaryBrehon) => {
+        $('address[party="primaryBrehon"]').text(primaryBrehon.addr);
+        $('section.primaryBrehon').attr('addr', primaryBrehon.addr);
+        return instance;
+      }))
+    .then(instance =>
+      brehonApp.getSecondaryBrehon().then((secondaryBrehon) => {
+        $('address[party="secondaryBrehon"]').text(secondaryBrehon.addr);
+        $('section.secondaryBrehon').attr('addr', secondaryBrehon.addr);
+        return instance;
+      }))
+    .then(instance =>
+      brehonApp.getTertiaryBrehon().then((tertiaryBrehon) => {
+        $('address[party="tertiaryBrehon"]').text(tertiaryBrehon.addr);
+        $('section.tertiaryBrehon').attr('addr', tertiaryBrehon.addr);
+        return instance;
+      }))
+    .then(instance =>
+      $('section.party').each((index, el) => {
+        console.log($(el).attr('addr'));
+      }));
   },
 
   setStatus: (message) => {
