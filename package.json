@@ -8,6 +8,7 @@
     "testrpc-silent": "testrpc -m 'myth like bonus scare over problem client lizard pioneer submit female collect' --hostname 0.0.0.0 --gasPrice 20 > /dev/null",
     "truffletest": "truffle test",
     "test": "run-p -r \"testrpc-silent\" \"truffletest\"",
+    "migrate": "truffle migrate",
     "build": "webpack",
     "lint": "eslint ./",
     "dev": "webpack-dev-server --host 0.0.0.0"
@@ -17,6 +18,7 @@
   "license": "MIT",
   "dependencies": {
     "bignumber.js": "^4.0.0",
+    "jquery": "^3.1.1",
     "ramda": "^0.23.0",
     "truffle-contract": "^1.1.10",
     "web3": "^0.18.2"

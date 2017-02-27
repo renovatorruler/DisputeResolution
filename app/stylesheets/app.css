@@ -43,6 +43,14 @@ h3 {
   color: black;
 }
 
+.title {
+  color: #4A4A4A;
+}
+
+.title .contract {
+  color: #3B98CC;
+}
+
 @media only screen and (min-width: 320px) {
   body {
     margin-left: 2vw;

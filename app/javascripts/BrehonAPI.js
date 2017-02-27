@@ -16,4 +16,8 @@ export default class BrehonAPI {
     console.info('started');
     return this;
   }
+
+  getDeployed() {
+    return this.brehonContract.deployed();
+  }
 }

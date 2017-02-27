@@ -1,5 +1,6 @@
 // Import libraries we need.
 import Web3 from 'web3';
+import $ from 'jquery';
 
 import BrehonAPI from './BrehonAPI';
 
@@ -7,33 +8,13 @@ import BrehonAPI from './BrehonAPI';
 import '../stylesheets/app.css';
 import '../stylesheets/profiles.css';
 
-// The following code is simple to show off interacting with your contracts.
-// As your needs grow you will likely need to change its form and structure.
-// For application bootstrapping, check out window.addEventListener below.
-let accounts;
-let account;
+let brehonApp;
 
-/**
 window.App = {
   start: () => {
-    const self = this;
-
-    // Get the initial account balance so it can be displayed.
-    web3.eth.getAccounts((err, accs) => {
-      if (err != null) {
-        console.error('There was an error fetching your accounts.');
-        return;
-      }
-
-      if (accs.length === 0) {
-        console.error('Couldn\'t get any accounts! Make sure your Ethereum client is configured correctly.');
-        return;
-      }
-
-      accounts = accs;
-      account = accounts[0];
-
-      self.refreshBalance();
+    brehonApp.start();
+    brehonApp.getDeployed().then((instance) => {
+      $('contract-address').text(instance.address);
     });
   },
 
@@ -42,44 +23,22 @@ window.App = {
     status.innerHTML = message;
   },
 
-  refreshBalance: () => {
-    const self = this;
+  //refreshBalance: () => {
+    //const self = this;
 
-    let meta;
-    BrehonContract.deployed().then((instance) => {
-      meta = instance;
-      return meta.getBalance.call(account, { from: account });
-    }).then((value) => {
-      const balanceEl = document.getElementById('balance');
-      balanceEl.innerHTML = value.valueOf();
-    }).catch((e) => {
-      console.error(e);
-      self.setStatus('Error getting balance; see log.');
-    });
-  },
-
-  sendCoin: () => {
-    const self = this;
-
-    const amount = parseInt(document.getElementById('amount').value, 10);
-    const receiver = document.getElementById('receiver').value;
-
-    this.setStatus('Initiating transaction... (please wait)');
-
-    let meta;
-    BrehonContract.deployed().then((instance) => {
-      meta = instance;
-      return meta.sendCoin(receiver, amount, { from: account });
-    }).then(() => {
-      self.setStatus('Transaction complete!');
-      self.refreshBalance();
-    }).catch((e) => {
-      console.error(e);
-      self.setStatus('Error sending coin; see log.');
-    });
-  },
+    //let meta;
+    //BrehonContract.deployed().then((instance) => {
+      //meta = instance;
+      //return meta.getBalance.call(account, { from: account });
+    //}).then((value) => {
+      //const balanceEl = document.getElementById('balance');
+      //balanceEl.innerHTML = value.valueOf();
+    //}).catch((e) => {
+      //console.error(e);
+      //self.setStatus('Error getting balance; see log.');
+    //});
+  //},
 };
-**/
 
 window.addEventListener('load', () => {
   // Checking if Web3 has been injected by the browser (Mist/MetaMask)
@@ -93,6 +52,7 @@ window.addEventListener('load', () => {
     window.web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
   }
 
-  const brehonApp = new BrehonAPI(web3.currentProvider);
-  brehonApp.start();
+  brehonApp = new BrehonAPI(web3.currentProvider);
+
+  window.App.start();
 });
