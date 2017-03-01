@@ -79,4 +79,11 @@ export default class BrehonAPI {
           disputeFee: tertiaryBrehon[BrehonStruct.disputeFee],
         })));
   }
+
+  acceptContract(addr) {
+    return this.brehonContract.deployed()
+      .then(instance =>
+        instance.acceptContract({ from: addr }).then(result =>
+          console.info(result)));
+  }
 }

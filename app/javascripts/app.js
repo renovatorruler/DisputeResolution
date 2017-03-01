@@ -27,52 +27,72 @@ window.App = {
 
   initInterface: () => {
     const contractAcceptanceMsg = 'Contract Accepted';
-    const contractNonAcceptanceMsg = 'Contract Acceptance Pending';
+    const contractNonAcceptanceMsg = '<a href="javascript:void(0);">Contract Acceptance Pending</a>';
     return Promise.all([
       brehonApp.getDeployed().then((instance) => {
         $('contract-address').text(instance.address);
       }),
       brehonApp.getPartyA().then((partyA) => {
         if (partyA.contractAccepted) {
-          $('[party="partyA"] contract-acceptance').text(contractAcceptanceMsg);
+          $('[party="partyA"] contract-acceptance').html(contractAcceptanceMsg);
         } else {
-          $('[party="partyA"] contract-acceptance').text(contractNonAcceptanceMsg);
+          $('[party="partyA"] contract-acceptance')
+            .html(contractNonAcceptanceMsg)
+            .click(() => {
+              brehonApp.acceptContract(partyA.addr);
+            });
         }
         $('[party="partyA"] address').text(partyA.addr);
         $('section.partyA').attr('addr', partyA.addr);
       }),
       brehonApp.getPartyB().then((partyB) => {
         if (partyB.contractAccepted) {
-          $('[party="partyB"] contract-acceptance').text(contractAcceptanceMsg);
+          $('[party="partyB"] contract-acceptance').html(contractAcceptanceMsg);
         } else {
-          $('[party="partyB"] contract-acceptance').text(contractNonAcceptanceMsg);
+          $('[party="partyB"] contract-acceptance')
+            .html(contractNonAcceptanceMsg)
+            .click(() => {
+              brehonApp.acceptContract(partyB.addr);
+            });
         }
         $('[party="partyB"] address').text(partyB.addr);
         $('section.partyB').attr('addr', partyB.addr);
       }),
       brehonApp.getPrimaryBrehon().then((primaryBrehon) => {
         if (primaryBrehon.contractAccepted) {
-          $('[party="primaryBrehon"] contract-acceptance').text(contractAcceptanceMsg);
+          $('[party="primaryBrehon"] contract-acceptance').html(contractAcceptanceMsg);
         } else {
-          $('[party="primaryBrehon"] contract-acceptance').text(contractNonAcceptanceMsg);
+          $('[party="primaryBrehon"] contract-acceptance')
+            .html(contractNonAcceptanceMsg)
+            .click(() => {
+              brehonApp.acceptContract(primaryBrehon.addr);
+            });
         }
         $('[party="primaryBrehon"] address').text(primaryBrehon.addr);
         $('section.primaryBrehon').attr('addr', primaryBrehon.addr);
       }),
       brehonApp.getSecondaryBrehon().then((secondaryBrehon) => {
         if (secondaryBrehon.contractAccepted) {
-          $('[party="secondaryBrehon"] contract-acceptance').text(contractAcceptanceMsg);
+          $('[party="secondaryBrehon"] contract-acceptance').html(contractAcceptanceMsg);
         } else {
-          $('[party="secondaryBrehon"] contract-acceptance').text(contractNonAcceptanceMsg);
+          $('[party="secondaryBrehon"] contract-acceptance')
+            .html(contractNonAcceptanceMsg)
+            .click(() => {
+              brehonApp.acceptContract(secondaryBrehon.addr);
+            });
         }
         $('[party="secondaryBrehon"] address').text(secondaryBrehon.addr);
         $('section.secondaryBrehon').attr('addr', secondaryBrehon.addr);
       }),
       brehonApp.getTertiaryBrehon().then((tertiaryBrehon) => {
         if (tertiaryBrehon.contractAccepted) {
-          $('[party="tertiaryBrehon"] contract-acceptance').text(contractAcceptanceMsg);
+          $('[party="tertiaryBrehon"] contract-acceptance').html(contractAcceptanceMsg);
         } else {
-          $('[party="tertiaryBrehon"] contract-acceptance').text(contractNonAcceptanceMsg);
+          $('[party="tertiaryBrehon"] contract-acceptance')
+            .html(contractNonAcceptanceMsg)
+            .click(() => {
+              brehonApp.acceptContract(tertiaryBrehon.addr);
+            });
         }
         $('[party="tertiaryBrehon"] address').text(tertiaryBrehon.addr);
         $('section.tertiaryBrehon').attr('addr', tertiaryBrehon.addr);
