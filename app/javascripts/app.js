@@ -13,83 +13,89 @@ let brehonApp;
 window.App = {
   start: () => {
     const self = window.App;
-    self.accounts = web3.eth.accounts;
     self.selectedAccount = web3.eth.accounts[0];
 
     brehonApp.start();
-    self.updateInterface();
+    self.initInterface().then(self.updateInterface);
     setInterval(() => {
-      if (self.accounts[0] !== self.selectedAccount) {
-        self.selectedAccount = self.accounts[0];
+      if (web3.eth.accounts[0] !== self.selectedAccount) {
+        self.selectedAccount = web3.eth.accounts[0];
         self.updateInterface();
       }
     }, 1000);
   },
 
+  initInterface: () => {
+    const contractAcceptanceMsg = 'Contract Accepted';
+    const contractNonAcceptanceMsg = 'Contract Acceptance Pending';
+    return Promise.all([
+      brehonApp.getDeployed().then((instance) => {
+        $('contract-address').text(instance.address);
+      }),
+      brehonApp.getPartyA().then((partyA) => {
+        if (partyA.contractAccepted) {
+          $('[party="partyA"] contract-acceptance').text(contractAcceptanceMsg);
+        } else {
+          $('[party="partyA"] contract-acceptance').text(contractNonAcceptanceMsg);
+        }
+        $('[party="partyA"] address').text(partyA.addr);
+        $('section.partyA').attr('addr', partyA.addr);
+      }),
+      brehonApp.getPartyB().then((partyB) => {
+        if (partyB.contractAccepted) {
+          $('[party="partyB"] contract-acceptance').text(contractAcceptanceMsg);
+        } else {
+          $('[party="partyB"] contract-acceptance').text(contractNonAcceptanceMsg);
+        }
+        $('[party="partyB"] address').text(partyB.addr);
+        $('section.partyB').attr('addr', partyB.addr);
+      }),
+      brehonApp.getPrimaryBrehon().then((primaryBrehon) => {
+        if (primaryBrehon.contractAccepted) {
+          $('[party="primaryBrehon"] contract-acceptance').text(contractAcceptanceMsg);
+        } else {
+          $('[party="primaryBrehon"] contract-acceptance').text(contractNonAcceptanceMsg);
+        }
+        $('[party="primaryBrehon"] address').text(primaryBrehon.addr);
+        $('section.primaryBrehon').attr('addr', primaryBrehon.addr);
+      }),
+      brehonApp.getSecondaryBrehon().then((secondaryBrehon) => {
+        if (secondaryBrehon.contractAccepted) {
+          $('[party="secondaryBrehon"] contract-acceptance').text(contractAcceptanceMsg);
+        } else {
+          $('[party="secondaryBrehon"] contract-acceptance').text(contractNonAcceptanceMsg);
+        }
+        $('[party="secondaryBrehon"] address').text(secondaryBrehon.addr);
+        $('section.secondaryBrehon').attr('addr', secondaryBrehon.addr);
+      }),
+      brehonApp.getTertiaryBrehon().then((tertiaryBrehon) => {
+        if (tertiaryBrehon.contractAccepted) {
+          $('[party="tertiaryBrehon"] contract-acceptance').text(contractAcceptanceMsg);
+        } else {
+          $('[party="tertiaryBrehon"] contract-acceptance').text(contractNonAcceptanceMsg);
+        }
+        $('[party="tertiaryBrehon"] address').text(tertiaryBrehon.addr);
+        $('section.tertiaryBrehon').attr('addr', tertiaryBrehon.addr);
+      }),
+    ]);
+  },
+
   updateInterface: () => {
     const self = window.App;
-    brehonApp.getDeployed().then((instance) => {
-      console.debug(instance);
-      console.debug('Selected Account:', self.selectedAccount);
-      $('contract-address').text(instance.address);
-      return instance;
-    })
-    .then(instance =>
-      brehonApp.getPartyA().then((partyA) => {
-        $('address[party="partyA"]').text(partyA.addr);
-        $('section.partyA').attr('addr', partyA.addr);
-        return instance;
-      }))
-    .then(instance =>
-      brehonApp.getPartyB().then((partyB) => {
-        $('address[party="partyB"]').text(partyB.addr);
-        $('section.partyB').attr('addr', partyB.addr);
-        return instance;
-      }))
-    .then(instance =>
-      brehonApp.getPrimaryBrehon().then((primaryBrehon) => {
-        $('address[party="primaryBrehon"]').text(primaryBrehon.addr);
-        $('section.primaryBrehon').attr('addr', primaryBrehon.addr);
-        return instance;
-      }))
-    .then(instance =>
-      brehonApp.getSecondaryBrehon().then((secondaryBrehon) => {
-        $('address[party="secondaryBrehon"]').text(secondaryBrehon.addr);
-        $('section.secondaryBrehon').attr('addr', secondaryBrehon.addr);
-        return instance;
-      }))
-    .then(instance =>
-      brehonApp.getTertiaryBrehon().then((tertiaryBrehon) => {
-        $('address[party="tertiaryBrehon"]').text(tertiaryBrehon.addr);
-        $('section.tertiaryBrehon').attr('addr', tertiaryBrehon.addr);
-        return instance;
-      }))
-    .then(instance =>
-      $('section.party').each((index, el) => {
-        console.log($(el).attr('addr'));
-      }));
+
+    $('section.party').each((index, el) => {
+      if ($(el).attr('addr') === self.selectedAccount) {
+        $(el).addClass('active');
+      } else {
+        $(el).removeClass('active');
+      }
+    });
   },
 
   setStatus: (message) => {
     const status = document.getElementById('status');
     status.innerHTML = message;
   },
-
-  //refreshBalance: () => {
-    //const self = this;
-
-    //let meta;
-    //BrehonContract.deployed().then((instance) => {
-      //meta = instance;
-      //return meta.getBalance.call(account, { from: account });
-    //}).then((value) => {
-      //const balanceEl = document.getElementById('balance');
-      //balanceEl.innerHTML = value.valueOf();
-    //}).catch((e) => {
-      //console.error(e);
-      //self.setStatus('Error getting balance; see log.');
-    //});
-  //},
 };
 
 window.addEventListener('load', () => {

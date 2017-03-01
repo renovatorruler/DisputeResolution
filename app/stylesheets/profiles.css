@@ -18,6 +18,9 @@
 
 .party {
   width: 30vw;
+  border: 1px solid #AAA;
+}
+.party img {
 }
 
 .party figure {
@@ -26,9 +29,10 @@
 
 .party address {
   font-style: normal;
+  word-wrap: break-word;
 }
 
-.party-active {
+.party.active {
   background: #AAA;
   border: 1px solid gray;
   border-radius: 2px;
@@ -42,25 +46,25 @@
 
 @media only screen and (min-width: 768px) {
   .party {
-    width: 22vw;
+    width: 25vw;
   }
 }
 
 @media only screen and (min-width: 1200px) {
   .party {
-    width: 16vw;
+    width: 22vw;
   }
 }
 
 @media only screen and (min-width: 1800px) {
   .party {
-    width: 12vw;
+    width: 16vw;
   }
 }
 
 @media only screen and (min-width: 2500px) {
   .party {
-    width: 10vw;
+    width: 14vw;
   }
 }
 

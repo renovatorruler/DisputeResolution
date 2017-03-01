@@ -71,4 +71,11 @@ h3 {
     margin-top: 5vw;
     font-family: "Open Sans", sans-serif;
   }
+  h2 {
+    font-size: 22px;
+  }
+
+  h3 {
+    font-size: 14px;
+  }
 }
