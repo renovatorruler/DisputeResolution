@@ -1,0 +1,70 @@
+.partylist, .brehonlist { 
+  display: flex;
+  flex-wrap: nowrap;
+  align-content: stretch;
+}
+
+.partylist { 
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: flex-start;
+}
+
+.brehonlist { 
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.party {
+  width: 30vw;
+  border: 1px solid #AAA;
+}
+.party img {
+}
+
+.party figure {
+  text-align: center;
+}
+
+.party address {
+  font-style: normal;
+  word-wrap: break-word;
+}
+
+.party.active {
+  background: #AAA;
+  border: 1px solid gray;
+  border-radius: 2px;
+}
+
+@media only screen and (min-width: 320px) {
+  .party {
+    width: 52vw;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .party {
+    width: 25vw;
+  }
+}
+
+@media only screen and (min-width: 1200px) {
+  .party {
+    width: 22vw;
+  }
+}
+
+@media only screen and (min-width: 1800px) {
+  .party {
+    width: 16vw;
+  }
+}
+
+@media only screen and (min-width: 2500px) {
+  .party {
+    width: 14vw;
+  }
+}
+

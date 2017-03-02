@@ -1,22 +1,67 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>MetaCoin - Default Truffle App</title>
+  <title>Brehon Contract - Truffle Webpack Demo w/ Frontend</title>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-  <link href="./app.css" rel='stylesheet' type='text/css'>
   <script src="./app.js"></script>
 </head>
 <body>
-  <h1>MetaCoin</h1>
-  <h2>Example Truffle Dapp</h2>
-  <h3>You have <span class="black"><span id="balance"></span> META</span></h3>
+  <header class="title">
+  <h1>Brehon<span class="contract">Contract</span></h1>
+  <h2>- (<contract-address></contract-address>)</h2>
+  </header>
+  <div class="partylist">
+    <section class="party partyA" party="partyA">
+      <figure>
+        <img src="images/partyA.png" width="100%"/>
+        <figcaption>Party A</figcaption>
+        <address party="partyA"></address>
+        <contract-acceptance></contract-acceptance>
+      </figure>
+    </section>
 
-  <br>
-  <h1>Send</h1>
-  <br><label for="amount">Amount:</label><input type="text" id="amount" placeholder="e.g., 95"></input>
-  <br><label for="receiver">To Address:</label><input type="text" id="receiver" placeholder="e.g., 0x93e66d9baea28c17d9fc393b53e3fbdd76899dae"></input>
-  <br><br><button id="send" onclick="sendCoin()">Send MetaCoin</button>
-  <br><br>
-  <span id="status"></span>
+    <section class="party partyB" party="partyB">
+      <figure>
+        <img src="images/partyB.png" width="100%"/>
+        <figcaption>Party B</figcaption>
+        <address party="partyB"></address>
+        <contract-acceptance></contract-acceptance>
+      </figure>
+    </section>
+  </div>
+
+  <div class="brehonlist">
+    <section class="party primaryBrehon" party="primaryBrehon">
+      <figure>
+        <img src="images/partyPrimaryBrehon.png" width="100%"/>
+        <figcaption>Primary Brehon</figcaption>
+        <address party="primaryBrehon"></address>
+        <contract-acceptance></contract-acceptance>
+      </figure>
+    </section>
+
+    <section class="party secondaryBrehon" party="secondaryBrehon">
+      <figure>
+        <img src="images/partySecondaryBrehon.png" width="100%"/>
+        <figcaption>Secondary Brehon</figcaption>
+        <address party="secondaryBrehon"></address>
+        <contract-acceptance></contract-acceptance>
+      </figure>
+    </section>
+
+    <section class="party tertiaryBrehon" party="tertiaryBrehon">
+      <figure>
+        <img src="images/partyTertiaryBrehon.png" width="100%"/>
+        <figcaption>Tertiary Brehon</figcaption>
+        <address party="tertiaryBrehon"></address>
+        <contract-acceptance></contract-acceptance>
+      </figure>
+    </section>
+  </div>
+
+
+  <footer>
+    <div>Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+  </footer>
 </body>
 </html>

@@ -1,55 +1,136 @@
-var accounts;
-var account;
+// Import libraries we need.
+import Web3 from 'web3';
+import $ from 'jquery';
 
-function setStatus(message) {
-  var status = document.getElementById("status");
-  status.innerHTML = message;
-}
+import BrehonAPI from './BrehonAPI';
 
-function refreshBalance() {
-  var meta = MetaCoin.deployed();
+// Import the page's CSS. Webpack will know what to do with it.
+import '../stylesheets/app.css';
+import '../stylesheets/profiles.css';
 
-  meta.getBalance.call(account, {from: account}).then(function(value) {
-    var balance_element = document.getElementById("balance");
-    balance_element.innerHTML = value.valueOf();
-  }).catch(function(e) {
-    console.log(e);
-    setStatus("Error getting balance; see log.");
-  });
-}
+let brehonApp;
 
-function sendCoin() {
-  var meta = MetaCoin.deployed();
+window.App = {
+  start: () => {
+    const self = window.App;
+    self.selectedAccount = web3.eth.accounts[0];
 
-  var amount = parseInt(document.getElementById("amount").value, 10);
-  var receiver = document.getElementById("receiver").value;
+    brehonApp.start();
+    self.initInterface().then(self.updateInterface);
+    setInterval(() => {
+      if (web3.eth.accounts[0] !== self.selectedAccount) {
+        self.selectedAccount = web3.eth.accounts[0];
+        self.updateInterface();
+      }
+    }, 1000);
+  },
 
-  setStatus("Initiating transaction... (please wait)");
+  initInterface: () => {
+    const contractAcceptanceMsg = 'Contract Accepted';
+    const contractNonAcceptanceMsg = '<a href="javascript:void(0);">Contract Acceptance Pending</a>';
+    return Promise.all([
+      brehonApp.getDeployed().then((instance) => {
+        $('contract-address').text(instance.address);
+      }),
+      brehonApp.getPartyA().then((partyA) => {
+        if (partyA.contractAccepted) {
+          $('[party="partyA"] contract-acceptance').html(contractAcceptanceMsg);
+        } else {
+          $('[party="partyA"] contract-acceptance')
+            .html(contractNonAcceptanceMsg)
+            .click(() => {
+              brehonApp.acceptContract(partyA.addr);
+            });
+        }
+        $('[party="partyA"] address').text(partyA.addr);
+        $('section.partyA').attr('addr', partyA.addr);
+      }),
+      brehonApp.getPartyB().then((partyB) => {
+        if (partyB.contractAccepted) {
+          $('[party="partyB"] contract-acceptance').html(contractAcceptanceMsg);
+        } else {
+          $('[party="partyB"] contract-acceptance')
+            .html(contractNonAcceptanceMsg)
+            .click(() => {
+              brehonApp.acceptContract(partyB.addr);
+            });
+        }
+        $('[party="partyB"] address').text(partyB.addr);
+        $('section.partyB').attr('addr', partyB.addr);
+      }),
+      brehonApp.getPrimaryBrehon().then((primaryBrehon) => {
+        if (primaryBrehon.contractAccepted) {
+          $('[party="primaryBrehon"] contract-acceptance').html(contractAcceptanceMsg);
+        } else {
+          $('[party="primaryBrehon"] contract-acceptance')
+            .html(contractNonAcceptanceMsg)
+            .click(() => {
+              brehonApp.acceptContract(primaryBrehon.addr);
+            });
+        }
+        $('[party="primaryBrehon"] address').text(primaryBrehon.addr);
+        $('section.primaryBrehon').attr('addr', primaryBrehon.addr);
+      }),
+      brehonApp.getSecondaryBrehon().then((secondaryBrehon) => {
+        if (secondaryBrehon.contractAccepted) {
+          $('[party="secondaryBrehon"] contract-acceptance').html(contractAcceptanceMsg);
+        } else {
+          $('[party="secondaryBrehon"] contract-acceptance')
+            .html(contractNonAcceptanceMsg)
+            .click(() => {
+              brehonApp.acceptContract(secondaryBrehon.addr);
+            });
+        }
+        $('[party="secondaryBrehon"] address').text(secondaryBrehon.addr);
+        $('section.secondaryBrehon').attr('addr', secondaryBrehon.addr);
+      }),
+      brehonApp.getTertiaryBrehon().then((tertiaryBrehon) => {
+        if (tertiaryBrehon.contractAccepted) {
+          $('[party="tertiaryBrehon"] contract-acceptance').html(contractAcceptanceMsg);
+        } else {
+          $('[party="tertiaryBrehon"] contract-acceptance')
+            .html(contractNonAcceptanceMsg)
+            .click(() => {
+              brehonApp.acceptContract(tertiaryBrehon.addr);
+            });
+        }
+        $('[party="tertiaryBrehon"] address').text(tertiaryBrehon.addr);
+        $('section.tertiaryBrehon').attr('addr', tertiaryBrehon.addr);
+      }),
+    ]);
+  },
 
-  meta.sendCoin(receiver, amount, {from: account}).then(function() {
-    setStatus("Transaction complete!");
-    refreshBalance();
-  }).catch(function(e) {
-    console.log(e);
-    setStatus("Error sending coin; see log.");
-  });
-}
+  updateInterface: () => {
+    const self = window.App;
 
-window.onload = function() {
-  web3.eth.getAccounts(function(err, accs) {
-    if (err !== null) {
-      alert("There was an error fetching your accounts.");
-      return;
-    }
+    $('section.party').each((index, el) => {
+      if ($(el).attr('addr') === self.selectedAccount) {
+        $(el).addClass('active');
+      } else {
+        $(el).removeClass('active');
+      }
+    });
+  },
 
-    if (accs.length === 0) {
-      alert("Couldn't get any accounts! Make sure your Ethereum client is configured correctly.");
-      return;
-    }
-
-    accounts = accs;
-    account = accounts[0];
-
-    refreshBalance();
-  });
+  setStatus: (message) => {
+    const status = document.getElementById('status');
+    status.innerHTML = message;
+  },
 };
+
+window.addEventListener('load', () => {
+  // Checking if Web3 has been injected by the browser (Mist/MetaMask)
+  if (typeof web3 !== 'undefined') {
+    console.warn('Using web3 detected from external source. If you find that your accounts don\'t appear or you have 0 BrehonContract, ensure you\'ve configured that source properly. If using MetaMask, see the following link. Feel free to delete this warning. :) http://truffleframework.com/tutorials/truffle-and-metamask');
+    // Use Mist/MetaMask's provider
+    window.web3 = new Web3(web3.currentProvider);
+  } else {
+    console.warn('No web3 detected. Falling back to http://localhost:8545. You should remove this fallback when you deploy live, as it\'s inherently insecure. Consider switching to Metamask for development. More info here: http://truffleframework.com/tutorials/truffle-and-metamask');
+    // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
+    window.web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
+  }
+
+  brehonApp = new BrehonAPI(web3.currentProvider);
+
+  window.App.start();
+});
