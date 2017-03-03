@@ -14,9 +14,6 @@ contract BrehonContract is
     address addr;
     uint deposit;
     bool contractAccepted;
-    bool primaryBrehonApproval;
-    bool secondaryBrehonApproval;
-    bool tertiaryBrehonApproval;
   }
 
   struct Brehon {
@@ -124,15 +121,9 @@ contract BrehonContract is
     stage = Stages.Negotiation;
     appealLevel = -1;
     partyA.contractAccepted = false;
-    partyA.primaryBrehonApproval = false;
-    partyA.secondaryBrehonApproval = false;
-    partyA.tertiaryBrehonApproval = false;
     partyA.deposit = 0;
 
     partyB.contractAccepted = false;
-    partyB.primaryBrehonApproval = false;
-    partyB.secondaryBrehonApproval = false;
-    partyB.tertiaryBrehonApproval = false;
     partyB.deposit = 0;
 
     primaryBrehon.contractAccepted = false;
