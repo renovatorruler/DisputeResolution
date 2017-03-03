@@ -5,6 +5,7 @@ import './../index.html';
 
 import Elm from './../elm/Main.elm';
 
-const mountNode = document.getElementById('main');
-
-Elm.Main.embed(mountNode);
+setTimeout(() => {
+  const mountNode = document.getElementById('main');
+  Elm.Main.embed(mountNode);
+}, 0);
