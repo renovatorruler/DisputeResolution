@@ -17,6 +17,7 @@
   "author": "Prashant Singh Pawar <prashantpawar@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "ace-css": "^1.1.0",
     "bignumber.js": "^4.0.0",
     "elm-webpack-loader": "^4.2.0",
     "font-awesome": "^4.7.0",
