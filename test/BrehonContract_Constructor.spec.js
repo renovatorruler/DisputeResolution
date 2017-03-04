@@ -17,6 +17,11 @@ contract('BrehonContract constructor', () => {
       instance.transactionAmount.call().then(transactionAmount =>
         assert.equal(transactionAmount.valueOf(), defaults.transactionAmount))));
 
+  it(`should set contractTermsHash to ${defaults.contractTermsHash}`, () =>
+    BrehonContract.deployed().then(instance =>
+      instance.contractTermsHash.call().then(contractTermsHash =>
+        assert.equal(contractTermsHash.valueOf(), defaults.contractTermsHash))));
+
   it('should set the stage to Negotiation', () =>
     BrehonContract.deployed().then(instance =>
       instance.stage.call().then(stage =>

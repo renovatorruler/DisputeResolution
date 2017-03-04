@@ -21,6 +21,7 @@
     "font-awesome": "^4.7.0",
     "jquery": "^3.1.1",
     "ramda": "^0.23.0",
+    "solidity-sha3": "^0.4.1",
     "truffle-contract": "^1.1.10",
     "web3": "^0.18.2"
   },
