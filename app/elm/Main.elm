@@ -2,28 +2,28 @@ module Main exposing (..)
 
 import Html exposing (Html, div, text, program)
 import Msgs exposing (Msg)
-import Models exposing (Model)
+import Parties.Models exposing (Party)
+import Parties.View exposing (view)
 import Update exposing (update)
-import View exposing (view)
 
 
 -- MODEL
 
-init : ( Model, Cmd Msg)
+init : ( Party, Cmd Msg)
 init =
-  ( "Hello", Cmd.none )
+  ( Party "0x0a0s0dd" 0 False, Cmd.none )
 
 
 -- SUBSCRIPTIONS
 
-subscriptions : Model -> Sub Msg
+subscriptions : Party -> Sub Msg
 subscriptions model =
   Sub.none
 
 
 -- MAIN
 
-main : Program Never Model Msg
+main : Program Never Party Msg
 main =
   program
     { init = init

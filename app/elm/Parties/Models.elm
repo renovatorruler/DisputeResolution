@@ -1,12 +1,14 @@
-module Models exposing (..)
+module Parties.Models exposing (..)
 
 type alias Party =
   {
-    addr : String
+    addr : Address
   , deposit : Int
   , contractAccepted : Bool
   }
 
-partyA : Model
-partyB =
-  { 
+partyA : Party
+partyA = Party "" 0 False
+
+type alias Address =
+  String

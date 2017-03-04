@@ -1,10 +1,10 @@
 module Update exposing (..)
 
 import Msgs exposing (Msg(..))
-import Models exposing (Model)
+import Parties.Models exposing (Party)
 
-update : Msg -> Model -> ( Model, Cmd Msg)
-update msg model =
+update : Msg -> Party -> ( Party, Cmd Msg)
+update msg party =
   case msg of
     NoOp ->
-      ( model, Cmd.none )
+      ( party, Cmd.none )
