@@ -20,15 +20,12 @@
   "dependencies": {
     "ace-css": "^1.1.0",
     "bignumber.js": "^4.0.0",
-    "elm-webpack-loader": "^4.2.0",
     "file-loader": "^0.10.1",
     "font-awesome": "^4.7.0",
-    "jquery": "^3.1.1",
     "ramda": "^0.23.0",
     "solidity-sha3": "^0.4.1",
     "truffle-contract": "^1.1.10",
-    "web3": "^0.18.2",
-    "webpack-dev-middleware": "^1.10.1"
+    "web3": "^0.18.2"
   },
   "devDependencies": {
     "babel-cli": "^6.23.0",
@@ -41,6 +38,7 @@
     "babel-register": "^6.23.0",
     "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.26.2",
+    "elm-webpack-loader": "^4.2.0",
     "eslint": "^3.16.1",
     "eslint-config-airbnb": "^14.1.0",
     "eslint-config-standard": "^6.2.1",
@@ -59,6 +57,7 @@
     "truffle": "^3.0.5",
     "url-loader": "^0.5.8",
     "webpack": "^2.2.1",
+    "webpack-dev-middleware": "^1.10.1",
     "webpack-dev-server": "^2.4.1"
   }
 }
