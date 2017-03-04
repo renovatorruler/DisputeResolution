@@ -17,6 +17,11 @@ contract('BrehonContract constructor', () => {
       instance.transactionAmount.call().then(transactionAmount =>
         assert.equal(transactionAmount.valueOf(), defaults.transactionAmount))));
 
+  it(`should set contractTermsHash to ${defaults.contractTermsHash}`, () =>
+    BrehonContract.deployed().then(instance =>
+      instance.contractTermsHash.call().then(contractTermsHash =>
+        assert.equal(contractTermsHash.valueOf(), defaults.contractTermsHash))));
+
   it('should set the stage to Negotiation', () =>
     BrehonContract.deployed().then(instance =>
       instance.stage.call().then(stage =>
@@ -36,51 +41,6 @@ contract('BrehonContract constructor', () => {
     BrehonContract.deployed().then(brehonContract =>
       brehonContract.partyA.call().then(partyA =>
         assert.equal(partyA[PartyStruct.contractAccepted], false))));
-
-  it('should set partyA\'s primaryBrehonApproval to false', () =>
-    BrehonContract.deployed().then(brehonContract =>
-      brehonContract.partyA.call().then(partyA =>
-        assert.equal(partyA[PartyStruct.primaryBrehonApproval], false))));
-
-  it('should set partyA\'s secondaryBrehonApproval to false', () =>
-    BrehonContract.deployed().then(brehonContract =>
-      brehonContract.partyA.call().then(partyA =>
-        assert.equal(partyA[PartyStruct.secondaryBrehonApproval], false))));
-
-  it('should set partyA\'s tertiaryBrehonApproval to false', () =>
-    BrehonContract.deployed().then(brehonContract =>
-      brehonContract.partyA.call().then(partyA =>
-        assert.equal(partyA[PartyStruct.tertiaryBrehonApproval], false))));
-
-  it('should set partyB\'s address properly', () =>
-    BrehonContract.deployed().then(brehonContract =>
-      brehonContract.partyB.call().then(partyB =>
-        assert.equal(partyB[PartyStruct.addr], defaults.partyB_addr))));
-
-  it('should set partyB\'s deposit to 0', () =>
-    BrehonContract.deployed().then(brehonContract =>
-      brehonContract.partyB.call().then(partyB =>
-      assert.equal(partyB[PartyStruct.deposit].valueOf(), 0))));
-
-  it('should set partyB\'s contractAccepted to false', () =>
-    BrehonContract.deployed().then(brehonContract =>
-      brehonContract.partyB.call().then(partyB =>
-        assert.equal(partyB[PartyStruct.contractAccepted], false))));
-
-  it('should set partyB\'s primaryBrehonApproval to false', () =>
-    BrehonContract.deployed().then(brehonContract =>
-      brehonContract.partyB.call().then(partyB =>
-        assert.equal(partyB[PartyStruct.primaryBrehonApproval], false))));
-
-  it('should set partyB\'s secondaryBrehonApproval to false', () =>
-    BrehonContract.deployed().then(brehonContract =>
-      brehonContract.partyB.call().then(partyB =>
-        assert.equal(partyB[PartyStruct.secondaryBrehonApproval], false))));
-
-  it('should set partyB\'s tertiaryBrehonApproval to false', () =>
-    BrehonContract.deployed().then(brehonContract =>
-      brehonContract.partyB.call().then(partyB =>
-        assert.equal(partyB[PartyStruct.tertiaryBrehonApproval], false))));
 
   it('should set primaryBrehon\'s address properly', () =>
     BrehonContract.deployed().then(brehonContract =>
