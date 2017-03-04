@@ -33,6 +33,7 @@ contract BrehonContract is
 
   int8 public appealLevel;
   uint public transactionAmount;
+  bytes32 public contractTermsHash;
   Party public partyA;
   Party public partyB;
   Brehon public primaryBrehon;
@@ -90,6 +91,7 @@ contract BrehonContract is
       address _partyA,
       address _partyB,
       uint _transactionAmount,
+      bytes32 _contractTermsHash,
       address _primaryBrehon,
       uint _primaryBrehonFixedFee,
       uint _primaryBrehonDisputeFee,
@@ -102,6 +104,7 @@ contract BrehonContract is
   ) {
     partyA.addr = _partyA;
     transactionAmount = _transactionAmount;
+    contractTermsHash = _contractTermsHash;
 
     partyB.addr = _partyB;
 
