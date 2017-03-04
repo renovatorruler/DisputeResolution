@@ -2,7 +2,7 @@ module View exposing (..)
 
 import Html exposing (Html, div, text)
 import Msgs exposing (Msg)
-import Parties.Models exposing (Party)
+import Parties.Party exposing (Party)
 import Parties.View
 
 view : Party -> Html Msg

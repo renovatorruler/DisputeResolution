@@ -1,7 +1,7 @@
 module Update exposing (..)
 
 import Msgs exposing (Msg(..))
-import Parties.Models exposing (Party)
+import Parties.Party exposing (Party)
 
 update : Msg -> Party -> ( Party, Cmd Msg)
 update msg party =

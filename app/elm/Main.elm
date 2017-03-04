@@ -2,7 +2,7 @@ module Main exposing (..)
 
 import Html exposing (Html, div, text, program)
 import Msgs exposing (Msg)
-import Parties.Models exposing (Party)
+import Parties.Party exposing (Party)
 import View exposing (view)
 import Update exposing (update)
 
