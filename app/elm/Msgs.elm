@@ -1,4 +1,6 @@
 module Msgs exposing (..)
 
+
 type Msg
-  = NoOp
+    = OnLoadWeb3Accounts
+    | LoadAccounts (List String)
