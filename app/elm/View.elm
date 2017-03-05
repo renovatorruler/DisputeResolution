@@ -11,11 +11,15 @@ view model =
     div []
         [ text "Main View "
         , contractDetailView model
-        , partyView model.partyA
-        , partyView model.partyB
-        , brehonView model.primaryBrehon
-        , brehonView model.secondaryBrehon
-        , brehonView model.tertiaryBrehon
+        , div [ class "block" ]
+            [ partyView model.partyA
+            , partyView model.partyB
+            ]
+        , div [ class "block" ]
+            [ brehonView model.primaryBrehon
+            , brehonView model.secondaryBrehon
+            , brehonView model.tertiaryBrehon
+            ]
         ]
 
 
@@ -29,7 +33,7 @@ contractDetailView model =
 
 partyView : Party -> Html Msg
 partyView party =
-    div [ class "p2" ]
+    div [ class "inline-block border max-width-1" ]
         [ text "Party View"
         , div []
             [ text "Address: "
@@ -44,7 +48,7 @@ partyView party =
 
 brehonView : Brehon -> Html Msg
 brehonView brehon =
-    div [ class "p2" ]
+    div [ class "block border max-width-1" ]
         [ text "Brehon View"
         , div []
             [ text "Address: "
