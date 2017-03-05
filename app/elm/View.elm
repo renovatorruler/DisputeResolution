@@ -3,7 +3,7 @@ module View exposing (..)
 import Html exposing (Html, div, text)
 import Html.Attributes exposing (class)
 import Msgs exposing (Msg)
-import Models exposing (Model, Party, Brehon)
+import Models exposing (Model, Address, Party, Brehon)
 
 
 view : Model -> Html Msg
@@ -23,7 +23,7 @@ contractDetailView : Model -> Html Msg
 contractDetailView model =
     div [ class "p2" ]
         [ text "Contract Deployed At: "
-        , text model.deployedAt
+        , textAddress model.deployedAt
         ]
 
 
@@ -33,7 +33,7 @@ partyView party =
         [ text "Party View"
         , div []
             [ text "Address: "
-            , text party.addr
+            , textAddress party.addr
             ]
         , div []
             [ text "Deposit: "
@@ -48,6 +48,16 @@ brehonView brehon =
         [ text "Brehon View"
         , div []
             [ text "Address: "
-            , text brehon.addr
+            , textAddress brehon.addr
             ]
         ]
+
+
+textAddress : Address -> Html Msg
+textAddress address =
+    case address of
+        Nothing ->
+            text "<Unassigned>"
+
+        Just val ->
+            text val

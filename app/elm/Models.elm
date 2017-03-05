@@ -27,7 +27,7 @@ type alias Brehon =
 
 
 type alias Address =
-    String
+    Maybe String
 
 
 type alias FilePath =
