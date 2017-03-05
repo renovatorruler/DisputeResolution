@@ -8,3 +8,6 @@ Climate](https://codeclimate.com/github/prashantpawar/DisputeResolution/badges/g
 
 [![Issue
 Count](https://codeclimate.com/github/prashantpawar/DisputeResolution/badges/issue_count.svg)](https://codeclimate.com/github/prashantpawar/DisputeResolution)
+
+[![Dependency
+Status](https://dependencyci.com/github/prashantpawar/DisputeResolution/badge)](https://dependencyci.com/github/prashantpawar/DisputeResolution)
