@@ -7,8 +7,5 @@ import Models exposing (Model, Address)
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        OnLoadWeb3Accounts ->
-            ( model, Cmd.none )
-
         Msgs.LoadAccounts accounts ->
             ( { model | deployedAt = List.head accounts }, Cmd.none )

@@ -5,7 +5,7 @@ import Msgs exposing (Msg)
 import Models exposing (Model, Party, Brehon)
 import View exposing (view)
 import Update exposing (update)
-import Web3.BrehonAPI exposing (getAccounts, receiveAccounts)
+import Web3.BrehonAPI exposing (requestAccounts, receiveAccounts)
 import Commands exposing (loadWeb3Accounts)
 
 

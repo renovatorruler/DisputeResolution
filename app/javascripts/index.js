@@ -7,9 +7,9 @@ import Elm from './../elm/Main.elm';
 import './../index.html';
 
 document.addEventListener('DOMContentLoaded', () => {
+  const self = window;
   const mountNode = document.getElementById('main');
   const brehonElmApp = Elm.Main.embed(mountNode);
-  console.debug(brehonElmApp.ports);
 
   // Checking if Web3 has been injected by the browser (Mist/MetaMask)
   if (typeof web3 !== 'undefined') {
@@ -22,8 +22,14 @@ document.addEventListener('DOMContentLoaded', () => {
     window.web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
   }
 
-  brehonElmApp.ports.getAccounts.subscribe(() => {
-    const accounts = web3.eth.accounts;
-    brehonElmApp.ports.receiveAccounts.send(accounts);
+  brehonElmApp.ports.requestAccounts.subscribe(() => {
+    brehonElmApp.ports.receiveAccounts.send(web3.eth.accounts);
+
+    setInterval(() => {
+      if (web3.eth.accounts[0] !== self.selectedAccount) {
+        self.selectedAccount = web3.eth.accounts[0];
+        brehonElmApp.ports.receiveAccounts.send(web3.eth.accounts);
+      }
+    }, 1000);
   });
 });

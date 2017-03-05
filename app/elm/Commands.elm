@@ -6,4 +6,4 @@ import Web3.BrehonAPI exposing (..)
 
 loadWeb3Accounts : Cmd Msg
 loadWeb3Accounts =
-    getAccounts ""
+    requestAccounts 0
