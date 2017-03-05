@@ -2,7 +2,8 @@ module Models exposing (..)
 
 
 type alias Model =
-    { partyA : Party
+    { deployedAt : Address
+    , partyA : Party
     , partyB : Party
     , primaryBrehon : Brehon
     , secondaryBrehon : Brehon

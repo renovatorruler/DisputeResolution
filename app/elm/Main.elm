@@ -13,6 +13,7 @@ import Update exposing (update)
 init : ( Model, Cmd Msg )
 init =
     ( Model
+        "0xe234423423"
         (Party "partyA.png" "0x0a0s0dd" 0 False)
         (Party "partyB.png" "0x0a0s3dd" 0 False)
         (Brehon "primaryBrehon.png" "0xprimaryBrehon" False)

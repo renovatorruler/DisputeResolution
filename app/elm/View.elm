@@ -9,7 +9,8 @@ import Models exposing (Model, Party, Brehon)
 view : Model -> Html Msg
 view model =
     div []
-        [ text "Main View"
+        [ text "Main View "
+        , contractDetailView model
         , partyView model.partyA
         , partyView model.partyB
         , brehonView model.primaryBrehon
@@ -18,15 +19,23 @@ view model =
         ]
 
 
+contractDetailView : Model -> Html Msg
+contractDetailView model =
+    div [ class "p2" ]
+        [ text "Contract Deployed At: "
+        , text model.deployedAt
+        ]
+
+
 partyView : Party -> Html Msg
 partyView party =
-    div []
+    div [ class "p2" ]
         [ text "Party View"
-        , div [ class "p2" ]
+        , div []
             [ text "Address: "
             , text party.addr
             ]
-        , div [ class "p2" ]
+        , div []
             [ text "Deposit: "
             , text (toString party.deposit)
             ]
@@ -35,9 +44,9 @@ partyView party =
 
 brehonView : Brehon -> Html Msg
 brehonView brehon =
-    div []
+    div [ class "p2" ]
         [ text "Brehon View"
-        , div [ class "p2" ]
+        , div []
             [ text "Address: "
             , text brehon.addr
             ]
