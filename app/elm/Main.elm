@@ -2,7 +2,7 @@ module Main exposing (..)
 
 import Html exposing (Html, div, text, program)
 import Msgs exposing (Msg)
-import Models exposing (Model, Party)
+import Models exposing (Model, Party, Brehon)
 import View exposing (view)
 import Update exposing (update)
 
@@ -12,7 +12,14 @@ import Update exposing (update)
 
 init : ( Model, Cmd Msg )
 init =
-    ( Model (Party "partyA.png" "0x0a0s0dd" 0 False) (Party "partyB.png" "0x0a0s3dd" 0 False), Cmd.none )
+    ( Model
+        (Party "partyA.png" "0x0a0s0dd" 0 False)
+        (Party "partyB.png" "0x0a0s3dd" 0 False)
+        (Brehon "primaryBrehon.png" "0xprimaryBrehon" False)
+        (Brehon "secondaryBrehon.png" "0xsecondaryBrehon" False)
+        (Brehon "tertiaryBrehon.png" "0xtertiaryBrehon" False)
+    , Cmd.none
+    )
 
 
 

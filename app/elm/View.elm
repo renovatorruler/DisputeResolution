@@ -3,27 +3,42 @@ module View exposing (..)
 import Html exposing (Html, div, text)
 import Html.Attributes exposing (class)
 import Msgs exposing (Msg)
-import Models exposing (Model)
+import Models exposing (Model, Party, Brehon)
 
 
 view : Model -> Html Msg
 view model =
     div []
         [ text "Main View"
-        , page model
+        , partyView model.partyA
+        , partyView model.partyB
+        , brehonView model.primaryBrehon
+        , brehonView model.secondaryBrehon
+        , brehonView model.tertiaryBrehon
         ]
 
 
-page : Model -> Html Msg
-page model =
+partyView : Party -> Html Msg
+partyView party =
     div []
-        [ text "PartyA View"
+        [ text "Party View"
         , div [ class "p2" ]
             [ text "Address: "
-            , text model.partyA.addr
+            , text party.addr
             ]
         , div [ class "p2" ]
             [ text "Deposit: "
-            , text (toString model.partyA.deposit)
+            , text (toString party.deposit)
+            ]
+        ]
+
+
+brehonView : Brehon -> Html Msg
+brehonView brehon =
+    div []
+        [ text "Brehon View"
+        , div [ class "p2" ]
+            [ text "Address: "
+            , text brehon.addr
             ]
         ]
