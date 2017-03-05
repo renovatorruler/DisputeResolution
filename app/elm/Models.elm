@@ -1,18 +1,23 @@
-module Parties.Models exposing (..)
+module Models exposing (..)
+
+
+type alias Model =
+    { partyA : Party
+    , partyB : Party
+    }
+
 
 type alias Party =
-  {
-    profileImage : FilePath
-  , addr : Address
-  , deposit : Int
-  , contractAccepted : Bool
-  }
+    { profileImage : FilePath
+    , addr : Address
+    , deposit : Int
+    , contractAccepted : Bool
+    }
 
-partyA : Party
-partyA = Party "" "" 0 False
 
 type alias Address =
-  String
+    String
+
 
 type alias FilePath =
-  String
+    String
