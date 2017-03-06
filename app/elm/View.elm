@@ -1,21 +1,21 @@
 module View exposing (..)
 
-import Html exposing (Html, div, text)
-import Html.Attributes exposing (class)
+import Html exposing (Html, div, img, text)
+import Html.Attributes exposing (class, src)
 import Msgs exposing (Msg)
 import Models exposing (Model, Address, Party, Brehon)
 
 
 view : Model -> Html Msg
 view model =
-    div []
+    div [ class "" ]
         [ text "Main View "
         , contractDetailView model
-        , div [ class "block" ]
+        , div [ class "flex flex-wrap" ]
             [ partyView model.partyA
             , partyView model.partyB
             ]
-        , div [ class "block" ]
+        , div [ class "flex flex-wrap flex-column" ]
             [ brehonView model.primaryBrehon
             , brehonView model.secondaryBrehon
             , brehonView model.tertiaryBrehon
@@ -33,10 +33,11 @@ contractDetailView model =
 
 partyView : Party -> Html Msg
 partyView party =
-    div [ class "inline-block border max-width-1" ]
+    div [ class "mx-auto max-width-1 border my1" ]
         [ text "Party View"
         , div []
-            [ text "Address: "
+            [ img [ src party.profileImage ] []
+            , text "Address: "
             , textAddress party.addr
             ]
         , div []
@@ -48,10 +49,11 @@ partyView party =
 
 brehonView : Brehon -> Html Msg
 brehonView brehon =
-    div [ class "block border max-width-1" ]
+    div [ class "mx-auto max-width-1 border my1" ]
         [ text "Brehon View"
         , div []
-            [ text "Address: "
+            [ img [ src brehon.profileImage ] []
+            , text "Address: "
             , textAddress brehon.addr
             ]
         ]

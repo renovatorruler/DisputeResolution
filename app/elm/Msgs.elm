@@ -1,4 +1,8 @@
 module Msgs exposing (..)
 
+import Models exposing (Address)
+
+
 type Msg
-  = NoOp
+    = LoadAccounts (List String)
+    | LoadDeployedAt Address
