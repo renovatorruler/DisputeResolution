@@ -1,7 +1,7 @@
 module View exposing (..)
 
-import Html exposing (Html, div, text)
-import Html.Attributes exposing (class)
+import Html exposing (Html, div, img, text)
+import Html.Attributes exposing (class, src)
 import Msgs exposing (Msg)
 import Models exposing (Model, Address, Party, Brehon)
 
@@ -36,7 +36,8 @@ partyView party =
     div [ class "inline-block border max-width-1" ]
         [ text "Party View"
         , div []
-            [ text "Address: "
+            [ img [ src party.profileImage ] []
+            , text "Address: "
             , textAddress party.addr
             ]
         , div []
@@ -51,7 +52,8 @@ brehonView brehon =
     div [ class "block border max-width-1" ]
         [ text "Brehon View"
         , div []
-            [ text "Address: "
+            [ img [ src brehon.profileImage ] []
+            , text "Address: "
             , textAddress brehon.addr
             ]
         ]
