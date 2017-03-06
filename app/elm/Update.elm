@@ -1,11 +1,14 @@
 module Update exposing (..)
 
-import Msgs exposing (Msg(..))
+import Msgs exposing (..)
 import Models exposing (Model, Address)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        Msgs.LoadAccounts accounts ->
-            ( { model | deployedAt = List.head accounts }, Cmd.none )
+        LoadAccounts accounts ->
+            ( model, Cmd.none )
+
+        LoadDeployedAt deployedAddr ->
+            ( { model | deployedAt = deployedAddr }, Cmd.none )

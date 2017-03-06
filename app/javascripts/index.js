@@ -3,11 +3,33 @@ import 'font-awesome/css/font-awesome.css';
 
 import Web3 from 'web3';
 
+import BrehonAPI from './BrehonAPI';
 import Elm from './../elm/Main.elm';
 import './../index.html';
 
-document.addEventListener('DOMContentLoaded', () => {
+function portHooks(elmApp, currentProvider) {
   const self = window;
+  const ports = elmApp.ports;
+  const brehonApp = new BrehonAPI(currentProvider);
+  ports.requestAccounts.subscribe(() => {
+    ports.receiveAccounts.send(web3.eth.accounts);
+
+    setInterval(() => {
+      if (web3.eth.accounts[0] !== self.selectedAccount) {
+        self.selectedAccount = web3.eth.accounts[0];
+        ports.receiveAccounts.send(web3.eth.accounts);
+      }
+    }, 1000);
+  });
+
+  ports.requestDeployedAt.subscribe(() => {
+    brehonApp.getDeployed().then((instance) => {
+      ports.receiveDeployedAt.send(instance.address);
+    });
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
   const mountNode = document.getElementById('main');
   const brehonElmApp = Elm.Main.embed(mountNode);
 
@@ -22,14 +44,5 @@ document.addEventListener('DOMContentLoaded', () => {
     window.web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
   }
 
-  brehonElmApp.ports.requestAccounts.subscribe(() => {
-    brehonElmApp.ports.receiveAccounts.send(web3.eth.accounts);
-
-    setInterval(() => {
-      if (web3.eth.accounts[0] !== self.selectedAccount) {
-        self.selectedAccount = web3.eth.accounts[0];
-        brehonElmApp.ports.receiveAccounts.send(web3.eth.accounts);
-      }
-    }, 1000);
-  });
+  portHooks(brehonElmApp, web3.currentProvider);
 });

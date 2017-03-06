@@ -33,7 +33,7 @@ contractDetailView model =
 
 partyView : Party -> Html Msg
 partyView party =
-    div [ class "mx-auto max-width-1 px3 border col" ]
+    div [ class "mx-auto max-width-1 border my1" ]
         [ text "Party View"
         , div []
             [ img [ src party.profileImage ] []
@@ -49,7 +49,7 @@ partyView party =
 
 brehonView : Brehon -> Html Msg
 brehonView brehon =
-    div [ class "block mx-auto border max-width-1" ]
+    div [ class "mx-auto max-width-1 border my1" ]
         [ text "Brehon View"
         , div []
             [ img [ src brehon.profileImage ] []

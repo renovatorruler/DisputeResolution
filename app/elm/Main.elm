@@ -5,8 +5,8 @@ import Msgs exposing (Msg)
 import Models exposing (Model, Party, Brehon)
 import View exposing (view)
 import Update exposing (update)
-import Web3.BrehonAPI exposing (requestAccounts, receiveAccounts)
-import Commands exposing (loadWeb3Accounts)
+import Web3.BrehonAPI exposing (requestAccounts, receiveAccounts, requestDeployedAt, receiveDeployedAt)
+import Commands exposing (loadWeb3Accounts, loadDeployedAt)
 
 
 -- MODEL
@@ -21,7 +21,7 @@ init =
         (Brehon "images/partyPrimaryBrehon.png" (Nothing) False)
         (Brehon "images/partySecondaryBrehon.png" (Nothing) False)
         (Brehon "images/partyTertiaryBrehon.png" (Nothing) False)
-    , loadWeb3Accounts
+    , Cmd.batch [ loadWeb3Accounts, loadDeployedAt ]
     )
 
 
@@ -31,7 +31,10 @@ init =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    receiveAccounts Msgs.LoadAccounts
+    Sub.batch
+        [ receiveAccounts Msgs.LoadAccounts
+        , receiveDeployedAt Msgs.LoadDeployedAt
+        ]
 
 
 
