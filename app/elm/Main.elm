@@ -16,11 +16,11 @@ init : ( Model, Cmd Msg )
 init =
     ( Model
         Nothing
-        (Party "partyA.png" (Just "0x0a0s0dd") 0 False)
-        (Party "partyB.png" (Just "0x0a0s3dd") 0 False)
-        (Brehon "primaryBrehon.png" (Just "0xprimaryBrehon") False)
-        (Brehon "secondaryBrehon.png" (Just "0xsecondaryBrehon") False)
-        (Brehon "tertiaryBrehon.png" (Just "0xtertiaryBrehon") False)
+        (Party "images/partyA.png" (Nothing) 0 False)
+        (Party "images/partyB.png" (Nothing) 0 False)
+        (Brehon "images/partyPrimaryBrehon.png" (Nothing) False)
+        (Brehon "images/partySecondaryBrehon.png" (Nothing) False)
+        (Brehon "images/partyTertiaryBrehon.png" (Nothing) False)
     , loadWeb3Accounts
     )
 

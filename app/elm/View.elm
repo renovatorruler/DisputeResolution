@@ -8,14 +8,14 @@ import Models exposing (Model, Address, Party, Brehon)
 
 view : Model -> Html Msg
 view model =
-    div []
+    div [ class "" ]
         [ text "Main View "
         , contractDetailView model
-        , div [ class "block" ]
+        , div [ class "flex flex-wrap" ]
             [ partyView model.partyA
             , partyView model.partyB
             ]
-        , div [ class "block" ]
+        , div [ class "flex flex-wrap flex-column" ]
             [ brehonView model.primaryBrehon
             , brehonView model.secondaryBrehon
             , brehonView model.tertiaryBrehon
@@ -33,7 +33,7 @@ contractDetailView model =
 
 partyView : Party -> Html Msg
 partyView party =
-    div [ class "inline-block border max-width-1" ]
+    div [ class "mx-auto max-width-1 px3 border col" ]
         [ text "Party View"
         , div []
             [ img [ src party.profileImage ] []
@@ -49,7 +49,7 @@ partyView party =
 
 brehonView : Brehon -> Html Msg
 brehonView brehon =
-    div [ class "block border max-width-1" ]
+    div [ class "block mx-auto border max-width-1" ]
         [ text "Brehon View"
         , div []
             [ img [ src brehon.profileImage ] []
