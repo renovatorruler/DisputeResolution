@@ -2,6 +2,7 @@ import 'ace-css/css/ace.css';
 import 'font-awesome/css/font-awesome.css';
 
 import Web3 from 'web3';
+import R from 'ramda';
 
 import BrehonAPI from './BrehonAPI';
 import Elm from './../elm/Main.elm';
@@ -27,6 +28,16 @@ function portHooks(elmApp, currentProvider) {
       ports.receiveDeployedAt.send(instance.address);
     });
   });
+
+  ports.requestAllAddresses.subscribe(() =>
+    Promise.all([
+      brehonApp.getPartyA(),
+      brehonApp.getPartyB(),
+      brehonApp.getPrimaryBrehon(),
+      brehonApp.getSecondaryBrehon(),
+      brehonApp.getTertiaryBrehon(),
+    ]).then(R.map(R.prop('addr')))
+    .then(ports.receiveAllAddresses.send));
 }
 
 document.addEventListener('DOMContentLoaded', () => {

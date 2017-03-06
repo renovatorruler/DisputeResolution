@@ -13,3 +13,9 @@ port requestDeployedAt : Int -> Cmd msg
 
 
 port receiveDeployedAt : (Address -> msg) -> Sub msg
+
+
+port requestAllAddresses : Int -> Cmd msg
+
+
+port receiveAllAddresses : (List Address -> msg) -> Sub msg
