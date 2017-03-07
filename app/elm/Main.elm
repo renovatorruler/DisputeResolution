@@ -16,15 +16,16 @@ init : ( Model, Cmd Msg )
 init =
     ( Model
         Nothing
-        (Party "images/partyA.png" (Nothing) 0 False)
-        (Party "images/partyB.png" (Nothing) 0 False)
-        (Brehon "images/partyPrimaryBrehon.png" (Nothing) False)
-        (Brehon "images/partySecondaryBrehon.png" (Nothing) False)
-        (Brehon "images/partyTertiaryBrehon.png" (Nothing) False)
+        (Party (Nothing) 0 False)
+        (Party (Nothing) 0 False)
+        (Brehon (Nothing) False)
+        (Brehon (Nothing) False)
+        (Brehon (Nothing) False)
     , Cmd.batch
         [ loadWeb3Accounts
         , loadDeployedAt
-        , loadAllAddresses
+        , loadAllParties
+        , loadAllBrehons
         ]
     )
 
@@ -38,7 +39,8 @@ subscriptions model =
     Sub.batch
         [ receiveAccounts Msgs.LoadAccounts
         , receiveDeployedAt Msgs.LoadDeployedAt
-        , receiveAllAddresses Msgs.LoadAllAddresses
+        , receiveAllParties Msgs.LoadAllParties
+        , receiveAllBrehons Msgs.LoadAllBrehons
         ]
 
 

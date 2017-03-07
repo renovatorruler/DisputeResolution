@@ -14,6 +14,11 @@ loadDeployedAt =
     requestDeployedAt 0
 
 
-loadAllAddresses : Cmd Msg
-loadAllAddresses =
-    requestAllAddresses -1
+loadAllParties : Cmd Msg
+loadAllParties =
+    requestAllParties 0
+
+
+loadAllBrehons : Cmd Msg
+loadAllBrehons =
+    requestAllBrehons 0

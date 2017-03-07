@@ -29,15 +29,32 @@ function portHooks(elmApp, currentProvider) {
     });
   });
 
-  ports.requestAllAddresses.subscribe(() =>
+  ports.requestAllParties.subscribe(() =>
     Promise.all([
       brehonApp.getPartyA(),
       brehonApp.getPartyB(),
+    ])
+    .then(R.map(R.over(R.lensProp('deposit'), Number)))
+    .then((parties) => {
+      ports.receiveAllParties.send({
+        partyA: R.head(parties),
+        partyB: R.last(parties),
+      });
+    }));
+
+  ports.requestAllBrehons.subscribe(() =>
+    Promise.all([
       brehonApp.getPrimaryBrehon(),
       brehonApp.getSecondaryBrehon(),
       brehonApp.getTertiaryBrehon(),
-    ]).then(R.map(R.prop('addr')))
-    .then(ports.receiveAllAddresses.send));
+    ])
+    .then((brehons) => {
+      ports.receiveAllBrehons.send({
+        primaryBrehon: R.nth(0, brehons),
+        secondaryBrehon: R.nth(1, brehons),
+        tertiaryBrehon: R.nth(2, brehons),
+      });
+    }));
 }
 
 document.addEventListener('DOMContentLoaded', () => {

@@ -1,7 +1,7 @@
 module Update exposing (..)
 
 import Msgs exposing (..)
-import Models exposing (Model, Address, Party, Brehon)
+import Models exposing (Model, Address, Parties, Brehons)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -13,13 +13,19 @@ update msg model =
         LoadDeployedAt deployedAddr ->
             ( { model | deployedAt = deployedAddr }, Cmd.none )
 
-        LoadAllAddresses addresses ->
+        LoadAllParties parties ->
             ( { model
-                | partyA = updatePartyAddr model.partyA (get 0 addresses)
-                , partyB = updatePartyAddr model.partyB (get 1 addresses)
-                , primaryBrehon = updateBrehonAddr model.primaryBrehon (get 2 addresses)
-                , secondaryBrehon = updateBrehonAddr model.secondaryBrehon (get 3 addresses)
-                , tertiaryBrehon = updateBrehonAddr model.tertiaryBrehon (get 4 addresses)
+                | partyA = parties.partyA
+                , partyB = parties.partyB
+              }
+            , Cmd.none
+            )
+
+        LoadAllBrehons brehons ->
+            ( { model
+                | primaryBrehon = brehons.primaryBrehon
+                , secondaryBrehon = brehons.secondaryBrehon
+                , tertiaryBrehon = brehons.tertiaryBrehon
               }
             , Cmd.none
             )
@@ -33,23 +39,3 @@ get i xs =
 
         _ ->
             get (i - 1) (List.drop 1 xs)
-
-
-updatePartyAddr : Party -> Maybe Address -> Party
-updatePartyAddr party newAddr =
-    case newAddr of
-        Nothing ->
-            party
-
-        Just newAddr ->
-            { party | addr = newAddr }
-
-
-updateBrehonAddr : Brehon -> Maybe Address -> Brehon
-updateBrehonAddr brehon newAddr =
-    case newAddr of
-        Nothing ->
-            brehon
-
-        Just newAddr ->
-            { brehon | addr = newAddr }

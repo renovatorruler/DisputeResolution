@@ -1,9 +1,10 @@
 module Msgs exposing (..)
 
-import Models exposing (Address)
+import Models exposing (Address, Parties, Brehons)
 
 
 type Msg
     = LoadAccounts (List String)
     | LoadDeployedAt Address
-    | LoadAllAddresses (List Address)
+    | LoadAllParties Parties
+    | LoadAllBrehons Brehons

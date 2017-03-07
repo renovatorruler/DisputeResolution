@@ -3,7 +3,7 @@ module View exposing (..)
 import Html exposing (Html, div, img, text)
 import Html.Attributes exposing (class, src)
 import Msgs exposing (Msg)
-import Models exposing (Model, Address, Party, Brehon)
+import Models exposing (Model, Address, Party, Brehon, FilePath)
 
 
 view : Model -> Html Msg
@@ -12,13 +12,13 @@ view model =
         [ text "Main View "
         , contractDetailView model
         , div [ class "flex flex-wrap" ]
-            [ partyView model.partyA
-            , partyView model.partyB
+            [ partyView model.partyA "images/partyA.png"
+            , partyView model.partyB "images/partyB.png"
             ]
         , div [ class "flex flex-wrap flex-column" ]
-            [ brehonView model.primaryBrehon
-            , brehonView model.secondaryBrehon
-            , brehonView model.tertiaryBrehon
+            [ brehonView model.primaryBrehon "images/partyPrimaryBrehon.png"
+            , brehonView model.secondaryBrehon "images/partySecondaryBrehon.png"
+            , brehonView model.tertiaryBrehon "images/partyTertiaryBrehon.png"
             ]
         ]
 
@@ -31,12 +31,12 @@ contractDetailView model =
         ]
 
 
-partyView : Party -> Html Msg
-partyView party =
+partyView : Party -> FilePath -> Html Msg
+partyView party profileImage =
     div [ class "mx-auto max-width-1 border my1" ]
         [ text "Party View"
         , div []
-            [ img [ src party.profileImage ] []
+            [ img [ src profileImage ] []
             , text "Address: "
             , textAddress party.addr
             ]
@@ -47,12 +47,12 @@ partyView party =
         ]
 
 
-brehonView : Brehon -> Html Msg
-brehonView brehon =
+brehonView : Brehon -> FilePath -> Html Msg
+brehonView brehon profileImage =
     div [ class "mx-auto max-width-1 border my1" ]
         [ text "Brehon View"
         , div []
-            [ img [ src brehon.profileImage ] []
+            [ img [ src profileImage ] []
             , text "Address: "
             , textAddress brehon.addr
             ]
