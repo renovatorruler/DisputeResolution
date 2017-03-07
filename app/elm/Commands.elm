@@ -12,3 +12,8 @@ loadWeb3Accounts =
 loadDeployedAt : Cmd Msg
 loadDeployedAt =
     requestDeployedAt 0
+
+
+loadAllAddresses : Cmd Msg
+loadAllAddresses =
+    requestAllAddresses -1
