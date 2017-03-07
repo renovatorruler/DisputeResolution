@@ -16,6 +16,7 @@ init : ( Model, Cmd Msg )
 init =
     ( Model
         Nothing
+        Nothing
         (Party (Nothing) 0 False)
         (Party (Nothing) 0 False)
         (Brehon (Nothing) False)

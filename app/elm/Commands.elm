@@ -1,5 +1,6 @@
 module Commands exposing (..)
 
+import Models exposing (Address)
 import Msgs exposing (Msg)
 import Web3.BrehonAPI exposing (..)
 
@@ -22,3 +23,8 @@ loadAllParties =
 loadAllBrehons : Cmd Msg
 loadAllBrehons =
     requestAllBrehons 0
+
+
+acceptContract : Address -> Cmd Msg
+acceptContract addr =
+    requestAcceptContract addr

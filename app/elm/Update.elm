@@ -2,13 +2,14 @@ module Update exposing (..)
 
 import Msgs exposing (..)
 import Models exposing (Model, Address, Parties, Brehons)
+import Commands exposing (..)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         LoadAccounts accounts ->
-            ( model, Cmd.none )
+            ( setLoadedAddress model (List.head accounts), Cmd.none )
 
         LoadDeployedAt deployedAddr ->
             ( { model | deployedAt = deployedAddr }, Cmd.none )
@@ -30,12 +31,15 @@ update msg model =
             , Cmd.none
             )
 
+        AcceptContract addr ->
+            ( model, acceptContract addr )
 
-get : Int -> List x -> Maybe x
-get i xs =
-    case i of
-        0 ->
-            List.head xs
 
-        _ ->
-            get (i - 1) (List.drop 1 xs)
+setLoadedAddress : Model -> Maybe Address -> Model
+setLoadedAddress model address =
+    case address of
+        Nothing ->
+            model
+
+        Just addr ->
+            { model | loadedAccount = addr }

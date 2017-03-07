@@ -55,6 +55,9 @@ function portHooks(elmApp, currentProvider) {
         tertiaryBrehon: R.nth(2, brehons),
       });
     }));
+
+  ports.requestAcceptContract.subscribe((addr) =>
+    brehonApp.acceptContract(addr));
 }
 
 document.addEventListener('DOMContentLoaded', () => {

@@ -6,7 +6,7 @@ import Models exposing (Address, Parties, Brehons)
 port requestAccounts : Int -> Cmd msg
 
 
-port receiveAccounts : (List String -> msg) -> Sub msg
+port receiveAccounts : (List Address -> msg) -> Sub msg
 
 
 port requestDeployedAt : Int -> Cmd msg
@@ -25,3 +25,6 @@ port requestAllBrehons : Int -> Cmd msg
 
 
 port receiveAllBrehons : (Brehons -> msg) -> Sub msg
+
+
+port requestAcceptContract : Address -> Cmd msg

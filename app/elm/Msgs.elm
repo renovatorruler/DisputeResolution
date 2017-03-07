@@ -1,10 +1,11 @@
 module Msgs exposing (..)
 
-import Models exposing (Address, Parties, Brehons)
+import Models exposing (Address, Party, Brehon, Parties, Brehons)
 
 
 type Msg
-    = LoadAccounts (List String)
+    = LoadAccounts (List Address)
     | LoadDeployedAt Address
     | LoadAllParties Parties
     | LoadAllBrehons Brehons
+    | AcceptContract Address

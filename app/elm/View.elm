@@ -1,7 +1,8 @@
 module View exposing (..)
 
-import Html exposing (Html, div, img, text)
+import Html exposing (Html, button, div, img, text)
 import Html.Attributes exposing (class, src)
+import Html.Events exposing (onClick)
 import Msgs exposing (Msg)
 import Models exposing (Model, Address, Party, Brehon, FilePath)
 
@@ -12,8 +13,8 @@ view model =
         [ text "Main View "
         , contractDetailView model
         , div [ class "flex flex-wrap" ]
-            [ partyView model.partyA "images/partyA.png"
-            , partyView model.partyB "images/partyB.png"
+            [ partyView model.partyA "images/partyA.png" model.loadedAccount
+            , partyView model.partyB "images/partyB.png" model.loadedAccount
             ]
         , div [ class "flex flex-wrap flex-column" ]
             [ brehonView model.primaryBrehon "images/partyPrimaryBrehon.png"
@@ -26,13 +27,19 @@ view model =
 contractDetailView : Model -> Html Msg
 contractDetailView model =
     div [ class "p2" ]
-        [ text "Contract Deployed At: "
-        , textAddress model.deployedAt
+        [ div []
+            [ text "Contract Deployed At: "
+            , textAddress model.deployedAt
+            ]
+        , div []
+            [ text "Loaded Account: "
+            , textAddress model.loadedAccount
+            ]
         ]
 
 
-partyView : Party -> FilePath -> Html Msg
-partyView party profileImage =
+partyView : Party -> FilePath -> Address -> Html Msg
+partyView party profileImage loadedAccount =
     div [ class "mx-auto max-width-1 border my1" ]
         [ text "Party View"
         , div []
@@ -44,7 +51,27 @@ partyView party profileImage =
             [ text "Deposit: "
             , text (toString party.deposit)
             ]
+        , contractAcceptanceView party loadedAccount
         ]
+
+
+contractAcceptanceView : Party -> Address -> Html Msg
+contractAcceptanceView party loadedAccount =
+    case party.contractAccepted of
+        True ->
+            div []
+                [ text "Contract Accepted"
+                ]
+
+        False ->
+            if party.addr == loadedAccount then
+                div []
+                    [ button [ onClick (Msgs.AcceptContract party.addr) ] [ text "Accept Contract" ]
+                    ]
+            else
+                div []
+                    [ text "Contract Not Accepted"
+                    ]
 
 
 brehonView : Brehon -> FilePath -> Html Msg
