@@ -1,6 +1,6 @@
 module View exposing (..)
 
-import Html exposing (Html, button, div, img, text)
+import Html exposing (Html, Attribute, button, div, img, text)
 import Html.Attributes exposing (class, src)
 import Html.Events exposing (onClick)
 import Msgs exposing (Msg)
@@ -17,9 +17,9 @@ view model =
             , partyView model.partyB "images/partyB.png" model.loadedAccount
             ]
         , div [ class "flex flex-wrap flex-column" ]
-            [ brehonView model.primaryBrehon "images/partyPrimaryBrehon.png"
-            , brehonView model.secondaryBrehon "images/partySecondaryBrehon.png"
-            , brehonView model.tertiaryBrehon "images/partyTertiaryBrehon.png"
+            [ brehonView model.primaryBrehon "images/partyPrimaryBrehon.png" model.loadedAccount
+            , brehonView model.secondaryBrehon "images/partySecondaryBrehon.png" model.loadedAccount
+            , brehonView model.tertiaryBrehon "images/partyTertiaryBrehon.png" model.loadedAccount
             ]
         ]
 
@@ -51,31 +51,12 @@ partyView party profileImage loadedAccount =
             [ text "Deposit: "
             , text (toString party.deposit)
             ]
-        , contractAcceptanceView party loadedAccount
+        , contractAcceptanceView party.contractAccepted party.addr loadedAccount (Msgs.AcceptContractByParty party)
         ]
 
 
-contractAcceptanceView : Party -> Address -> Html Msg
-contractAcceptanceView party loadedAccount =
-    case party.contractAccepted of
-        True ->
-            div []
-                [ text "Contract Accepted"
-                ]
-
-        False ->
-            if party.addr == loadedAccount then
-                div []
-                    [ button [ onClick (Msgs.AcceptContractByParty party) ] [ text "Accept Contract" ]
-                    ]
-            else
-                div []
-                    [ text "Contract Not Accepted"
-                    ]
-
-
-brehonView : Brehon -> FilePath -> Html Msg
-brehonView brehon profileImage =
+brehonView : Brehon -> FilePath -> Address -> Html Msg
+brehonView brehon profileImage loadedAccount =
     div [ class "mx-auto max-width-1 border my1" ]
         [ text "Brehon View"
         , div []
@@ -83,7 +64,27 @@ brehonView brehon profileImage =
             , text "Address: "
             , textAddress brehon.addr
             ]
+        , contractAcceptanceView brehon.contractAccepted brehon.addr loadedAccount (Msgs.AcceptContractByBrehon brehon)
         ]
+
+
+contractAcceptanceView : Bool -> Address -> Address -> Msg -> Html Msg
+contractAcceptanceView isContractAccepted addr loadedAccount messageDispatch =
+    case isContractAccepted of
+        True ->
+            div []
+                [ text "Contract Accepted"
+                ]
+
+        False ->
+            if addr == loadedAccount then
+                div []
+                    [ button [ onClick (messageDispatch) ] [ text "Accept Contract" ]
+                    ]
+            else
+                div []
+                    [ text "Contract Not Accepted"
+                    ]
 
 
 textAddress : Address -> Html Msg
