@@ -3,6 +3,7 @@ module Models exposing (..)
 
 type alias Model =
     { deployedAt : Address
+    , loadedAccount : Address
     , partyA : Party
     , partyB : Party
     , primaryBrehon : Brehon
@@ -12,16 +13,14 @@ type alias Model =
 
 
 type alias Party =
-    { profileImage : FilePath
-    , addr : Address
+    { addr : Address
     , deposit : Int
     , contractAccepted : Bool
     }
 
 
 type alias Brehon =
-    { profileImage : FilePath
-    , addr : Address
+    { addr : Address
     , contractAccepted : Bool
     }
 
@@ -32,3 +31,16 @@ type alias Address =
 
 type alias FilePath =
     String
+
+
+type alias Parties =
+    { partyA : Party
+    , partyB : Party
+    }
+
+
+type alias Brehons =
+    { primaryBrehon : Brehon
+    , secondaryBrehon : Brehon
+    , tertiaryBrehon : Brehon
+    }

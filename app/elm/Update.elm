@@ -1,55 +1,48 @@
 module Update exposing (..)
 
 import Msgs exposing (..)
-import Models exposing (Model, Address, Party, Brehon)
+import Models exposing (Model, Address, Parties, Brehons)
+import Commands exposing (..)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         LoadAccounts accounts ->
-            ( model, Cmd.none )
+            ( setLoadedAddress model (List.head accounts), Cmd.none )
 
         LoadDeployedAt deployedAddr ->
             ( { model | deployedAt = deployedAddr }, Cmd.none )
 
-        LoadAllAddresses addresses ->
+        LoadAllParties parties ->
             ( { model
-                | partyA = updatePartyAddr model.partyA (get 0 addresses)
-                , partyB = updatePartyAddr model.partyB (get 1 addresses)
-                , primaryBrehon = updateBrehonAddr model.primaryBrehon (get 2 addresses)
-                , secondaryBrehon = updateBrehonAddr model.secondaryBrehon (get 3 addresses)
-                , tertiaryBrehon = updateBrehonAddr model.tertiaryBrehon (get 4 addresses)
+                | partyA = parties.partyA
+                , partyB = parties.partyB
               }
             , Cmd.none
             )
 
+        LoadAllBrehons brehons ->
+            ( { model
+                | primaryBrehon = brehons.primaryBrehon
+                , secondaryBrehon = brehons.secondaryBrehon
+                , tertiaryBrehon = brehons.tertiaryBrehon
+              }
+            , Cmd.none
+            )
 
-get : Int -> List x -> Maybe x
-get i xs =
-    case i of
-        0 ->
-            List.head xs
+        AcceptContractByParty party ->
+            ( model, acceptContractByParty party )
 
-        _ ->
-            get (i - 1) (List.drop 1 xs)
+        AcceptContractByBrehon brehon ->
+            ( model, acceptContractByBrehon brehon )
 
 
-updatePartyAddr : Party -> Maybe Address -> Party
-updatePartyAddr party newAddr =
-    case newAddr of
+setLoadedAddress : Model -> Maybe Address -> Model
+setLoadedAddress model address =
+    case address of
         Nothing ->
-            party
+            model
 
-        Just newAddr ->
-            { party | addr = newAddr }
-
-
-updateBrehonAddr : Brehon -> Maybe Address -> Brehon
-updateBrehonAddr brehon newAddr =
-    case newAddr of
-        Nothing ->
-            brehon
-
-        Just newAddr ->
-            { brehon | addr = newAddr }
+        Just addr ->
+            { model | loadedAccount = addr }

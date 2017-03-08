@@ -8,6 +8,34 @@ import BrehonAPI from './BrehonAPI';
 import Elm from './../elm/Main.elm';
 import './../index.html';
 
+function updateAllParties(ports, brehonApp) {
+  return Promise.all([
+    brehonApp.getPartyA(),
+    brehonApp.getPartyB(),
+  ])
+    .then(R.map(R.over(R.lensProp('deposit'), Number)))
+    .then(parties =>
+      ports.receiveAllParties.send({
+        partyA: R.head(parties),
+        partyB: R.last(parties),
+      }));
+}
+
+function updateAllBrehons(ports, brehonApp) {
+  return Promise.all([
+    brehonApp.getPrimaryBrehon(),
+    brehonApp.getSecondaryBrehon(),
+    brehonApp.getTertiaryBrehon(),
+  ])
+    .then((brehons) => {
+      ports.receiveAllBrehons.send({
+        primaryBrehon: R.nth(0, brehons),
+        secondaryBrehon: R.nth(1, brehons),
+        tertiaryBrehon: R.nth(2, brehons),
+      });
+    });
+}
+
 function portHooks(elmApp, currentProvider) {
   const self = window;
   const ports = elmApp.ports;
@@ -29,15 +57,20 @@ function portHooks(elmApp, currentProvider) {
     });
   });
 
-  ports.requestAllAddresses.subscribe(() =>
-    Promise.all([
-      brehonApp.getPartyA(),
-      brehonApp.getPartyB(),
-      brehonApp.getPrimaryBrehon(),
-      brehonApp.getSecondaryBrehon(),
-      brehonApp.getTertiaryBrehon(),
-    ]).then(R.map(R.prop('addr')))
-    .then(ports.receiveAllAddresses.send));
+  ports.requestAllParties.subscribe(() =>
+    updateAllParties(ports, brehonApp));
+
+  ports.requestAllBrehons.subscribe(() =>
+    updateAllBrehons(ports, brehonApp));
+
+  ports.requestAcceptContractByParty.subscribe(party =>
+    brehonApp.acceptContract(party.addr).then(() =>
+      updateAllParties(ports, brehonApp)));
+
+
+  ports.requestAcceptContractByBrehon.subscribe(brehon =>
+    brehonApp.acceptContract(brehon.addr).then(() =>
+      updateAllBrehons(ports, brehonApp)));
 }
 
 document.addEventListener('DOMContentLoaded', () => {
