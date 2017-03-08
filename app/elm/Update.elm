@@ -31,8 +31,11 @@ update msg model =
             , Cmd.none
             )
 
-        AcceptContract addr ->
-            ( model, acceptContract addr )
+        AcceptContractByParty party ->
+            ( model, acceptContractByParty party )
+
+        AcceptContractByBrehon brehon ->
+            ( model, acceptContractByBrehon brehon )
 
 
 setLoadedAddress : Model -> Maybe Address -> Model

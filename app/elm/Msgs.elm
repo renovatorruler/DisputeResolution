@@ -8,4 +8,5 @@ type Msg
     | LoadDeployedAt Address
     | LoadAllParties Parties
     | LoadAllBrehons Brehons
-    | AcceptContract Address
+    | AcceptContractByParty Party
+    | AcceptContractByBrehon Brehon

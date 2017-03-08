@@ -83,7 +83,6 @@ export default class BrehonAPI {
   acceptContract(addr) {
     return this.brehonContract.deployed()
       .then(instance =>
-        instance.acceptContract({ from: addr }).then(result =>
-          console.info(result)));
+        instance.acceptContract({ from: addr }));
   }
 }

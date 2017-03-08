@@ -8,6 +8,34 @@ import BrehonAPI from './BrehonAPI';
 import Elm from './../elm/Main.elm';
 import './../index.html';
 
+function updateAllParties(ports, brehonApp) {
+  return Promise.all([
+    brehonApp.getPartyA(),
+    brehonApp.getPartyB(),
+  ])
+    .then(R.map(R.over(R.lensProp('deposit'), Number)))
+    .then(parties =>
+      ports.receiveAllParties.send({
+        partyA: R.head(parties),
+        partyB: R.last(parties),
+      }));
+}
+
+function updateAllBrehons(ports, brehonApp) {
+  return Promise.all([
+    brehonApp.getPrimaryBrehon(),
+    brehonApp.getSecondaryBrehon(),
+    brehonApp.getTertiaryBrehon(),
+  ])
+    .then((brehons) => {
+      ports.receiveAllBrehons.send({
+        primaryBrehon: R.nth(0, brehons),
+        secondaryBrehon: R.nth(1, brehons),
+        tertiaryBrehon: R.nth(2, brehons),
+      });
+    });
+}
+
 function portHooks(elmApp, currentProvider) {
   const self = window;
   const ports = elmApp.ports;
@@ -30,34 +58,19 @@ function portHooks(elmApp, currentProvider) {
   });
 
   ports.requestAllParties.subscribe(() =>
-    Promise.all([
-      brehonApp.getPartyA(),
-      brehonApp.getPartyB(),
-    ])
-    .then(R.map(R.over(R.lensProp('deposit'), Number)))
-    .then((parties) => {
-      ports.receiveAllParties.send({
-        partyA: R.head(parties),
-        partyB: R.last(parties),
-      });
-    }));
+    updateAllParties(ports, brehonApp));
 
   ports.requestAllBrehons.subscribe(() =>
-    Promise.all([
-      brehonApp.getPrimaryBrehon(),
-      brehonApp.getSecondaryBrehon(),
-      brehonApp.getTertiaryBrehon(),
-    ])
-    .then((brehons) => {
-      ports.receiveAllBrehons.send({
-        primaryBrehon: R.nth(0, brehons),
-        secondaryBrehon: R.nth(1, brehons),
-        tertiaryBrehon: R.nth(2, brehons),
-      });
-    }));
+    updateAllBrehons(ports, brehonApp));
 
-  ports.requestAcceptContract.subscribe((addr) =>
-    brehonApp.acceptContract(addr));
+  ports.requestAcceptContractByParty.subscribe(party =>
+    brehonApp.acceptContract(party.addr).then(() =>
+      updateAllParties(ports, brehonApp)));
+
+
+  ports.requestAcceptContractByBrehon.subscribe(brehon =>
+    brehonApp.acceptContract(brehon.addr).then(() =>
+      updateAllBrehons(ports, brehonApp)));
 }
 
 document.addEventListener('DOMContentLoaded', () => {

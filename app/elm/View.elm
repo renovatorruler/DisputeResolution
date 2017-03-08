@@ -66,7 +66,7 @@ contractAcceptanceView party loadedAccount =
         False ->
             if party.addr == loadedAccount then
                 div []
-                    [ button [ onClick (Msgs.AcceptContract party.addr) ] [ text "Accept Contract" ]
+                    [ button [ onClick (Msgs.AcceptContractByParty party) ] [ text "Accept Contract" ]
                     ]
             else
                 div []
