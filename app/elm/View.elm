@@ -1,7 +1,7 @@
 module View exposing (..)
 
-import Html exposing (Html, Attribute, button, div, img, text)
-import Html.Attributes exposing (class, src)
+import Html exposing (Html, Attribute, a, button, div, img, input, p, text)
+import Html.Attributes exposing (class, href, src, type_, placeholder)
 import Html.Events exposing (onClick)
 import Msgs exposing (Msg)
 import Models exposing (Model, Address, Party, Brehon, FilePath)
@@ -9,14 +9,14 @@ import Models exposing (Model, Address, Party, Brehon, FilePath)
 
 view : Model -> Html Msg
 view model =
-    div [ class "" ]
+    div [ class "main-container" ]
         [ text "Main View "
         , contractDetailView model
-        , div [ class "flex flex-wrap" ]
+        , div [ class "party-list flex flex-wrap" ]
             [ partyView model.partyA "images/partyA.png" model.loadedAccount
             , partyView model.partyB "images/partyB.png" model.loadedAccount
             ]
-        , div [ class "flex flex-wrap flex-column" ]
+        , div [ class "brehon-list flex flex-wrap flex-column" ]
             [ brehonView model.primaryBrehon "images/partyPrimaryBrehon.png" model.loadedAccount
             , brehonView model.secondaryBrehon "images/partySecondaryBrehon.png" model.loadedAccount
             , brehonView model.tertiaryBrehon "images/partyTertiaryBrehon.png" model.loadedAccount
@@ -26,7 +26,7 @@ view model =
 
 contractDetailView : Model -> Html Msg
 contractDetailView model =
-    div [ class "p2" ]
+    div [ class "contract-detail p2" ]
         [ div []
             [ text "Contract Deployed At: "
             , textAddress model.deployedAt
@@ -40,58 +40,93 @@ contractDetailView model =
 
 partyView : Party -> FilePath -> Address -> Html Msg
 partyView party profileImage loadedAccount =
-    div [ class "mx-auto max-width-1 border my1" ]
-        [ text "Party View"
-        , div []
-            [ img [ src profileImage ] []
-            , text "Address: "
-            , textAddress party.addr
+    let
+        ownerView =
+            loadedAccount == party.addr
+    in
+        div [ class "party-view mx-auto max-width-2 border rounded m1 py1 px2 bg-silver" ]
+            [ text "Party View"
+            , div [ class "" ]
+                [ img [ src profileImage ] []
+                , text "Address: "
+                , textAddress party.addr
+                ]
+            , div [ class "block my1" ]
+                [ div []
+                    [ text "Deposit: "
+                    , text (toString party.deposit)
+                    ]
+                , depositView ownerView party.contractAccepted
+                ]
+            , contractAcceptanceView party.contractAccepted ownerView (Msgs.AcceptContractByParty party)
             ]
-        , div []
-            [ text "Deposit: "
-            , text (toString party.deposit)
-            ]
-        , contractAcceptanceView party.contractAccepted party.addr loadedAccount (Msgs.AcceptContractByParty party)
-        ]
 
 
 brehonView : Brehon -> FilePath -> Address -> Html Msg
 brehonView brehon profileImage loadedAccount =
-    div [ class "mx-auto max-width-1 border my1" ]
-        [ text "Brehon View"
-        , div []
-            [ img [ src profileImage ] []
-            , text "Address: "
-            , textAddress brehon.addr
+    let
+        ownerView =
+            loadedAccount == brehon.addr
+    in
+        div [ class "brehon-view mx-auto max-width-2 border m1 p1" ]
+            [ text "Brehon View"
+            , div [ class "block" ]
+                [ img [ src profileImage ] []
+                , text "Address: "
+                , textAddress brehon.addr
+                ]
+            , contractAcceptanceView brehon.contractAccepted ownerView (Msgs.AcceptContractByBrehon brehon)
             ]
-        , contractAcceptanceView brehon.contractAccepted brehon.addr loadedAccount (Msgs.AcceptContractByBrehon brehon)
-        ]
 
 
-contractAcceptanceView : Bool -> Address -> Address -> Msg -> Html Msg
-contractAcceptanceView isContractAccepted addr loadedAccount messageDispatch =
+depositView : Bool -> Bool -> Html Msg
+depositView ownerView isContractAccepted =
+    case ownerView && isContractAccepted of
+        True ->
+            div [ class "deposit-funds clearfix" ]
+                [ input
+                    [ class "input left max-width-1", placeholder "0 Ethers", type_ "number" ]
+                    []
+                , a
+                    [ class "btn btn-narrow rounded white bg-olive right", href "#", onClick Msgs.None ]
+                    [ text "Deposit" ]
+                ]
+
+        False ->
+            div [] []
+
+
+contractAcceptanceView : Bool -> Bool -> Msg -> Html Msg
+contractAcceptanceView isContractAccepted ownerView messageDispatch =
     case isContractAccepted of
         True ->
-            div []
+            p [ class "center" ]
                 [ text "Contract Accepted"
                 ]
 
         False ->
-            if addr == loadedAccount then
-                div []
-                    [ button [ onClick (messageDispatch) ] [ text "Accept Contract" ]
+            if ownerView then
+                div [ class "mx-auto max-width-1" ]
+                    [ button
+                        [ class "btn btn-primary btn-big"
+                        , type_ "button"
+                        , onClick (messageDispatch)
+                        ]
+                        [ text "Accept Contract" ]
                     ]
             else
-                div []
-                    [ text "Contract Not Accepted"
-                    ]
+                p [ class "center" ] [ text "Contract Not Accepted" ]
 
 
 textAddress : Address -> Html Msg
 textAddress address =
     case address of
         Nothing ->
-            text "<Unassigned>"
+            p []
+                [ text "<Unassigned>"
+                ]
 
         Just val ->
-            text val
+            p [ class "max-width-1" ]
+                [ text val
+                ]

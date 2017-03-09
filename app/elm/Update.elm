@@ -37,6 +37,9 @@ update msg model =
         AcceptContractByBrehon brehon ->
             ( model, acceptContractByBrehon brehon )
 
+        None ->
+            ( model, Cmd.none )
+
 
 setLoadedAddress : Model -> Maybe Address -> Model
 setLoadedAddress model address =

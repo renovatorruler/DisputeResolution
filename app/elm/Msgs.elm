@@ -10,3 +10,4 @@ type Msg
     | LoadAllBrehons Brehons
     | AcceptContractByParty Party
     | AcceptContractByBrehon Brehon
+    | None
