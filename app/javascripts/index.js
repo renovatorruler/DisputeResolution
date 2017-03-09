@@ -40,6 +40,13 @@ function portHooks(elmApp, currentProvider) {
   const self = window;
   const ports = elmApp.ports;
   const brehonApp = new BrehonAPI(currentProvider);
+
+  /**
+  * Request Console.out for debugging
+  **/
+  ports.requestConsoleLog.subscribe(arg => console.debug(arg)); // eslint-disable-line no-console
+
+
   ports.requestAccounts.subscribe(() => {
     ports.receiveAccounts.send(web3.eth.accounts);
 

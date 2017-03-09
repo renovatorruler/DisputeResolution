@@ -33,3 +33,8 @@ acceptContractByParty party =
 acceptContractByBrehon : BrehonModel -> Cmd Msg
 acceptContractByBrehon brehon =
     requestAcceptContractByBrehon brehon.struct
+
+
+consoleLog : String -> Cmd Msg
+consoleLog msg =
+    requestConsoleLog msg

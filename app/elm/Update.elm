@@ -41,7 +41,7 @@ update msg model =
             ( { model | partyA = updatePartyDepositField model.partyA amount }, Cmd.none )
 
         DepositFunds party ->
-            ( model, Cmd.none )
+            ( model, consoleLog party.depositField )
 
         None ->
             ( model, Cmd.none )

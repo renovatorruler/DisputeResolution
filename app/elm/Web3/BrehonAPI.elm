@@ -31,3 +31,6 @@ port requestAcceptContractByParty : Party -> Cmd msg
 
 
 port requestAcceptContractByBrehon : Brehon -> Cmd msg
+
+
+port requestConsoleLog : String -> Cmd msg
