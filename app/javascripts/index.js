@@ -79,8 +79,9 @@ function portHooks(elmApp, currentProvider) {
     brehonApp.acceptContract(brehon.addr).then(() =>
       updateAllBrehons(ports, brehonApp)));
 
-  ports.requestDepositFunds.subscribe((partyAmtTuple) => {
-    console.debug("inside requestDepositFunds", partyAmtTuple);
+  ports.requestDepositFunds.subscribe((partyModel) => {
+    brehonApp.depositFunds(partyModel.struct.addr, partyModel.depositField)
+      .then(() => updateAllParties(ports, brehonApp));
   });
 }
 
