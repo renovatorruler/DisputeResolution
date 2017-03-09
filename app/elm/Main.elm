@@ -2,7 +2,7 @@ port module Main exposing (..)
 
 import Html exposing (Html, div, text, program)
 import Msgs exposing (Msg)
-import Models exposing (Model, Party, Brehon)
+import Models exposing (Model, Party, Brehon, PartyModel, BrehonModel)
 import View exposing (view)
 import Update exposing (update)
 import Web3.BrehonAPI exposing (..)
@@ -17,11 +17,11 @@ init =
     ( Model
         Nothing
         Nothing
-        (Party (Nothing) 0 False)
-        (Party (Nothing) 0 False)
-        (Brehon (Nothing) False)
-        (Brehon (Nothing) False)
-        (Brehon (Nothing) False)
+        (PartyModel (Party Nothing 0 False) "")
+        (PartyModel (Party Nothing 0 False) "")
+        (BrehonModel (Brehon Nothing False))
+        (BrehonModel (Brehon Nothing False))
+        (BrehonModel (Brehon Nothing False))
     , Cmd.batch
         [ loadWeb3Accounts
         , loadDeployedAt

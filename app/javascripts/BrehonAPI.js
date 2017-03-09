@@ -85,4 +85,10 @@ export default class BrehonAPI {
       .then(instance =>
         instance.acceptContract({ from: addr }));
   }
+
+  depositFunds(addr, amount) {
+    return this.brehonContract.deployed()
+      .then(instance =>
+        instance.deposit({ from: addr, value: amount }));
+  }
 }

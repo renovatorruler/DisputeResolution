@@ -1,6 +1,6 @@
 module Commands exposing (..)
 
-import Models exposing (Address, Party, Brehon)
+import Models exposing (Address, PartyModel, BrehonModel)
 import Msgs exposing (Msg)
 import Web3.BrehonAPI exposing (..)
 
@@ -25,11 +25,21 @@ loadAllBrehons =
     requestAllBrehons 0
 
 
-acceptContractByParty : Party -> Cmd Msg
+acceptContractByParty : PartyModel -> Cmd Msg
 acceptContractByParty party =
-    requestAcceptContractByParty party
+    requestAcceptContractByParty party.struct
 
 
-acceptContractByBrehon : Brehon -> Cmd Msg
+acceptContractByBrehon : BrehonModel -> Cmd Msg
 acceptContractByBrehon brehon =
-    requestAcceptContractByBrehon brehon
+    requestAcceptContractByBrehon brehon.struct
+
+
+depositFunds : PartyModel -> Cmd Msg
+depositFunds partyModel =
+    requestDepositFunds partyModel
+
+
+consoleLog : String -> Cmd Msg
+consoleLog msg =
+    requestConsoleLog msg

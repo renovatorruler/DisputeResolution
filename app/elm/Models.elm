@@ -4,11 +4,22 @@ module Models exposing (..)
 type alias Model =
     { deployedAt : Address
     , loadedAccount : Address
-    , partyA : Party
-    , partyB : Party
-    , primaryBrehon : Brehon
-    , secondaryBrehon : Brehon
-    , tertiaryBrehon : Brehon
+    , partyA : PartyModel
+    , partyB : PartyModel
+    , primaryBrehon : BrehonModel
+    , secondaryBrehon : BrehonModel
+    , tertiaryBrehon : BrehonModel
+    }
+
+
+type alias PartyModel =
+    { struct : Party
+    , depositField : Wei
+    }
+
+
+type alias BrehonModel =
+    { struct : Brehon
     }
 
 
@@ -30,6 +41,10 @@ type alias Address =
 
 
 type alias FilePath =
+    String
+
+
+type alias Wei =
     String
 
 
