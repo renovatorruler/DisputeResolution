@@ -31,17 +31,17 @@ update msg model =
             , Cmd.none
             )
 
-        AcceptContractByParty party ->
-            ( model, acceptContractByParty party )
+        AcceptContractByParty partyModel ->
+            ( model, acceptContractByParty partyModel )
 
-        AcceptContractByBrehon brehon ->
-            ( model, acceptContractByBrehon brehon )
+        AcceptContractByBrehon brehonModel ->
+            ( model, acceptContractByBrehon brehonModel )
 
         DepositFieldChanged amount ->
             ( { model | partyA = updatePartyDepositField model.partyA amount }, Cmd.none )
 
-        DepositFunds party ->
-            ( model, consoleLog party.depositField )
+        DepositFunds partyModel ->
+            ( model, depositFunds partyModel )
 
         None ->
             ( model, Cmd.none )
