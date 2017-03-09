@@ -17,11 +17,11 @@ init =
     ( Model
         Nothing
         Nothing
-        (PartyModel (Party (Nothing) 0 False) "")
-        (PartyModel (Party (Nothing) 0 False) "")
-        (BrehonModel (Brehon (Nothing) False))
-        (BrehonModel (Brehon (Nothing) False))
-        (BrehonModel (Brehon (Nothing) False))
+        (PartyModel (Party Nothing 0 False) "")
+        (PartyModel (Party Nothing 0 False) "")
+        (BrehonModel (Brehon Nothing False))
+        (BrehonModel (Brehon Nothing False))
+        (BrehonModel (Brehon Nothing False))
     , Cmd.batch
         [ loadWeb3Accounts
         , loadDeployedAt
