@@ -1,7 +1,7 @@
 module Update exposing (..)
 
 import Msgs exposing (..)
-import Models exposing (Model, Address, Parties, Brehons)
+import Models exposing (Model, Address, Wei, Parties, PartyModel, Party, Brehons, BrehonModel, Brehon)
 import Commands exposing (..)
 
 
@@ -16,17 +16,17 @@ update msg model =
 
         LoadAllParties parties ->
             ( { model
-                | partyA = parties.partyA
-                , partyB = parties.partyB
+                | partyA = updatePartyModel model.partyA parties.partyA
+                , partyB = updatePartyModel model.partyB parties.partyB
               }
             , Cmd.none
             )
 
         LoadAllBrehons brehons ->
             ( { model
-                | primaryBrehon = brehons.primaryBrehon
-                , secondaryBrehon = brehons.secondaryBrehon
-                , tertiaryBrehon = brehons.tertiaryBrehon
+                | primaryBrehon = updateBrehonModel model.primaryBrehon brehons.primaryBrehon
+                , secondaryBrehon = updateBrehonModel model.secondaryBrehon brehons.secondaryBrehon
+                , tertiaryBrehon = updateBrehonModel model.tertiaryBrehon brehons.tertiaryBrehon
               }
             , Cmd.none
             )
@@ -36,6 +36,12 @@ update msg model =
 
         AcceptContractByBrehon brehon ->
             ( model, acceptContractByBrehon brehon )
+
+        DepositFieldChanged amount ->
+            ( { model | partyA = updatePartyDepositField model.partyA amount }, Cmd.none )
+
+        DepositFunds party ->
+            ( model, Cmd.none )
 
         None ->
             ( model, Cmd.none )
@@ -49,3 +55,18 @@ setLoadedAddress model address =
 
         Just addr ->
             { model | loadedAccount = addr }
+
+
+updatePartyModel : PartyModel -> Party -> PartyModel
+updatePartyModel partyModel party =
+    { partyModel | struct = party }
+
+
+updateBrehonModel : BrehonModel -> Brehon -> BrehonModel
+updateBrehonModel brehonModel brehon =
+    { brehonModel | struct = brehon }
+
+
+updatePartyDepositField : PartyModel -> Wei -> PartyModel
+updatePartyDepositField partyModel amount =
+    { partyModel | depositField = amount }

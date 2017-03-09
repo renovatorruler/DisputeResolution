@@ -1,6 +1,6 @@
 module Msgs exposing (..)
 
-import Models exposing (Address, Party, Brehon, Parties, Brehons)
+import Models exposing (Address, Wei, PartyModel, BrehonModel, Parties, Brehons)
 
 
 type Msg
@@ -8,6 +8,8 @@ type Msg
     | LoadDeployedAt Address
     | LoadAllParties Parties
     | LoadAllBrehons Brehons
-    | AcceptContractByParty Party
-    | AcceptContractByBrehon Brehon
+    | AcceptContractByParty PartyModel
+    | AcceptContractByBrehon BrehonModel
+    | DepositFieldChanged Wei
+    | DepositFunds PartyModel
     | None

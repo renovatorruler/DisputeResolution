@@ -2,9 +2,9 @@ module View exposing (..)
 
 import Html exposing (Html, Attribute, a, button, div, img, input, p, text)
 import Html.Attributes exposing (class, href, src, type_, placeholder)
-import Html.Events exposing (onClick)
+import Html.Events exposing (onClick, onInput)
 import Msgs exposing (Msg)
-import Models exposing (Model, Address, Party, Brehon, FilePath)
+import Models exposing (Model, Address, Wei, PartyModel, BrehonModel, FilePath)
 
 
 view : Model -> Html Msg
@@ -38,57 +38,64 @@ contractDetailView model =
         ]
 
 
-partyView : Party -> FilePath -> Address -> Html Msg
+partyView : PartyModel -> FilePath -> Address -> Html Msg
 partyView party profileImage loadedAccount =
     let
         ownerView =
-            loadedAccount == party.addr
+            loadedAccount == party.struct.addr
     in
-        div [ class "party-view mx-auto max-width-2 border rounded m1 py1 px2 bg-silver" ]
+        div [ class "party-view mx-auto max-width-2 border rounded m1 p2" ]
             [ text "Party View"
-            , div [ class "" ]
+            , div [ class "block" ]
                 [ img [ src profileImage ] []
                 , text "Address: "
-                , textAddress party.addr
+                , textAddress party.struct.addr
                 ]
             , div [ class "block my1" ]
                 [ div []
                     [ text "Deposit: "
-                    , text (toString party.deposit)
+                    , text (toString party.struct.deposit)
                     ]
-                , depositView ownerView party.contractAccepted
+                , depositView ownerView party
                 ]
-            , contractAcceptanceView party.contractAccepted ownerView (Msgs.AcceptContractByParty party)
+            , contractAcceptanceView party.struct.contractAccepted ownerView (Msgs.AcceptContractByParty party)
             ]
 
 
-brehonView : Brehon -> FilePath -> Address -> Html Msg
+brehonView : BrehonModel -> FilePath -> Address -> Html Msg
 brehonView brehon profileImage loadedAccount =
     let
         ownerView =
-            loadedAccount == brehon.addr
+            loadedAccount == brehon.struct.addr
     in
-        div [ class "brehon-view mx-auto max-width-2 border m1 p1" ]
+        div [ class "brehon-view mx-auto max-width-2 border rounded m1 p2" ]
             [ text "Brehon View"
             , div [ class "block" ]
                 [ img [ src profileImage ] []
-                , text "Address: "
-                , textAddress brehon.addr
+                , p [] [ text "Address: " ]
+                , textAddress brehon.struct.addr
                 ]
-            , contractAcceptanceView brehon.contractAccepted ownerView (Msgs.AcceptContractByBrehon brehon)
+            , contractAcceptanceView brehon.struct.contractAccepted ownerView (Msgs.AcceptContractByBrehon brehon)
             ]
 
 
-depositView : Bool -> Bool -> Html Msg
-depositView ownerView isContractAccepted =
-    case ownerView && isContractAccepted of
+depositView : Bool -> PartyModel -> Html Msg
+depositView ownerView party =
+    case ownerView && party.struct.contractAccepted of
         True ->
             div [ class "deposit-funds clearfix" ]
                 [ input
-                    [ class "input left max-width-1", placeholder "0 Ethers", type_ "number" ]
+                    [ class "input left max-width-1"
+                    , placeholder "0 Wei"
+                    , type_ "number"
+                    , onInput Msgs.DepositFieldChanged
+                    ]
                     []
                 , a
-                    [ class "btn btn-narrow rounded white bg-olive right", href "#", onClick Msgs.None ]
+                    [ class "btn btn-narrow rounded white bg-olive right"
+                    , href "#"
+                    , onClick (Msgs.DepositFunds party)
+                    ]
                     [ text "Deposit" ]
                 ]
 
@@ -106,9 +113,9 @@ contractAcceptanceView isContractAccepted ownerView messageDispatch =
 
         False ->
             if ownerView then
-                div [ class "mx-auto max-width-1" ]
+                div [ class "fit" ]
                     [ button
-                        [ class "btn btn-primary btn-big"
+                        [ class "btn btn-primary btn-big block mx-auto"
                         , type_ "button"
                         , onClick (messageDispatch)
                         ]
@@ -127,6 +134,6 @@ textAddress address =
                 ]
 
         Just val ->
-            p [ class "max-width-1" ]
+            p [ class "" ]
                 [ text val
                 ]
