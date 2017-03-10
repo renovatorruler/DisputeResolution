@@ -40,5 +40,6 @@ branches:
     - gh-pages
 
 script:
+  - npm run build
   # run from node_modules if added to package.json
   - node_modules/.bin/gh-pages-travis
