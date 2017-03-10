@@ -13,7 +13,7 @@ function updateAllParties(ports, brehonApp) {
     brehonApp.getPartyA(),
     brehonApp.getPartyB(),
   ])
-    .then(R.map(R.over(R.lensProp('deposit'), Number)))
+    .then(R.map(R.over(R.lensProp('deposit'), num => num.valueOf())))
     .then(parties =>
       ports.receiveAllParties.send({
         partyA: R.head(parties),
@@ -79,8 +79,10 @@ function portHooks(elmApp, currentProvider) {
     brehonApp.acceptContract(brehon.addr).then(() =>
       updateAllBrehons(ports, brehonApp)));
 
-  ports.requestDepositFunds.subscribe((partyModel) => {
-    brehonApp.depositFunds(partyModel.struct.addr, partyModel.depositField)
+  ports.requestDepositFunds.subscribe((partyAmountTuple) => {
+    const partyModel = partyAmountTuple[0];
+    const amount = partyAmountTuple[1];
+    return brehonApp.depositFunds(partyModel.struct.addr, amount)
       .then(() => updateAllParties(ports, brehonApp));
   });
 }

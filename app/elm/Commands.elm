@@ -35,9 +35,9 @@ acceptContractByBrehon brehon =
     requestAcceptContractByBrehon brehon.struct
 
 
-depositFunds : PartyModel -> Cmd Msg
-depositFunds partyModel =
-    requestDepositFunds partyModel
+depositFunds : PartyModel -> String -> Cmd Msg
+depositFunds partyModel amount =
+    requestDepositFunds ( partyModel, amount )
 
 
 consoleLog : String -> Cmd Msg

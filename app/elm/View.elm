@@ -54,7 +54,7 @@ partyView party profileImage loadedAccount =
             , div [ class "block my1" ]
                 [ div []
                     [ text "Deposit: "
-                    , text (toString party.struct.deposit)
+                    , text party.struct.deposit
                     ]
                 , depositView ownerView party
                 ]

@@ -38,10 +38,10 @@ update msg model =
             ( model, acceptContractByBrehon brehonModel )
 
         DepositFieldChanged amount ->
-            ( { model | partyA = updatePartyDepositField model.partyA amount }, Cmd.none )
+            ( { model | depositField = amount }, Cmd.none )
 
         DepositFunds partyModel ->
-            ( model, depositFunds partyModel )
+            ( model, depositFunds partyModel model.depositField )
 
         None ->
             ( model, Cmd.none )
@@ -65,8 +65,3 @@ updatePartyModel partyModel party =
 updateBrehonModel : BrehonModel -> Brehon -> BrehonModel
 updateBrehonModel brehonModel brehon =
     { brehonModel | struct = brehon }
-
-
-updatePartyDepositField : PartyModel -> Wei -> PartyModel
-updatePartyDepositField partyModel amount =
-    { partyModel | depositField = amount }
