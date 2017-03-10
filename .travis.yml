@@ -5,9 +5,6 @@ compiler:
   - gcc
   - clang
 env:
-  - CXX=g++-4.8
-
-env:
   global:
     - DEPLOY_BRANCH="master"
     - SOURCE_DIR="dist"
@@ -15,6 +12,10 @@ env:
     - SSH_KEY="id_rsa"
     - GIT_NAME="prashantpawar - travis"
     - GIT_EMAIL="prashantpawar@gmail.com"
+
+  matrix:
+    - CXX=g++-4.8
+
 
 addons:
   code_climate:
@@ -32,8 +33,7 @@ cache:
   directories:
     - node_modules
 before_install:
-  - openssl aes-256-cbc -K $encrypted_f08f37fd3eee_key -iv $encrypted_f08f37fd3eee_iv
-  -in id_rsa.enc -out id_rsa -d
+  - openssl aes-256-cbc -K $encrypted_f08f37fd3eee_key -iv $encrypted_f08f37fd3eee_iv -in id_rsa.enc -out id_rsa -d
 
 branches:
   except:
