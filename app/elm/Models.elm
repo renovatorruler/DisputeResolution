@@ -1,9 +1,15 @@
 module Models exposing (..)
 
 
+zeroWei =
+    "0"
+
+
 type alias Model =
     { deployedAt : Address
     , loadedAccount : Address
+    , depositField : Wei
+    , totalDeposits : Wei
     , partyA : PartyModel
     , partyB : PartyModel
     , primaryBrehon : BrehonModel
@@ -14,7 +20,6 @@ type alias Model =
 
 type alias PartyModel =
     { struct : Party
-    , depositField : Wei
     }
 
 
@@ -25,7 +30,7 @@ type alias BrehonModel =
 
 type alias Party =
     { addr : Address
-    , deposit : Int
+    , deposit : Wei
     , contractAccepted : Bool
     }
 

@@ -2,7 +2,7 @@ port module Main exposing (..)
 
 import Html exposing (Html, div, text, program)
 import Msgs exposing (Msg)
-import Models exposing (Model, Party, Brehon, PartyModel, BrehonModel)
+import Models exposing (Model, Party, zeroWei, Brehon, PartyModel, BrehonModel)
 import View exposing (view)
 import Update exposing (update)
 import Web3.BrehonAPI exposing (..)
@@ -17,8 +17,10 @@ init =
     ( Model
         Nothing
         Nothing
-        (PartyModel (Party Nothing 0 False) "")
-        (PartyModel (Party Nothing 0 False) "")
+        zeroWei
+        zeroWei
+        (PartyModel (Party Nothing zeroWei False))
+        (PartyModel (Party Nothing zeroWei False))
         (BrehonModel (Brehon Nothing False))
         (BrehonModel (Brehon Nothing False))
         (BrehonModel (Brehon Nothing False))

@@ -33,7 +33,7 @@ port requestAcceptContractByParty : Party -> Cmd msg
 port requestAcceptContractByBrehon : Brehon -> Cmd msg
 
 
-port requestDepositFunds : PartyModel -> Cmd msg
+port requestDepositFunds : ( PartyModel, String ) -> Cmd msg
 
 
 port requestConsoleLog : String -> Cmd msg
