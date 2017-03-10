@@ -9,8 +9,8 @@
     "truffletest": "truffle test",
     "migrate": "truffle migrate",
     "test": "run-p -r \"testrpc-silent\" \"truffletest\"",
-    "blockchain": "run-p \"testrpc\" \"migrate\"",
-    "build": "webpack",
+    "blockchain": "run-p \"migrate\" \"testrpc\"",
+    "build": "truffle compile && webpack",
     "lint": "eslint ./",
     "watch": "webpack --watch",
     "dev": "webpack-dev-server --host 0.0.0.0 --port 8080"
