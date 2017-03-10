@@ -2,10 +2,10 @@ sudo: true
 language: node_js
 install: npm install
 compiler:
-- gcc
-- clang
+  - gcc
+  - clang
 env:
-- CXX=g++-4.8
+  - CXX=g++-4.8
 
 env:
   global:
@@ -27,12 +27,12 @@ addons:
     - g++-4.8
     - clang
 node_js:
-- node
+  - node
 cache:
   directories:
-  - node_modules
+    - node_modules
 before_install:
-- openssl aes-256-cbc -K $encrypted_f08f37fd3eee_key -iv $encrypted_f08f37fd3eee_iv
+  - openssl aes-256-cbc -K $encrypted_f08f37fd3eee_key -iv $encrypted_f08f37fd3eee_iv
   -in id_rsa.enc -out id_rsa -d
 
 branches:
