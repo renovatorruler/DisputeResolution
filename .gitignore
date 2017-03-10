@@ -41,3 +41,5 @@ build
 elm-stuff
 # # # elm-repl generated files
  repl-temp-*
+ id_rsa
+ id_rsa.pub
