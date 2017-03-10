@@ -6,6 +6,8 @@ compiler:
 - clang
 env:
 - CXX=g++-4.8
+
+env:
   global:
     - DEPLOY_BRANCH="master"
     - SOURCE_DIR="dist"
@@ -13,6 +15,7 @@ env:
     - SSH_KEY="id_rsa"
     - GIT_NAME="prashantpawar - travis"
     - GIT_EMAIL="prashantpawar@gmail.com"
+
 addons:
   code_climate:
     repo_token: 04ba58c9679f5e0c72d45403383e9d0f353c89c3dd54aa60112083590a676602
