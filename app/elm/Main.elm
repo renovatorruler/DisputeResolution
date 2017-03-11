@@ -15,7 +15,7 @@ import Commands exposing (..)
 init : ( Model, Cmd Msg )
 init =
     ( Model
-        (ContractInfo Nothing Negotiation)
+        (ContractInfo Nothing Negotiation zeroWei)
         Nothing
         zeroWei
         zeroWei

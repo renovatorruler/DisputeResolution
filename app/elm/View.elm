@@ -43,6 +43,10 @@ contractDetailView model =
             [ text "Contract Stage: "
             , text (toString model.contractInfo.stage)
             ]
+        , div []
+            [ text "Transaction Amount : "
+            , text model.contractInfo.transactionAmount
+            ]
         ]
 
 
@@ -118,16 +122,16 @@ depositView : Bool -> PartyModel -> Html Msg
 depositView ownerView party =
     case ownerView && party.struct.contractAccepted of
         True ->
-            div [ class "deposit-funds my1 clearfix" ]
+            div [ class "deposit-funds my1 clearfix flex" ]
                 [ input
-                    [ class "input left col-8"
+                    [ class "input mb0 mr2"
                     , placeholder "0 Wei"
                     , type_ "number"
                     , onInput Msgs.DepositFieldChanged
                     ]
                     []
                 , a
-                    [ class "btn col-3 rounded white bg-olive right"
+                    [ class "btn center rounded white bg-olive"
                     , href "#"
                     , onClick (Msgs.DepositFunds party)
                     ]

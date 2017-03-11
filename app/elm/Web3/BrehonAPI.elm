@@ -12,7 +12,7 @@ port receiveAccounts : (List Address -> msg) -> Sub msg
 port requestContractInfo : Int -> Cmd msg
 
 
-port receiveContractInfo : (( Address, Int ) -> msg) -> Sub msg
+port receiveContractInfo : (( Address, Int, Wei ) -> msg) -> Sub msg
 
 
 port requestAllParties : Int -> Cmd msg

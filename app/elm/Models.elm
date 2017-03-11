@@ -21,6 +21,7 @@ type alias Model =
 type alias ContractInfo =
     { deployedAt : Address
     , stage : Stage
+    , transactionAmount : Wei
     }
 
 
