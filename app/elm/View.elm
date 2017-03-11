@@ -47,6 +47,14 @@ contractDetailView model =
             [ text "Transaction Amount : "
             , text model.contractInfo.transactionAmount
             ]
+        , div []
+            [ text "Parties Accepted : "
+            , text (toString model.contractInfo.partiesAccepted)
+            ]
+        , div []
+            [ text "Brehons Accepted : "
+            , text (toString model.contractInfo.brehonsAccepted)
+            ]
         ]
 
 

@@ -5,6 +5,10 @@ zeroWei =
     "0"
 
 
+initContractInfo =
+    ContractInfo Nothing Negotiation zeroWei False False
+
+
 type alias Model =
     { contractInfo : ContractInfo
     , loadedAccount : Address
@@ -22,6 +26,8 @@ type alias ContractInfo =
     { deployedAt : Address
     , stage : Stage
     , transactionAmount : Wei
+    , partiesAccepted : Bool
+    , brehonsAccepted : Bool
     }
 
 

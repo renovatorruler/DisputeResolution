@@ -2,7 +2,7 @@ port module Main exposing (..)
 
 import Html exposing (Html, div, text, program)
 import Msgs exposing (Msg)
-import Models exposing (Model, Party, zeroWei, Brehon, PartyModel, BrehonModel, ContractInfo, Stage(..))
+import Models exposing (Model, Party, zeroWei, initContractInfo, Brehon, PartyModel, BrehonModel, ContractInfo, Stage(..))
 import View exposing (view)
 import Update exposing (update)
 import Web3.BrehonAPI exposing (..)
@@ -15,7 +15,7 @@ import Commands exposing (..)
 init : ( Model, Cmd Msg )
 init =
     ( Model
-        (ContractInfo Nothing Negotiation zeroWei)
+        initContractInfo
         Nothing
         zeroWei
         zeroWei
