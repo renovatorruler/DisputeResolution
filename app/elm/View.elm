@@ -1,6 +1,6 @@
 module View exposing (..)
 
-import Html exposing (Html, Attribute, a, button, div, img, input, p, text)
+import Html exposing (Html, Attribute, a, button, div, img, input, p, span, i, text)
 import Html.Attributes exposing (class, href, src, type_, placeholder)
 import Html.Events exposing (onClick, onInput)
 import Msgs exposing (Msg)
@@ -9,7 +9,7 @@ import Models exposing (Model, Address, Wei, PartyModel, BrehonModel, FilePath)
 
 view : Model -> Html Msg
 view model =
-    div [ class "main-container lg-h3 md-h4 sm-h6" ]
+    div [ class "main-container lg-h4 md-h4 sm-h4" ]
         [ contractDetailView model
         , div [ class "party-list flex flex-wrap" ]
             [ partyView model.partyA "images/partyA.png" model.loadedAccount
@@ -28,7 +28,7 @@ contractDetailView model =
     div [ class "contract-detail p2" ]
         [ div []
             [ text "Contract Deployed At: "
-            , textAddress model.deployedAt
+            , textAddress model.contractInfo.deployedAt
             ]
         , div []
             [ text "Loaded Account: "
@@ -48,14 +48,17 @@ partyView party profileImage loadedAccount =
         ownerView =
             loadedAccount == party.struct.addr
     in
-        div [ class "party-view mx-auto max-width-2 border rounded m1 p2" ]
+        div [ class "party-view mx-auto max-width-1 border rounded m1 p2" ]
             [ text "Party"
             , div [ class "block" ]
                 [ img [ src profileImage ] []
                 , text "Address: "
                 , textAddress party.struct.addr
                 ]
-            , div [ class "block my1" ]
+            , div [ class "block" ]
+                [ contractAcceptanceView party.struct.contractAccepted ownerView (Msgs.AcceptContractByParty party)
+                ]
+            , div [ class "despoti-block block my1" ]
                 [ div [ class "my1" ]
                     [ text "Deposit: "
                     , text party.struct.deposit
@@ -63,7 +66,6 @@ partyView party profileImage loadedAccount =
                     ]
                 , depositView ownerView party
                 ]
-            , contractAcceptanceView party.struct.contractAccepted ownerView (Msgs.AcceptContractByParty party)
             ]
 
 
@@ -73,7 +75,7 @@ brehonView brehon profileImage loadedAccount =
         ownerView =
             loadedAccount == brehon.struct.addr
     in
-        div [ class "brehon-view mx-auto max-width-2 border rounded m1 p2" ]
+        div [ class "brehon-view mx-auto max-width-1 border rounded m1 p2" ]
             [ text "Brehon"
             , div [ class "block" ]
                 [ img [ src profileImage ] []
@@ -112,8 +114,9 @@ contractAcceptanceView : Bool -> Bool -> Msg -> Html Msg
 contractAcceptanceView isContractAccepted ownerView messageDispatch =
     case isContractAccepted of
         True ->
-            p [ class "center" ]
-                [ text "Contract Accepted"
+            p []
+                [ i [ class "fa fa-check-circle mr1 green" ] []
+                , text "Contract Accepted"
                 ]
 
         False ->
@@ -127,18 +130,21 @@ contractAcceptanceView isContractAccepted ownerView messageDispatch =
                         [ text "Accept Contract" ]
                     ]
             else
-                p [ class "center" ] [ text "Contract Not Accepted" ]
+                p []
+                    [ i [ class "fa fa-minus-square mr1 red" ] []
+                    , text "Contract Not Accepted"
+                    ]
 
 
 textAddress : Address -> Html Msg
 textAddress address =
     case address of
         Nothing ->
-            p [ class "" ]
+            span [ class "" ]
                 [ text "<Unassigned>"
                 ]
 
         Just val ->
-            p [ class "" ]
+            span [ class "" ]
                 [ text val
                 ]

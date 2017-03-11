@@ -1,6 +1,6 @@
 port module Web3.BrehonAPI exposing (..)
 
-import Models exposing (Address, Parties, Party, PartyModel, Brehon, BrehonModel, Brehons, Wei)
+import Models exposing (Address, ContractInfo, Parties, Party, PartyModel, Brehon, BrehonModel, Brehons, Wei)
 
 
 port requestAccounts : Int -> Cmd msg
@@ -9,10 +9,10 @@ port requestAccounts : Int -> Cmd msg
 port receiveAccounts : (List Address -> msg) -> Sub msg
 
 
-port requestDeployedAt : Int -> Cmd msg
+port requestContractInfo : Int -> Cmd msg
 
 
-port receiveDeployedAt : (Address -> msg) -> Sub msg
+port receiveContractInfo : (( Address, Int ) -> msg) -> Sub msg
 
 
 port requestAllParties : Int -> Cmd msg

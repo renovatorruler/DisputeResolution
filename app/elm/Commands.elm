@@ -10,9 +10,9 @@ loadWeb3Accounts =
     requestAccounts 0
 
 
-loadDeployedAt : Cmd Msg
-loadDeployedAt =
-    requestDeployedAt 0
+loadContractInfo : Cmd Msg
+loadContractInfo =
+    requestContractInfo 0
 
 
 loadAllParties : Cmd Msg

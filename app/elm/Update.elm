@@ -1,7 +1,7 @@
 module Update exposing (..)
 
 import Msgs exposing (..)
-import Models exposing (Model, Address, Wei, zeroWei, Parties, PartyModel, Party, Brehons, BrehonModel, Brehon)
+import Models exposing (Model, Stage(..), ContractInfo, Address, Wei, zeroWei, Parties, PartyModel, Party, Brehons, BrehonModel, Brehon)
 import Commands exposing (..)
 
 
@@ -11,8 +11,12 @@ update msg model =
         LoadAccounts accounts ->
             ( setLoadedAddress model (List.head accounts), Cmd.none )
 
-        LoadDeployedAt deployedAddr ->
-            ( { model | deployedAt = deployedAddr }, Cmd.none )
+        LoadContractInfo ( deployedAddr, stage ) ->
+            ( { model
+                | contractInfo = updateContractInfo model.contractInfo deployedAddr stage
+              }
+            , Cmd.none
+            )
 
         LoadAllParties parties ->
             ( { model
@@ -57,6 +61,35 @@ setLoadedAddress model address =
 
         Just addr ->
             { model | loadedAccount = addr }
+
+
+updateContractInfo : ContractInfo -> Address -> Int -> ContractInfo
+updateContractInfo contractInfo addr stageInt =
+    let
+        contractInfoUpdated =
+            { contractInfo | deployedAt = addr }
+    in
+        case stageInt of
+            1 ->
+                { contractInfoUpdated | stage = Execution }
+
+            2 ->
+                { contractInfoUpdated | stage = Dispute }
+
+            3 ->
+                { contractInfoUpdated | stage = Resolved }
+
+            4 ->
+                { contractInfoUpdated | stage = AppealPeriod }
+
+            5 ->
+                { contractInfoUpdated | stage = Appeal }
+
+            6 ->
+                { contractInfoUpdated | stage = Completed }
+
+            _ ->
+                { contractInfoUpdated | stage = Negotiation }
 
 
 updatePartyModel : PartyModel -> Party -> PartyModel

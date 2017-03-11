@@ -6,7 +6,7 @@ zeroWei =
 
 
 type alias Model =
-    { deployedAt : Address
+    { contractInfo : ContractInfo
     , loadedAccount : Address
     , depositField : Wei
     , totalDeposits : Wei
@@ -15,6 +15,12 @@ type alias Model =
     , primaryBrehon : BrehonModel
     , secondaryBrehon : BrehonModel
     , tertiaryBrehon : BrehonModel
+    }
+
+
+type alias ContractInfo =
+    { deployedAt : Address
+    , stage : Stage
     }
 
 
@@ -65,3 +71,13 @@ type alias Brehons =
     , secondaryBrehon : Brehon
     , tertiaryBrehon : Brehon
     }
+
+
+type Stage
+    = Negotiation
+    | Execution
+    | Dispute
+    | Resolved
+    | AppealPeriod
+    | Appeal
+    | Completed
