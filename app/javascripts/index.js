@@ -3,6 +3,7 @@ import 'font-awesome/css/font-awesome.css';
 
 import Web3 from 'web3';
 import R from 'ramda';
+import BigNumber from 'bignumber.js';
 
 import BrehonAPI from './BrehonAPI';
 import Elm from './../elm/Main.elm';
@@ -13,12 +14,28 @@ function updateAllParties(ports, brehonApp) {
     brehonApp.getPartyA(),
     brehonApp.getPartyB(),
   ])
-    .then(R.map(R.over(R.lensProp('deposit'), num => num.valueOf())))
-    .then(parties =>
-      ports.receiveAllParties.send({
-        partyA: R.head(parties),
-        partyB: R.last(parties),
-      }));
+  .then(R.objOf('parties'))
+  .then(partiesObj =>
+    R.set(
+      R.lensProp('totalDeposits'),
+      R.reduce(
+        (acc, val) => acc.plus(val),
+        new BigNumber(0),
+        R.map(R.prop('deposit'), partiesObj.parties)).valueOf(),
+      partiesObj))
+  .then(partiesObj => R.set(
+    R.lensProp('parties'),
+    R.map(
+      R.over(R.lensProp('deposit'),
+      num => num.valueOf()),
+      partiesObj.parties)
+    , partiesObj))
+  .then(partiesObj =>
+    ports.receiveAllParties.send({
+      partyA: R.head(partiesObj.parties),
+      partyB: R.last(partiesObj.parties),
+      totalDeposits: partiesObj.totalDeposits,
+    }));
 }
 
 function updateAllBrehons(ports, brehonApp) {

@@ -56,6 +56,7 @@ type alias Wei =
 type alias Parties =
     { partyA : Party
     , partyB : Party
+    , totalDeposits : Wei
     }
 
 
