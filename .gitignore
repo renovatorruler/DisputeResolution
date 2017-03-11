@@ -40,4 +40,8 @@ build
 # elm-package generated files
 elm-stuff
 # # # elm-repl generated files
- repl-temp-*
+repl-temp-*
+
+# Private keys
+id_rsa
+id_rsa.pub

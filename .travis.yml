@@ -5,7 +5,18 @@ compiler:
   - gcc
   - clang
 env:
-  - CXX=g++-4.8
+  global:
+    - DEPLOY_BRANCH="master"
+    - SOURCE_DIR="build"
+    - TARGET_BRANCH="gh-pages"
+    - SSH_KEY="id_rsa"
+    - GIT_NAME="prashantpawar - travis"
+    - GIT_EMAIL="prashantpawar@gmail.com"
+
+  matrix:
+    - CXX=g++-4.8
+
+
 addons:
   code_climate:
     repo_token: 04ba58c9679f5e0c72d45403383e9d0f353c89c3dd54aa60112083590a676602
@@ -17,7 +28,19 @@ addons:
     - g++-4.8
     - clang
 node_js:
-  - "node"
+  - node
 cache:
   directories:
     - node_modules
+before_install:
+  - openssl aes-256-cbc -K $encrypted_f08f37fd3eee_key -iv $encrypted_f08f37fd3eee_iv -in id_rsa.enc -out id_rsa -d
+
+branches:
+  except:
+    - gh-pages
+
+script:
+  - npm test
+  - npm run build
+  # run from node_modules if added to package.json
+  - node_modules/.bin/gh-pages-travis
