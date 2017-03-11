@@ -7,7 +7,7 @@ compiler:
 env:
   global:
     - DEPLOY_BRANCH="master"
-    - SOURCE_DIR="dist"
+    - SOURCE_DIR="build"
     - TARGET_BRANCH="gh-pages"
     - SSH_KEY="id_rsa"
     - GIT_NAME="prashantpawar - travis"
