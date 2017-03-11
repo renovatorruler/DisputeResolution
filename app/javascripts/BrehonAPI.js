@@ -13,11 +13,6 @@ export default class BrehonAPI {
     this.brehonContract.setProvider(web3provider);
   }
 
-  start() {
-    console.info('started');
-    return this;
-  }
-
   getDeployed() {
     return this.brehonContract.deployed()
       .then((instance) => {
@@ -90,5 +85,11 @@ export default class BrehonAPI {
     return this.brehonContract.deployed()
       .then(instance =>
         instance.deposit({ from: addr, value: amount }));
+  }
+
+  getStage() {
+    return this.brehonContract.deployed()
+      .then(instance =>
+        instance.stage.call());
   }
 }

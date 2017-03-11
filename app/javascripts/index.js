@@ -9,6 +9,7 @@ import BrehonAPI from './BrehonAPI';
 import Elm from './../elm/Main.elm';
 import './../index.html';
 
+
 function updateAllParties(ports, brehonApp) {
   return Promise.all([
     brehonApp.getPartyA(),
@@ -75,9 +76,14 @@ function portHooks(elmApp, currentProvider) {
     }, 1000);
   });
 
-  ports.requestDeployedAt.subscribe(() => {
-    brehonApp.getDeployed().then((instance) => {
-      ports.receiveDeployedAt.send(instance.address);
+  ports.requestContractInfo.subscribe(() => {
+    brehonApp.getDeployed().then((brehonContract) => {
+      brehonContract.instance.stage.call()
+        .then(stage =>
+          ports.receiveContractInfo.send([
+            brehonContract.address,
+            Number(stage.valueOf()),
+          ]));
     });
   });
 
