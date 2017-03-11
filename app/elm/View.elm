@@ -39,6 +39,10 @@ contractDetailView model =
             , text model.totalDeposits
             , text " Wei"
             ]
+        , div []
+            [ text "Contract Stage: "
+            , text (toString model.contractInfo.stage)
+            ]
         ]
 
 
