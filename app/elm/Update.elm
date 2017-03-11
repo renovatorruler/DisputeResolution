@@ -1,7 +1,7 @@
 module Update exposing (..)
 
 import Msgs exposing (..)
-import Models exposing (Model, Address, Wei, Parties, PartyModel, Party, Brehons, BrehonModel, Brehon)
+import Models exposing (Model, Address, Wei, zeroWei, Parties, PartyModel, Party, Brehons, BrehonModel, Brehon)
 import Commands exposing (..)
 
 
@@ -18,6 +18,8 @@ update msg model =
             ( { model
                 | partyA = updatePartyModel model.partyA parties.partyA
                 , partyB = updatePartyModel model.partyB parties.partyB
+                , totalDeposits = parties.totalDeposits
+                , depositField = zeroWei
               }
             , Cmd.none
             )

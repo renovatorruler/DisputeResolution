@@ -34,6 +34,11 @@ contractDetailView model =
             [ text "Loaded Account: "
             , textAddress model.loadedAccount
             ]
+        , div []
+            [ text "Total Deposits: "
+            , text model.totalDeposits
+            , text " Wei"
+            ]
         ]
 
 

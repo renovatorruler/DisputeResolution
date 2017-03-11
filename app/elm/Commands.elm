@@ -40,6 +40,10 @@ depositFunds partyModel amount =
     requestDepositFunds ( partyModel, amount )
 
 
+
+{- For Debugging purposes -}
+
+
 consoleLog : String -> Cmd Msg
 consoleLog msg =
     requestConsoleLog msg
