@@ -51,8 +51,20 @@ partyView party profileImage loadedAccount =
     let
         ownerView =
             loadedAccount == party.struct.addr
+
+        viewClass ownerView cssClass =
+            case ownerView of
+                True ->
+                    cssClass ++ " white bg-maroon border-gray"
+
+                False ->
+                    cssClass
     in
-        div [ class "party-view mx-auto max-width-1 border rounded m1 p2" ]
+        div
+            [ "party-view mx-auto max-width-1 border rounded m1 p2"
+                |> viewClass ownerView
+                |> class
+            ]
             [ text "Party"
             , div [ class "block" ]
                 [ img [ src profileImage ] []
@@ -78,8 +90,20 @@ brehonView brehon profileImage loadedAccount =
     let
         ownerView =
             loadedAccount == brehon.struct.addr
+
+        viewClass ownerView cssClass =
+            case ownerView of
+                True ->
+                    cssClass ++ " white bg-maroon border-gray"
+
+                False ->
+                    cssClass
     in
-        div [ class "brehon-view mx-auto max-width-1 border rounded m1 p2" ]
+        div
+            [ "brehon-view mx-auto max-width-1 border rounded m1 p2"
+                |> viewClass ownerView
+                |> class
+            ]
             [ text "Brehon"
             , div [ class "block" ]
                 [ img [ src profileImage ] []
@@ -149,6 +173,6 @@ textAddress address =
                 ]
 
         Just val ->
-            span [ class "" ]
+            span [ class "address char-10" ]
                 [ text val
                 ]

@@ -9,6 +9,7 @@ import BrehonAPI from './BrehonAPI';
 import Elm from './../elm/Main.elm';
 import './../index.html';
 
+import '../stylesheets/brehon.css';
 
 function updateAllParties(ports, brehonApp) {
   return Promise.all([
