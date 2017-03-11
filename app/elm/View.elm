@@ -9,9 +9,8 @@ import Models exposing (Model, Address, Wei, PartyModel, BrehonModel, FilePath)
 
 view : Model -> Html Msg
 view model =
-    div [ class "main-container" ]
-        [ text "Main View "
-        , contractDetailView model
+    div [ class "main-container lg-h3 md-h4 sm-h6" ]
+        [ contractDetailView model
         , div [ class "party-list flex flex-wrap" ]
             [ partyView model.partyA "images/partyA.png" model.loadedAccount
             , partyView model.partyB "images/partyB.png" model.loadedAccount
@@ -45,16 +44,17 @@ partyView party profileImage loadedAccount =
             loadedAccount == party.struct.addr
     in
         div [ class "party-view mx-auto max-width-2 border rounded m1 p2" ]
-            [ text "Party View"
+            [ text "Party"
             , div [ class "block" ]
                 [ img [ src profileImage ] []
                 , text "Address: "
                 , textAddress party.struct.addr
                 ]
             , div [ class "block my1" ]
-                [ div []
+                [ div [ class "my1" ]
                     [ text "Deposit: "
                     , text party.struct.deposit
+                    , text " Wei"
                     ]
                 , depositView ownerView party
                 ]
@@ -69,7 +69,7 @@ brehonView brehon profileImage loadedAccount =
             loadedAccount == brehon.struct.addr
     in
         div [ class "brehon-view mx-auto max-width-2 border rounded m1 p2" ]
-            [ text "Brehon View"
+            [ text "Brehon"
             , div [ class "block" ]
                 [ img [ src profileImage ] []
                 , p [] [ text "Address: " ]
@@ -83,16 +83,16 @@ depositView : Bool -> PartyModel -> Html Msg
 depositView ownerView party =
     case ownerView && party.struct.contractAccepted of
         True ->
-            div [ class "deposit-funds clearfix" ]
+            div [ class "deposit-funds my1 clearfix" ]
                 [ input
-                    [ class "input left max-width-1"
+                    [ class "input left col-8"
                     , placeholder "0 Wei"
                     , type_ "number"
                     , onInput Msgs.DepositFieldChanged
                     ]
                     []
                 , a
-                    [ class "btn btn-narrow rounded white bg-olive right"
+                    [ class "btn col-3 rounded white bg-olive right"
                     , href "#"
                     , onClick (Msgs.DepositFunds party)
                     ]
@@ -129,7 +129,7 @@ textAddress : Address -> Html Msg
 textAddress address =
     case address of
         Nothing ->
-            p []
+            p [ class "" ]
                 [ text "<Unassigned>"
                 ]
 
