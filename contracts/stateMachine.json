@@ -1,0 +1,22 @@
+{
+  "contract_name": "stateMachine",
+  "abi": [
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "stage",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint8"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    }
+  ],
+  "unlinked_binary": "0x60606040526000805460ff19169055346000575b6081806100216000396000f300606060405263ffffffff60e060020a600035041663c040e6b881146022575b6000565b34600057602c604c565b60405180826006811160005760ff16815260200191505060405180910390f35b60005460ff16815600a165627a7a72305820814cf502f57448ba8a5aaf7ad20e520e18db1bf12403e1c247afd9a5fdd01a590029",
+  "networks": {},
+  "schema_version": "0.0.5",
+  "updated_at": 1488722845370
+}
