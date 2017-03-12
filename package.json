@@ -8,6 +8,7 @@
     "testrpc-silent": "testrpc -m 'myth like bonus scare over problem client lizard pioneer submit female collect' --hostname 0.0.0.0 --gasPrice 20 > /dev/null",
     "truffletest": "truffle test",
     "migrate": "truffle migrate",
+    "migrate-ropsten" : "truffle migrate --network ropsten",
     "test": "run-p -r \"testrpc-silent\" \"truffletest\"",
     "blockchain": "run-p \"migrate\" \"testrpc\"",
     "build": "truffle compile && webpack",
