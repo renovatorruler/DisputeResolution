@@ -98,4 +98,10 @@ export default class BrehonAPI {
       .then(instance =>
         instance.transactionAmount.call());
   }
+
+  startContract(addr) {
+    return this.brehonContract.deployed()
+      .then(instance =>
+        instance.startContract({ from: addr }));
+  }
 }

@@ -40,6 +40,11 @@ depositFunds partyModel amount =
     requestDepositFunds ( partyModel, amount )
 
 
+startContract : Address -> Cmd Msg
+startContract addr =
+    requestStartContract addr
+
+
 
 {- For Debugging purposes -}
 

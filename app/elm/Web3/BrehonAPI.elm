@@ -37,3 +37,6 @@ port requestDepositFunds : ( PartyModel, String ) -> Cmd msg
 
 
 port requestConsoleLog : String -> Cmd msg
+
+
+port requestStartContract : Address -> Cmd msg

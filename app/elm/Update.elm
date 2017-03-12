@@ -15,7 +15,7 @@ update msg model =
             ( { model
                 | contractInfo = updateContractInfo model.contractInfo deployedAddr stage transactionAmount
               }
-            , Cmd.none
+            , consoleLog "loadContractInfo"
             )
 
         LoadAllParties parties ->
@@ -54,6 +54,9 @@ update msg model =
 
         DepositFunds partyModel ->
             ( model, depositFunds partyModel model.depositField )
+
+        StartContract party ->
+            ( model, startContract party.struct.addr )
 
         None ->
             ( model, Cmd.none )
