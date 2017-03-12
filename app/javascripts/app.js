@@ -1,3 +1,4 @@
+/* eslint-disable */
 // Import libraries we need.
 import Web3 from 'web3';
 import $ from 'jquery';

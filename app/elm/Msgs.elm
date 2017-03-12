@@ -5,7 +5,7 @@ import Models exposing (Address, ContractInfo, Wei, PartyModel, BrehonModel, Par
 
 type Msg
     = LoadAccounts (List Address)
-    | LoadContractInfo ( Address, Int )
+    | LoadContractInfo ( Address, Int, Wei )
     | LoadAllParties Parties
     | LoadAllBrehons Brehons
     | AcceptContractByParty PartyModel

@@ -11,9 +11,9 @@ update msg model =
         LoadAccounts accounts ->
             ( setLoadedAddress model (List.head accounts), Cmd.none )
 
-        LoadContractInfo ( deployedAddr, stage ) ->
+        LoadContractInfo ( deployedAddr, stage, transactionAmount ) ->
             ( { model
-                | contractInfo = updateContractInfo model.contractInfo deployedAddr stage
+                | contractInfo = updateContractInfo model.contractInfo deployedAddr stage transactionAmount
               }
             , Cmd.none
             )
@@ -24,6 +24,9 @@ update msg model =
                 , partyB = updatePartyModel model.partyB parties.partyB
                 , totalDeposits = parties.totalDeposits
                 , depositField = zeroWei
+                , contractInfo =
+                    getPartiesAcceptance parties
+                        |> updatePartyAcceptance model.contractInfo
               }
             , Cmd.none
             )
@@ -33,6 +36,9 @@ update msg model =
                 | primaryBrehon = updateBrehonModel model.primaryBrehon brehons.primaryBrehon
                 , secondaryBrehon = updateBrehonModel model.secondaryBrehon brehons.secondaryBrehon
                 , tertiaryBrehon = updateBrehonModel model.tertiaryBrehon brehons.tertiaryBrehon
+                , contractInfo =
+                    getBrehonsAcceptance brehons
+                        |> updateBrehonAcceptance model.contractInfo
               }
             , Cmd.none
             )
@@ -53,6 +59,23 @@ update msg model =
             ( model, Cmd.none )
 
 
+getPartiesAcceptance : Parties -> Bool
+getPartiesAcceptance parties =
+    List.all (\p -> p.contractAccepted)
+        [ parties.partyA
+        , parties.partyB
+        ]
+
+
+getBrehonsAcceptance : Brehons -> Bool
+getBrehonsAcceptance brehons =
+    List.all (\b -> b.contractAccepted)
+        [ brehons.primaryBrehon
+        , brehons.secondaryBrehon
+        , brehons.tertiaryBrehon
+        ]
+
+
 setLoadedAddress : Model -> Maybe Address -> Model
 setLoadedAddress model address =
     case address of
@@ -63,11 +86,24 @@ setLoadedAddress model address =
             { model | loadedAccount = addr }
 
 
-updateContractInfo : ContractInfo -> Address -> Int -> ContractInfo
-updateContractInfo contractInfo addr stageInt =
+updatePartyAcceptance : ContractInfo -> Bool -> ContractInfo
+updatePartyAcceptance contractInfo partiesAccepted =
+    { contractInfo | partiesAccepted = partiesAccepted }
+
+
+updateBrehonAcceptance : ContractInfo -> Bool -> ContractInfo
+updateBrehonAcceptance contractInfo brehonsAccepted =
+    { contractInfo | brehonsAccepted = brehonsAccepted }
+
+
+updateContractInfo : ContractInfo -> Address -> Int -> Wei -> ContractInfo
+updateContractInfo contractInfo addr stageInt transactionAmount =
     let
         contractInfoUpdated =
-            { contractInfo | deployedAt = addr }
+            { contractInfo
+                | deployedAt = addr
+                , transactionAmount = transactionAmount
+            }
     in
         case stageInt of
             1 ->

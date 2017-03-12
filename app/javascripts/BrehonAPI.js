@@ -92,4 +92,10 @@ export default class BrehonAPI {
       .then(instance =>
         instance.stage.call());
   }
+
+  getTransactionAmount() {
+    return this.brehonContract.deployed()
+      .then(instance =>
+        instance.transactionAmount.call());
+  }
 }

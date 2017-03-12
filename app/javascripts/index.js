@@ -81,10 +81,12 @@ function portHooks(elmApp, currentProvider) {
     brehonApp.getDeployed().then((brehonContract) => {
       brehonContract.instance.stage.call()
         .then(stage =>
-          ports.receiveContractInfo.send([
-            brehonContract.address,
-            Number(stage.valueOf()),
-          ]));
+          brehonApp.getTransactionAmount().then(transactionAmount =>
+            ports.receiveContractInfo.send([
+              brehonContract.address,
+              Number(stage.valueOf()),
+              transactionAmount.valueOf(),
+            ])));
     });
   });
 
