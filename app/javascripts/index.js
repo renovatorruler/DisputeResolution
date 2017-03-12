@@ -55,6 +55,19 @@ function updateAllBrehons(ports, brehonApp) {
     });
 }
 
+function updateContractInfo(ports, brehonApp) {
+  return brehonApp.getDeployed().then((brehonContract) => {
+    brehonContract.instance.stage.call()
+      .then(stage =>
+        brehonApp.getTransactionAmount().then(transactionAmount =>
+          ports.receiveContractInfo.send([
+            brehonContract.address,
+            Number(stage.valueOf()),
+            transactionAmount.valueOf(),
+          ])));
+  });
+}
+
 function portHooks(elmApp, currentProvider) {
   const self = window;
   const ports = elmApp.ports;
@@ -77,18 +90,8 @@ function portHooks(elmApp, currentProvider) {
     }, 1000);
   });
 
-  ports.requestContractInfo.subscribe(() => {
-    brehonApp.getDeployed().then((brehonContract) => {
-      brehonContract.instance.stage.call()
-        .then(stage =>
-          brehonApp.getTransactionAmount().then(transactionAmount =>
-            ports.receiveContractInfo.send([
-              brehonContract.address,
-              Number(stage.valueOf()),
-              transactionAmount.valueOf(),
-            ])));
-    });
-  });
+  ports.requestContractInfo.subscribe(() =>
+    updateContractInfo(ports, brehonApp));
 
   ports.requestAllParties.subscribe(() =>
     updateAllParties(ports, brehonApp));
@@ -111,6 +114,10 @@ function portHooks(elmApp, currentProvider) {
     return brehonApp.depositFunds(partyModel.struct.addr, amount)
       .then(() => updateAllParties(ports, brehonApp));
   });
+
+  ports.requestStartContract.subscribe(addr =>
+    brehonApp.startContract(addr).then(() =>
+      updateContractInfo(ports, brehonApp)));
 }
 
 document.addEventListener('DOMContentLoaded', () => {

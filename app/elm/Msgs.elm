@@ -12,4 +12,5 @@ type Msg
     | AcceptContractByBrehon BrehonModel
     | DepositFieldChanged Wei
     | DepositFunds PartyModel
+    | StartContract PartyModel
     | None

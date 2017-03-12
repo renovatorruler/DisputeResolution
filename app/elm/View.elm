@@ -4,7 +4,7 @@ import Html exposing (Html, Attribute, a, button, div, img, input, p, span, i, t
 import Html.Attributes exposing (class, href, src, type_, placeholder)
 import Html.Events exposing (onClick, onInput)
 import Msgs exposing (Msg)
-import Models exposing (Model, Address, Wei, PartyModel, BrehonModel, FilePath)
+import Models exposing (Model, Address, Wei, PartyModel, BrehonModel, FilePath, Stage(..))
 
 
 view : Model -> Html Msg
@@ -12,8 +12,8 @@ view model =
     div [ class "main-container lg-h4 md-h4 sm-h4" ]
         [ contractDetailView model
         , div [ class "party-list flex flex-wrap" ]
-            [ partyView model.partyA "images/partyA.png" model.loadedAccount
-            , partyView model.partyB "images/partyB.png" model.loadedAccount
+            [ partyView model.partyA "images/partyA.png" model
+            , partyView model.partyB "images/partyB.png" model
             ]
         , div [ class "brehon-list flex flex-wrap flex-column" ]
             [ brehonView model.primaryBrehon "images/partyPrimaryBrehon.png" model.loadedAccount
@@ -58,11 +58,21 @@ contractDetailView model =
         ]
 
 
-partyView : PartyModel -> FilePath -> Address -> Html Msg
-partyView party profileImage loadedAccount =
+partyView : PartyModel -> FilePath -> Model -> Html Msg
+partyView party profileImage model =
     let
         ownerView =
-            loadedAccount == party.struct.addr
+            model.loadedAccount == party.struct.addr
+
+        canStartContract =
+            model.contractInfo.partiesAccepted
+                == True
+                && model.contractInfo.brehonsAccepted
+                == True
+                && model.contractInfo.stage
+                == Negotiation
+                && party.struct.contractAccepted
+                == True
 
         viewClass ownerView cssClass =
             case ownerView of
@@ -86,13 +96,16 @@ partyView party profileImage loadedAccount =
             , div [ class "block" ]
                 [ contractAcceptanceView party.struct.contractAccepted ownerView (Msgs.AcceptContractByParty party)
                 ]
-            , div [ class "despoti-block block my1" ]
+            , div [ class "deposit-block block my1" ]
                 [ div [ class "my1" ]
                     [ text "Deposit: "
                     , text party.struct.deposit
                     , text " Wei"
                     ]
                 , depositView ownerView party
+                ]
+            , div [ class "block" ]
+                [ startContractView party ownerView canStartContract
                 ]
             ]
 
@@ -124,6 +137,21 @@ brehonView brehon profileImage loadedAccount =
                 ]
             , contractAcceptanceView brehon.struct.contractAccepted ownerView (Msgs.AcceptContractByBrehon brehon)
             ]
+
+
+startContractView : PartyModel -> Bool -> Bool -> Html Msg
+startContractView party ownerView canStartContract =
+    case ownerView && canStartContract of
+        True ->
+            a
+                [ class "btn btn-big btn-primary block center rounded h2 black bg-yellow"
+                , href "#"
+                , onClick (Msgs.StartContract party)
+                ]
+                [ text "Start Contract" ]
+
+        False ->
+            text ""
 
 
 depositView : Bool -> PartyModel -> Html Msg

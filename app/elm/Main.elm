@@ -48,7 +48,7 @@ subscriptions model =
 
 
 
--- MAIN
+-- MAIn
 
 
 main : Program Never Model Msg

@@ -55,6 +55,9 @@ update msg model =
         DepositFunds partyModel ->
             ( model, depositFunds partyModel model.depositField )
 
+        StartContract party ->
+            ( model, startContract party.struct.addr )
+
         None ->
             ( model, Cmd.none )
 
