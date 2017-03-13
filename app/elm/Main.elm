@@ -29,6 +29,7 @@ init =
     , Cmd.batch
         [ loadWeb3Accounts
         , loadContractInfo
+        , loadProposedSettlement
         , loadAllParties
         , loadAllBrehons
         ]
@@ -44,6 +45,7 @@ subscriptions model =
     Sub.batch
         [ receiveAccounts Msgs.LoadAccounts
         , receiveContractInfo Msgs.LoadContractInfo
+        , receiveProposedSettlement Msgs.LoadProposedSettlement
         , receiveAllParties Msgs.LoadAllParties
         , receiveAllBrehons Msgs.LoadAllBrehons
         ]

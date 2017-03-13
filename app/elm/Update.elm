@@ -1,7 +1,7 @@
 module Update exposing (..)
 
 import Msgs exposing (..)
-import Models exposing (Model, Stage(..), ContractInfo, Address, Wei, zeroWei, Parties, PartyModel, Party, Brehons, BrehonModel, Brehon)
+import Models exposing (Model, Stage(..), ContractInfo, Settlement, Address, Wei, zeroWei, Parties, PartyModel, Party, Brehons, BrehonModel, Brehon)
 import Commands exposing (..)
 
 
@@ -64,6 +64,9 @@ update msg model =
         StartContract party ->
             ( model, startContract party.struct.addr )
 
+        LoadProposedSettlement proposedSettlement ->
+            ( { model | contractInfo = updateContractInfoSettlement model.contractInfo proposedSettlement }, Cmd.none )
+
         ProposeSettlement party ->
             ( model, proposeSettlement party.struct.addr model.settlementPartyAField model.settlementPartyBField )
 
@@ -109,6 +112,11 @@ updatePartyAcceptance contractInfo partiesAccepted =
 updateBrehonAcceptance : ContractInfo -> Bool -> ContractInfo
 updateBrehonAcceptance contractInfo brehonsAccepted =
     { contractInfo | brehonsAccepted = brehonsAccepted }
+
+
+updateContractInfoSettlement : ContractInfo -> Settlement -> ContractInfo
+updateContractInfoSettlement contractInfo settlement =
+    { contractInfo | proposedSettlement = Just settlement }
 
 
 updateContractInfo : ContractInfo -> Address -> Int -> Wei -> ContractInfo

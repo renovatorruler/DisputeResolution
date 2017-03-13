@@ -1,6 +1,6 @@
 module Msgs exposing (..)
 
-import Models exposing (Address, ContractInfo, Wei, PartyModel, BrehonModel, Parties, Brehons)
+import Models exposing (Address, ContractInfo, Settlement, Wei, PartyModel, BrehonModel, Parties, Brehons)
 
 
 type Msg
@@ -15,6 +15,7 @@ type Msg
     | SettlementPartyAFieldChanged Wei
     | SettlementPartyBFieldChanged Wei
     | StartContract PartyModel
+    | LoadProposedSettlement Settlement
     | ProposeSettlement PartyModel
     | AcceptSettlement PartyModel
     | None

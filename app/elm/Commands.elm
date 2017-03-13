@@ -15,6 +15,11 @@ loadContractInfo =
     requestContractInfo 0
 
 
+loadProposedSettlement : Cmd Msg
+loadProposedSettlement =
+    requestProposedSettlement 0
+
+
 loadAllParties : Cmd Msg
 loadAllParties =
     requestAllParties 0

@@ -4,7 +4,7 @@ import Html exposing (Html, Attribute, a, button, div, img, input, label, p, spa
 import Html.Attributes exposing (class, href, src, type_, placeholder)
 import Html.Events exposing (onClick, onInput)
 import Msgs exposing (Msg)
-import Models exposing (Model, Address, Wei, PartyModel, BrehonModel, FilePath, Stage(..))
+import Models exposing (Model, Address, Settlement, Wei, PartyModel, BrehonModel, FilePath, Stage(..))
 
 
 view : Model -> Html Msg
@@ -54,6 +54,9 @@ contractDetailView model =
         , div []
             [ text "Brehons Accepted : "
             , text (toString model.contractInfo.brehonsAccepted)
+            ]
+        , div []
+            [ proposedSettlementView model.contractInfo.proposedSettlement
             ]
         ]
 
@@ -153,6 +156,21 @@ proposeSettlementView party =
             ]
             [ text "Propose Settlement" ]
         ]
+
+
+proposedSettlementView : Maybe Settlement -> Html Msg
+proposedSettlementView proposedSettlement =
+    case proposedSettlement of
+        Nothing ->
+            div [] []
+
+        Just settlement ->
+            div []
+                [ text "Proposing Party"
+                , textAddress settlement.party.struct.addr
+                , text settlement.settlementPartyA
+                , text settlement.settlementPartyB
+                ]
 
 
 acceptSettlementView : PartyModel -> Html Msg

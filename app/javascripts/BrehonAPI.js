@@ -2,7 +2,7 @@ import contract from 'truffle-contract';
 
 // Import our contract artifacts and turn them into usable abstractions.
 import BrehonContractArtifact from '../../build/contracts/BrehonContract.json';
-import { PartyStruct, BrehonStruct } from '../../lib/contractHelpers';
+import { PartyStruct, BrehonStruct, ResolutionStruct } from '../../lib/contractHelpers';
 
 export default class BrehonAPI {
   constructor(web3provider) {
@@ -109,5 +109,16 @@ export default class BrehonAPI {
     return this.brehonContract.deployed()
       .then(instance =>
         instance.proposeSettlement(awardPartyA, awardPartyB, { from: addr }));
+  }
+
+  getProposedSettlement() {
+    return this.brehonContract.deployed()
+      .then(instance =>
+        instance.proposedSettlement.call()
+        .then(proposedSettlement => ({
+          party: proposedSettlement[ResolutionStruct.proposerAddr],
+          settlementPartyA: proposedSettlement[ResolutionStruct.awardPartyA],
+          settlementPartyB: proposedSettlement[ResolutionStruct.awardPartyB],
+        })));
   }
 }

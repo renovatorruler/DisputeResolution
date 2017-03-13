@@ -8,7 +8,7 @@ zeroWei =
 
 initContractInfo : ContractInfo
 initContractInfo =
-    ContractInfo Nothing Negotiation zeroWei False False
+    ContractInfo Nothing Negotiation zeroWei False False Nothing
 
 
 type alias Model =
@@ -32,6 +32,14 @@ type alias ContractInfo =
     , transactionAmount : Wei
     , partiesAccepted : Bool
     , brehonsAccepted : Bool
+    , proposedSettlement : Maybe Settlement
+    }
+
+
+type alias Settlement =
+    { party : PartyModel
+    , settlementPartyA : Wei
+    , settlementPartyB : Wei
     }
 
 

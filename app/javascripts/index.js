@@ -126,6 +126,10 @@ function portHooks(elmApp, currentProvider) {
       new BigNumber(proposal[1]),
       new BigNumber(proposal[2]))
     .then(() => updateContractInfo(ports, brehonApp)));
+
+  ports.requestProposedSettlement.subscribe(() =>
+    brehonApp.getProposedSettlement()
+    .then(proposedSettlement => console.debug(proposedSettlement)));
 }
 
 document.addEventListener('DOMContentLoaded', () => {
