@@ -1,10 +1,12 @@
 module Models exposing (..)
 
 
+zeroWei : Wei
 zeroWei =
     "0"
 
 
+initContractInfo : ContractInfo
 initContractInfo =
     ContractInfo Nothing Negotiation zeroWei False False
 
@@ -14,6 +16,8 @@ type alias Model =
     , loadedAccount : Address
     , depositField : Wei
     , totalDeposits : Wei
+    , settlementPartyAField : Wei
+    , settlementPartyBField : Wei
     , partyA : PartyModel
     , partyB : PartyModel
     , primaryBrehon : BrehonModel

@@ -40,3 +40,15 @@ port requestConsoleLog : String -> Cmd msg
 
 
 port requestStartContract : Address -> Cmd msg
+
+
+port requestProposeSettlement : ( Address, Wei, Wei ) -> Cmd msg
+
+
+port receiveProposeSettlement : (Bool -> msg) -> Sub msg
+
+
+port requestAcceptSettlement : ( Address, Wei, Wei ) -> Cmd msg
+
+
+port receiveAcceptSettlement : (Bool -> msg) -> Sub msg

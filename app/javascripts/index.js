@@ -7,6 +7,9 @@ import BigNumber from 'bignumber.js';
 
 import BrehonAPI from './BrehonAPI';
 import Elm from './../elm/Main.elm';
+import { getPercentageSplit } from '../../lib/contractHelpers';
+import defaults from '../../config/deployment_settings';
+
 import './../index.html';
 
 import '../stylesheets/brehon.css';
@@ -118,6 +121,13 @@ function portHooks(elmApp, currentProvider) {
   ports.requestStartContract.subscribe(addr =>
     brehonApp.startContract(addr).then(() =>
       updateContractInfo(ports, brehonApp)));
+
+  ports.requestProposeSettlement.subscribe((proposal) => {
+    const awardPartyA = getPercentageSplit(defaults.defaults, 0, 50);
+    const awardPartyB = getPercentageSplit(defaults.defaults, 0, 50);
+    return brehonApp.proposeSettlement(proposal[0], awardPartyA, awardPartyB)
+      .then(() => updateContractInfo(ports, brehonApp));
+  });
 }
 
 document.addEventListener('DOMContentLoaded', () => {

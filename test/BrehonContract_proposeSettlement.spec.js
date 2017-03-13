@@ -1,5 +1,3 @@
-const R = require('ramda');
-
 const BrehonContract = artifacts.require('./BrehonContract.sol');
 const defaults = require('../config/deployment_settings.js').defaults;
 

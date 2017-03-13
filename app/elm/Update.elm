@@ -55,8 +55,20 @@ update msg model =
         DepositFunds partyModel ->
             ( model, depositFunds partyModel model.depositField )
 
+        SettlementPartyAFieldChanged amount ->
+            ( { model | settlementPartyAField = amount }, Cmd.none )
+
+        SettlementPartyBFieldChanged amount ->
+            ( { model | settlementPartyBField = amount }, Cmd.none )
+
         StartContract party ->
             ( model, startContract party.struct.addr )
+
+        ProposeSettlement party ->
+            ( model, proposeSettlement party.struct.addr model.settlementPartyAField model.settlementPartyBField )
+
+        AcceptSettlement party ->
+            ( model, acceptSettlement party.struct.addr model.settlementPartyAField model.settlementPartyBField )
 
         None ->
             ( model, Cmd.none )

@@ -1,6 +1,6 @@
 module View exposing (..)
 
-import Html exposing (Html, Attribute, a, button, div, img, input, p, span, i, text)
+import Html exposing (Html, Attribute, a, button, div, img, input, label, p, span, i, text)
 import Html.Attributes exposing (class, href, src, type_, placeholder)
 import Html.Events exposing (onClick, onInput)
 import Msgs exposing (Msg)
@@ -74,6 +74,12 @@ partyView party profileImage model =
                 && party.struct.contractAccepted
                 == True
 
+        canProposeSettlement =
+            True
+
+        canAcceptSettlement =
+            False
+
         viewClass ownerView cssClass =
             case ownerView of
                 True ->
@@ -88,26 +94,72 @@ partyView party profileImage model =
                 |> class
             ]
             [ text "Party"
-            , div [ class "block" ]
+            , div [ class "block p1" ]
                 [ img [ src profileImage ] []
                 , text "Address: "
                 , textAddress party.struct.addr
                 ]
-            , div [ class "block" ]
+            , div [ class "block p1" ]
                 [ contractAcceptanceView party.struct.contractAccepted ownerView (Msgs.AcceptContractByParty party)
                 ]
-            , div [ class "deposit-block block my1" ]
+            , div [ class "deposit-block block my1 p1" ]
                 [ div [ class "my1" ]
                     [ text "Deposit: "
                     , text party.struct.deposit
                     , text " Wei"
                     ]
-                , depositView ownerView party
+                , depositView party
                 ]
-            , div [ class "block" ]
-                [ startContractView party ownerView canStartContract
+                |> conditionalBlock (ownerView && party.struct.contractAccepted)
+            , div
+                [ class "block my1 p1" ]
+                [ startContractView party
                 ]
+                |> conditionalBlock (ownerView && canStartContract)
+            , div
+                [ class "block my2 p1 border" ]
+                [ label [ class "label label-title bg-maroon h4" ] [ text "Settlement" ]
+                , proposeSettlementView party
+                ]
+                |> conditionalBlock (ownerView && canProposeSettlement)
+            , div
+                [ class "block my2 p1 border" ]
+                [ acceptSettlementView party
+                ]
+                |> conditionalBlock (ownerView && canAcceptSettlement)
             ]
+
+
+proposeSettlementView : PartyModel -> Html Msg
+proposeSettlementView party =
+    div [ class "propose-settlement" ]
+        [ label [ class "label" ] [ text "Award for Party A" ]
+        , input
+            [ class "input"
+            , placeholder "0 Wei"
+            , onInput Msgs.SettlementPartyAFieldChanged
+            ]
+            []
+        , label [ class "label" ] [ text "Award for Party B" ]
+        , input
+            [ class "input"
+            , placeholder "0 wei"
+            , onInput Msgs.SettlementPartyBFieldChanged
+            ]
+            []
+        , button
+            [ class "btn btn-primary"
+            , onClick (Msgs.ProposeSettlement party)
+            ]
+            [ text "Propose Settlement" ]
+        ]
+
+
+acceptSettlementView : PartyModel -> Html Msg
+acceptSettlementView party =
+    div []
+        [ text "Accept Settlement"
+        ]
 
 
 brehonView : BrehonModel -> FilePath -> Address -> Html Msg
@@ -139,43 +191,33 @@ brehonView brehon profileImage loadedAccount =
             ]
 
 
-startContractView : PartyModel -> Bool -> Bool -> Html Msg
-startContractView party ownerView canStartContract =
-    case ownerView && canStartContract of
-        True ->
-            a
-                [ class "btn btn-big btn-primary block center rounded h2 black bg-yellow"
-                , href "#"
-                , onClick (Msgs.StartContract party)
-                ]
-                [ text "Start Contract" ]
-
-        False ->
-            text ""
+startContractView : PartyModel -> Html Msg
+startContractView party =
+    a
+        [ class "btn btn-big btn-primary block center rounded h2 black bg-yellow"
+        , href "#"
+        , onClick (Msgs.StartContract party)
+        ]
+        [ text "Start Contract" ]
 
 
-depositView : Bool -> PartyModel -> Html Msg
-depositView ownerView party =
-    case ownerView && party.struct.contractAccepted of
-        True ->
-            div [ class "deposit-funds my1 clearfix flex" ]
-                [ input
-                    [ class "input mb0 mr2"
-                    , placeholder "0 Wei"
-                    , type_ "number"
-                    , onInput Msgs.DepositFieldChanged
-                    ]
-                    []
-                , a
-                    [ class "btn center rounded white bg-olive"
-                    , href "#"
-                    , onClick (Msgs.DepositFunds party)
-                    ]
-                    [ text "Deposit" ]
-                ]
-
-        False ->
-            div [] []
+depositView : PartyModel -> Html Msg
+depositView party =
+    div [ class "deposit-funds my1 clearfix flex" ]
+        [ input
+            [ class "input mb0 mr2"
+            , placeholder "0 Wei"
+            , type_ "number"
+            , onInput Msgs.DepositFieldChanged
+            ]
+            []
+        , a
+            [ class "btn center rounded white bg-olive"
+            , href "#"
+            , onClick (Msgs.DepositFunds party)
+            ]
+            [ text "Deposit" ]
+        ]
 
 
 contractAcceptanceView : Bool -> Bool -> Msg -> Html Msg
@@ -216,3 +258,13 @@ textAddress address =
             span [ class "address char-10" ]
                 [ text val
                 ]
+
+
+conditionalBlock : Bool -> Html Msg -> Html Msg
+conditionalBlock flag htmlEl =
+    case flag of
+        True ->
+            htmlEl
+
+        False ->
+            text ""

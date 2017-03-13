@@ -19,6 +19,8 @@ init =
         Nothing
         zeroWei
         zeroWei
+        zeroWei
+        zeroWei
         (PartyModel (Party Nothing zeroWei False))
         (PartyModel (Party Nothing zeroWei False))
         (BrehonModel (Brehon Nothing False))

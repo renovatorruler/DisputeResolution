@@ -12,5 +12,9 @@ type Msg
     | AcceptContractByBrehon BrehonModel
     | DepositFieldChanged Wei
     | DepositFunds PartyModel
+    | SettlementPartyAFieldChanged Wei
+    | SettlementPartyBFieldChanged Wei
     | StartContract PartyModel
+    | ProposeSettlement PartyModel
+    | AcceptSettlement PartyModel
     | None
