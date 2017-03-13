@@ -108,6 +108,6 @@ export default class BrehonAPI {
   proposeSettlement(addr, awardPartyA, awardPartyB) {
     return this.brehonContract.deployed()
       .then(instance =>
-        instance.proposeSettlement(2600, 2600, { from: addr }));
+        instance.proposeSettlement(awardPartyA, awardPartyB, { from: addr }));
   }
 }
