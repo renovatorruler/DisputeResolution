@@ -37,7 +37,7 @@ type alias ContractInfo =
 
 
 type alias Settlement =
-    { party : PartyModel
+    { partyAddress : Address
     , settlementPartyA : Wei
     , settlementPartyB : Wei
     }

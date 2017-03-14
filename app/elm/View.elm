@@ -166,10 +166,18 @@ proposedSettlementView proposedSettlement =
 
         Just settlement ->
             div []
-                [ text "Proposing Party"
-                , textAddress settlement.party.struct.addr
-                , text settlement.settlementPartyA
-                , text settlement.settlementPartyB
+                [ div []
+                    [ text "Proposing Party: "
+                    , textAddress settlement.partyAddress
+                    ]
+                , div []
+                    [ text "Award Party A: "
+                    , text settlement.settlementPartyA
+                    ]
+                , div []
+                    [ text "Award Party B: "
+                    , text settlement.settlementPartyB
+                    ]
                 ]
 
 

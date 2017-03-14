@@ -116,9 +116,9 @@ export default class BrehonAPI {
       .then(instance =>
         instance.proposedSettlement.call()
         .then(proposedSettlement => ({
-          party: proposedSettlement[ResolutionStruct.proposerAddr],
-          settlementPartyA: proposedSettlement[ResolutionStruct.awardPartyA],
-          settlementPartyB: proposedSettlement[ResolutionStruct.awardPartyB],
+          partyAddress: proposedSettlement[ResolutionStruct.proposerAddr],
+          settlementPartyA: proposedSettlement[ResolutionStruct.awardPartyA].valueOf(),
+          settlementPartyB: proposedSettlement[ResolutionStruct.awardPartyB].valueOf(),
         })));
   }
 }

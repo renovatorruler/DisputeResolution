@@ -129,7 +129,7 @@ function portHooks(elmApp, currentProvider) {
 
   ports.requestProposedSettlement.subscribe(() =>
     brehonApp.getProposedSettlement()
-    .then(proposedSettlement => console.debug(proposedSettlement)));
+    .then(ports.receiveProposedSettlement.send));
 }
 
 document.addEventListener('DOMContentLoaded', () => {
