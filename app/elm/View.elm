@@ -78,7 +78,10 @@ partyView party profileImage model =
                 == True
 
         canProposeSettlement =
-            model.contractInfo.stage /= Negotiation
+            model.contractInfo.stage
+                /= Negotiation
+                && model.contractInfo.stage
+                /= Completed
 
         canAcceptSettlement =
             case model.contractInfo.proposedSettlement of
@@ -181,7 +184,7 @@ acceptSettlementView party proposedSettlement =
                     ]
                 , button
                     [ class "btn btn-primary"
-                    , onClick (Msgs.ProposeSettlement party)
+                    , onClick (Msgs.AcceptSettlement party)
                     ]
                     [ text "Accept Settlement" ]
                 ]

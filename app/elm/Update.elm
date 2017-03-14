@@ -71,7 +71,17 @@ update msg model =
             ( model, proposeSettlement party.struct.addr model.settlementPartyAField model.settlementPartyBField )
 
         AcceptSettlement party ->
-            ( model, acceptSettlement party.struct.addr model.settlementPartyAField model.settlementPartyBField )
+            case model.contractInfo.proposedSettlement of
+                Nothing ->
+                    ( model, Cmd.none )
+
+                Just settlement ->
+                    ( model
+                    , acceptSettlement
+                        party.struct.addr
+                        settlement.settlementPartyA
+                        settlement.settlementPartyB
+                    )
 
         None ->
             ( model, Cmd.none )
