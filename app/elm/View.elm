@@ -78,10 +78,15 @@ partyView party profileImage model =
                 == True
 
         canProposeSettlement =
-            True
+            model.contractInfo.stage /= Negotiation
 
         canAcceptSettlement =
-            False
+            case model.contractInfo.proposedSettlement of
+                Nothing ->
+                    False
+
+                Just settlement ->
+                    settlement.proposingPartyAddr /= model.loadedAccount
 
         viewClass ownerView cssClass =
             case ownerView of
@@ -127,7 +132,7 @@ partyView party profileImage model =
                 |> conditionalBlock (ownerView && canProposeSettlement)
             , div
                 [ class "block my2 p1 border" ]
-                [ acceptSettlementView party
+                [ acceptSettlementView party model.contractInfo.proposedSettlement
                 ]
                 |> conditionalBlock (ownerView && canAcceptSettlement)
             ]
@@ -158,6 +163,30 @@ proposeSettlementView party =
         ]
 
 
+acceptSettlementView : PartyModel -> Maybe Settlement -> Html Msg
+acceptSettlementView party proposedSettlement =
+    case proposedSettlement of
+        Nothing ->
+            div [] []
+
+        Just settlement ->
+            div [ class "accept-settlement" ]
+                [ label [ class "label h4" ]
+                    [ text "Award for Party A: "
+                    , text settlement.settlementPartyA
+                    ]
+                , label [ class "label h4" ]
+                    [ text "Award for Party B: "
+                    , text settlement.settlementPartyB
+                    ]
+                , button
+                    [ class "btn btn-primary"
+                    , onClick (Msgs.ProposeSettlement party)
+                    ]
+                    [ text "Accept Settlement" ]
+                ]
+
+
 proposedSettlementView : Maybe Settlement -> Html Msg
 proposedSettlementView proposedSettlement =
     case proposedSettlement of
@@ -168,7 +197,7 @@ proposedSettlementView proposedSettlement =
             div []
                 [ div []
                     [ text "Proposing Party: "
-                    , textAddress settlement.partyAddress
+                    , textAddress settlement.proposingPartyAddr
                     ]
                 , div []
                     [ text "Award Party A: "
@@ -179,13 +208,6 @@ proposedSettlementView proposedSettlement =
                     , text settlement.settlementPartyB
                     ]
                 ]
-
-
-acceptSettlementView : PartyModel -> Html Msg
-acceptSettlementView party =
-    div []
-        [ text "Accept Settlement"
-        ]
 
 
 brehonView : BrehonModel -> FilePath -> Address -> Html Msg

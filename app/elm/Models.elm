@@ -37,7 +37,7 @@ type alias ContractInfo =
 
 
 type alias Settlement =
-    { partyAddress : Address
+    { proposingPartyAddr : Address
     , settlementPartyA : Wei
     , settlementPartyB : Wei
     }
