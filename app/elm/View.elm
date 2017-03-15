@@ -4,7 +4,7 @@ import Html exposing (Html, Attribute, a, button, div, img, input, label, p, spa
 import Html.Attributes exposing (class, href, src, type_, placeholder)
 import Html.Events exposing (onClick, onInput)
 import Msgs exposing (Msg)
-import Models exposing (Model, Address, Settlement, Wei, PartyModel, BrehonModel, FilePath, Stage(..))
+import Models exposing (Model, Address, ContractInfo, Settlement, Wei, PartyModel, BrehonModel, FilePath, Stage(..))
 
 
 view : Model -> Html Msg
@@ -61,6 +61,32 @@ contractDetailView model =
         ]
 
 
+canPartyStartContract : PartyModel -> ContractInfo -> Bool
+canPartyStartContract party contractInfo =
+    (contractInfo.partiesAccepted && contractInfo.brehonsAccepted)
+        && contractInfo.stage
+        == Negotiation
+        && party.struct.contractAccepted
+
+
+canPartyProposeSettlement : PartyModel -> ContractInfo -> Bool
+canPartyProposeSettlement party contractInfo =
+    contractInfo.stage
+        /= Negotiation
+        && contractInfo.stage
+        /= Completed
+
+
+canPartyAcceptSettlement : PartyModel -> ContractInfo -> Bool
+canPartyAcceptSettlement party contractInfo =
+    case contractInfo.proposedSettlement of
+        Nothing ->
+            False
+
+        Just settlement ->
+            settlement.proposingPartyAddr /= party.struct.addr
+
+
 partyView : PartyModel -> FilePath -> Model -> Html Msg
 partyView party profileImage model =
     let
@@ -68,28 +94,16 @@ partyView party profileImage model =
             model.loadedAccount == party.struct.addr
 
         canStartContract =
-            model.contractInfo.partiesAccepted
-                == True
-                && model.contractInfo.brehonsAccepted
-                == True
-                && model.contractInfo.stage
-                == Negotiation
-                && party.struct.contractAccepted
-                == True
+            ownerView
+                && canPartyStartContract party model.contractInfo
 
         canProposeSettlement =
-            model.contractInfo.stage
-                /= Negotiation
-                && model.contractInfo.stage
-                /= Completed
+            ownerView
+                && canPartyProposeSettlement party model.contractInfo
 
         canAcceptSettlement =
-            case model.contractInfo.proposedSettlement of
-                Nothing ->
-                    False
-
-                Just settlement ->
-                    settlement.proposingPartyAddr /= model.loadedAccount
+            ownerView
+                && canPartyAcceptSettlement party model.contractInfo
 
         viewClass ownerView cssClass =
             case ownerView of
@@ -126,13 +140,13 @@ partyView party profileImage model =
                 [ class "block my1 p1" ]
                 [ startContractView party
                 ]
-                |> conditionalBlock (ownerView && canStartContract)
+                |> conditionalBlock canStartContract
             , div
                 [ class "block my2 p1 border" ]
                 [ label [ class "label label-title bg-maroon h4" ] [ text "Settlement" ]
                 , proposeSettlementView party
                 ]
-                |> conditionalBlock (ownerView && canProposeSettlement)
+                |> conditionalBlock canProposeSettlement
             , div
                 [ class "block my2 p1 border" ]
                 [ acceptSettlementView party model.contractInfo.proposedSettlement

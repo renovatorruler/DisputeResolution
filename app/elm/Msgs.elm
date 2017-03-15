@@ -15,7 +15,7 @@ type Msg
     | SettlementPartyAFieldChanged Wei
     | SettlementPartyBFieldChanged Wei
     | StartContract PartyModel
-    | LoadProposedSettlement Settlement
+    | LoadProposedSettlement (Maybe Settlement)
     | ProposeSettlement PartyModel
     | AcceptSettlement PartyModel
     | None

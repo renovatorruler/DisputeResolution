@@ -48,7 +48,7 @@ port requestProposeSettlement : ( Address, Wei, Wei ) -> Cmd msg
 port requestProposedSettlement : Int -> Cmd msg
 
 
-port receiveProposedSettlement : (Settlement -> msg) -> Sub msg
+port receiveProposedSettlement : (Maybe Settlement -> msg) -> Sub msg
 
 
 port requestAcceptSettlement : ( Address, Wei, Wei ) -> Cmd msg

@@ -124,9 +124,9 @@ updateBrehonAcceptance contractInfo brehonsAccepted =
     { contractInfo | brehonsAccepted = brehonsAccepted }
 
 
-updateContractInfoSettlement : ContractInfo -> Settlement -> ContractInfo
+updateContractInfoSettlement : ContractInfo -> Maybe Settlement -> ContractInfo
 updateContractInfoSettlement contractInfo settlement =
-    { contractInfo | proposedSettlement = Just settlement }
+    { contractInfo | proposedSettlement = settlement }
 
 
 updateContractInfo : ContractInfo -> Address -> Int -> Wei -> ContractInfo
