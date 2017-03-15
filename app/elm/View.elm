@@ -25,40 +25,45 @@ view model =
 
 contractDetailView : Model -> Html Msg
 contractDetailView model =
-    div [ class "contract-detail p2" ]
-        [ div []
-            [ text "Contract Deployed At: "
-            , textAddress model.contractInfo.deployedAt
+    let
+        showProposedSettlement =
+            model.contractInfo.stage /= Completed
+    in
+        div [ class "contract-detail p2" ]
+            [ div []
+                [ text "Contract Deployed At: "
+                , textAddress model.contractInfo.deployedAt
+                ]
+            , div []
+                [ text "Loaded Account: "
+                , textAddress model.loadedAccount
+                ]
+            , div []
+                [ text "Total Deposits: "
+                , text model.totalDeposits
+                , text " Wei"
+                ]
+            , div []
+                [ text "Contract Stage: "
+                , text (toString model.contractInfo.stage)
+                ]
+            , div []
+                [ text "Transaction Amount : "
+                , text model.contractInfo.transactionAmount
+                ]
+            , div []
+                [ text "Parties Accepted : "
+                , text (toString model.contractInfo.partiesAccepted)
+                ]
+            , div []
+                [ text "Brehons Accepted : "
+                , text (toString model.contractInfo.brehonsAccepted)
+                ]
+            , div []
+                [ proposedSettlementView model.contractInfo.proposedSettlement
+                    |> conditionalBlock showProposedSettlement
+                ]
             ]
-        , div []
-            [ text "Loaded Account: "
-            , textAddress model.loadedAccount
-            ]
-        , div []
-            [ text "Total Deposits: "
-            , text model.totalDeposits
-            , text " Wei"
-            ]
-        , div []
-            [ text "Contract Stage: "
-            , text (toString model.contractInfo.stage)
-            ]
-        , div []
-            [ text "Transaction Amount : "
-            , text model.contractInfo.transactionAmount
-            ]
-        , div []
-            [ text "Parties Accepted : "
-            , text (toString model.contractInfo.partiesAccepted)
-            ]
-        , div []
-            [ text "Brehons Accepted : "
-            , text (toString model.contractInfo.brehonsAccepted)
-            ]
-        , div []
-            [ proposedSettlementView model.contractInfo.proposedSettlement
-            ]
-        ]
 
 
 canPartyStartContract : PartyModel -> ContractInfo -> Bool

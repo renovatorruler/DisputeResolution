@@ -69,6 +69,11 @@ function updateContractInfo(ports, brehonApp) {
   });
 }
 
+function updateProposedSettlement(ports, brehonApp) {
+  brehonApp.getProposedSettlement()
+    .then(ports.receiveProposedSettlement.send);
+}
+
 function portHooks(elmApp, currentProvider) {
   const self = window;
   const ports = elmApp.ports;
@@ -125,11 +130,10 @@ function portHooks(elmApp, currentProvider) {
       proposal[0],
       new BigNumber(proposal[1]),
       new BigNumber(proposal[2]))
-    .then(() => updateContractInfo(ports, brehonApp)));
+    .then(() => updateProposedSettlement(ports, brehonApp)));
 
   ports.requestProposedSettlement.subscribe(() =>
-    brehonApp.getProposedSettlement()
-    .then(ports.receiveProposedSettlement.send));
+    updateProposedSettlement(ports, brehonApp));
 
   ports.requestAcceptSettlement.subscribe(proposal =>
     brehonApp.acceptSettlement(
