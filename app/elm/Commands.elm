@@ -1,6 +1,6 @@
 module Commands exposing (..)
 
-import Models exposing (Address, PartyModel, BrehonModel)
+import Models exposing (Address, Wei, PartyModel, BrehonModel)
 import Msgs exposing (Msg)
 import Web3.BrehonAPI exposing (..)
 
@@ -13,6 +13,11 @@ loadWeb3Accounts =
 loadContractInfo : Cmd Msg
 loadContractInfo =
     requestContractInfo 0
+
+
+loadProposedSettlement : Cmd Msg
+loadProposedSettlement =
+    requestProposedSettlement 0
 
 
 loadAllParties : Cmd Msg
@@ -43,6 +48,16 @@ depositFunds partyModel amount =
 startContract : Address -> Cmd Msg
 startContract addr =
     requestStartContract addr
+
+
+proposeSettlement : Address -> Wei -> Wei -> Cmd Msg
+proposeSettlement addr awardPartyA awardPartyB =
+    requestProposeSettlement ( addr, awardPartyA, awardPartyB )
+
+
+acceptSettlement : Address -> Wei -> Wei -> Cmd Msg
+acceptSettlement addr awardPartyA awardPartyB =
+    requestAcceptSettlement ( addr, awardPartyA, awardPartyB )
 
 
 

@@ -19,6 +19,8 @@ init =
         Nothing
         zeroWei
         zeroWei
+        zeroWei
+        zeroWei
         (PartyModel (Party Nothing zeroWei False))
         (PartyModel (Party Nothing zeroWei False))
         (BrehonModel (Brehon Nothing False))
@@ -27,6 +29,7 @@ init =
     , Cmd.batch
         [ loadWeb3Accounts
         , loadContractInfo
+        , loadProposedSettlement
         , loadAllParties
         , loadAllBrehons
         ]
@@ -42,6 +45,7 @@ subscriptions model =
     Sub.batch
         [ receiveAccounts Msgs.LoadAccounts
         , receiveContractInfo Msgs.LoadContractInfo
+        , receiveProposedSettlement Msgs.LoadProposedSettlement
         , receiveAllParties Msgs.LoadAllParties
         , receiveAllBrehons Msgs.LoadAllBrehons
         ]

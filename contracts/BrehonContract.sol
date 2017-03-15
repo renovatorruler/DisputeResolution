@@ -63,9 +63,10 @@ contract BrehonContract is
     _;
   }
 
-  modifier atConflictStages()
+  modifier afterContractStarts()
   {
-    if(stage != Stages.Dispute &&
+    if(stage != Stages.Execution &&
+       stage != Stages.Dispute &&
        stage != Stages.AppealPeriod &&
        stage != Stages.Appeal)
         throw;
@@ -255,7 +256,7 @@ contract BrehonContract is
   }
 
   function proposeSettlement(uint _awardPartyA, uint _awardPartyB)
-    atConflictStages()
+    afterContractStarts()
     eitherByParty(partyA, partyB)
   {
       proposedSettlement.proposerAddr = msg.sender;
@@ -273,7 +274,7 @@ contract BrehonContract is
   }
 
   function acceptSettlement(uint _awardPartyA, uint _awardPartyB)
-    atConflictStages()
+    afterContractStarts()
     eitherByParty(partyA, partyB)
   {
       if((proposedSettlement.awardPartyA != _awardPartyA) ||

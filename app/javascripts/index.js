@@ -7,6 +7,7 @@ import BigNumber from 'bignumber.js';
 
 import BrehonAPI from './BrehonAPI';
 import Elm from './../elm/Main.elm';
+
 import './../index.html';
 
 import '../stylesheets/brehon.css';
@@ -68,6 +69,11 @@ function updateContractInfo(ports, brehonApp) {
   });
 }
 
+function updateProposedSettlement(ports, brehonApp) {
+  brehonApp.getProposedSettlement()
+    .then(ports.receiveProposedSettlement.send);
+}
+
 function portHooks(elmApp, currentProvider) {
   const self = window;
   const ports = elmApp.ports;
@@ -118,6 +124,23 @@ function portHooks(elmApp, currentProvider) {
   ports.requestStartContract.subscribe(addr =>
     brehonApp.startContract(addr).then(() =>
       updateContractInfo(ports, brehonApp)));
+
+  ports.requestProposeSettlement.subscribe(proposal =>
+    brehonApp.proposeSettlement(
+      proposal[0],
+      new BigNumber(proposal[1]),
+      new BigNumber(proposal[2]))
+    .then(() => updateProposedSettlement(ports, brehonApp)));
+
+  ports.requestProposedSettlement.subscribe(() =>
+    updateProposedSettlement(ports, brehonApp));
+
+  ports.requestAcceptSettlement.subscribe(proposal =>
+    brehonApp.acceptSettlement(
+      proposal[0],
+      new BigNumber(proposal[1]),
+      new BigNumber(proposal[2]))
+    .then(() => updateContractInfo(ports, brehonApp)));
 }
 
 document.addEventListener('DOMContentLoaded', () => {

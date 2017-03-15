@@ -1,7 +1,7 @@
 module Update exposing (..)
 
 import Msgs exposing (..)
-import Models exposing (Model, Stage(..), ContractInfo, Address, Wei, zeroWei, Parties, PartyModel, Party, Brehons, BrehonModel, Brehon)
+import Models exposing (Model, Stage(..), ContractInfo, Settlement, Address, Wei, zeroWei, Parties, PartyModel, Party, Brehons, BrehonModel, Brehon)
 import Commands exposing (..)
 
 
@@ -55,8 +55,33 @@ update msg model =
         DepositFunds partyModel ->
             ( model, depositFunds partyModel model.depositField )
 
+        SettlementPartyAFieldChanged amount ->
+            ( { model | settlementPartyAField = amount }, Cmd.none )
+
+        SettlementPartyBFieldChanged amount ->
+            ( { model | settlementPartyBField = amount }, Cmd.none )
+
         StartContract party ->
             ( model, startContract party.struct.addr )
+
+        LoadProposedSettlement proposedSettlement ->
+            ( { model | contractInfo = updateContractInfoSettlement model.contractInfo proposedSettlement }, Cmd.none )
+
+        ProposeSettlement party ->
+            ( model, proposeSettlement party.struct.addr model.settlementPartyAField model.settlementPartyBField )
+
+        AcceptSettlement party ->
+            case model.contractInfo.proposedSettlement of
+                Nothing ->
+                    ( model, Cmd.none )
+
+                Just settlement ->
+                    ( model
+                    , acceptSettlement
+                        party.struct.addr
+                        settlement.settlementPartyA
+                        settlement.settlementPartyB
+                    )
 
         None ->
             ( model, Cmd.none )
@@ -97,6 +122,11 @@ updatePartyAcceptance contractInfo partiesAccepted =
 updateBrehonAcceptance : ContractInfo -> Bool -> ContractInfo
 updateBrehonAcceptance contractInfo brehonsAccepted =
     { contractInfo | brehonsAccepted = brehonsAccepted }
+
+
+updateContractInfoSettlement : ContractInfo -> Maybe Settlement -> ContractInfo
+updateContractInfoSettlement contractInfo settlement =
+    { contractInfo | proposedSettlement = settlement }
 
 
 updateContractInfo : ContractInfo -> Address -> Int -> Wei -> ContractInfo

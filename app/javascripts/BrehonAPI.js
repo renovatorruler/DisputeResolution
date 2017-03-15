@@ -1,8 +1,9 @@
 import contract from 'truffle-contract';
+import R from 'ramda';
 
 // Import our contract artifacts and turn them into usable abstractions.
 import BrehonContractArtifact from '../../build/contracts/BrehonContract.json';
-import { PartyStruct, BrehonStruct } from '../../lib/contractHelpers';
+import { PartyStruct, BrehonStruct, ResolutionStruct, UninitializedResolution } from '../../lib/contractHelpers';
 
 export default class BrehonAPI {
   constructor(web3provider) {
@@ -103,5 +104,33 @@ export default class BrehonAPI {
     return this.brehonContract.deployed()
       .then(instance =>
         instance.startContract({ from: addr }));
+  }
+
+  proposeSettlement(addr, awardPartyA, awardPartyB) {
+    return this.brehonContract.deployed()
+      .then(instance =>
+        instance.proposeSettlement(awardPartyA, awardPartyB, { from: addr }));
+  }
+
+  acceptSettlement(addr, awardPartyA, awardPartyB) {
+    return this.brehonContract.deployed()
+      .then(instance =>
+        instance.acceptSettlement(awardPartyA, awardPartyB, { from: addr }));
+  }
+
+  getProposedSettlement() {
+    return this.brehonContract.deployed()
+      .then(instance =>
+        instance.proposedSettlement.call()
+        .then((proposedSettlement) => {
+          if (R.equals(UninitializedResolution, proposedSettlement)) {
+            return null;
+          }
+          return R.zipObj(['proposingPartyAddr', 'settlementPartyA', 'settlementPartyB'], [
+            proposedSettlement[ResolutionStruct.proposerAddr],
+            proposedSettlement[ResolutionStruct.awardPartyA].valueOf(),
+            proposedSettlement[ResolutionStruct.awardPartyB].valueOf(),
+          ]);
+        }));
   }
 }

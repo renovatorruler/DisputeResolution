@@ -1,5 +1,3 @@
-const R = require('ramda');
-
 const BrehonContract = artifacts.require('./BrehonContract.sol');
 const defaults = require('../config/deployment_settings.js').defaults;
 
@@ -11,14 +9,7 @@ const startContractAndRaiseDispute = contractHelpers.startContractAndRaiseDisput
 const verifyEvent = contractHelpers.verifyEvent;
 const getMinimumContractAmt = contractHelpers.getMinimumContractAmt;
 const getSplitForPrimaryBrehon = contractHelpers.getPercentageSplit(defaults, 0);
-
-const ResolutionStruct = {
-  proposerAddr: 0,
-  awardPartyA: 1,
-  awardPartyB: 2,
-  partyAAccepted: 3,
-  partyBAccepted: 4,
-};
+const ResolutionStruct = contractHelpers.ResolutionStruct;
 
 /**
  * Spec:
