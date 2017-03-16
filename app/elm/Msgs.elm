@@ -18,4 +18,5 @@ type Msg
     | LoadProposedSettlement (Maybe Settlement)
     | ProposeSettlement PartyModel
     | AcceptSettlement PartyModel
+    | LoadAllEvents
     | None

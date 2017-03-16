@@ -52,3 +52,6 @@ port receiveProposedSettlement : (Maybe Settlement -> msg) -> Sub msg
 
 
 port requestAcceptSettlement : ( Address, Wei, Wei ) -> Cmd msg
+
+
+port requestAllEvents : Int -> Cmd msg

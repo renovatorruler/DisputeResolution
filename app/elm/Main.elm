@@ -32,6 +32,7 @@ init =
         , loadProposedSettlement
         , loadAllParties
         , loadAllBrehons
+        , loadAllEvents
         ]
     )
 

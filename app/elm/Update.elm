@@ -83,6 +83,9 @@ update msg model =
                         settlement.settlementPartyB
                     )
 
+        LoadAllEvents ->
+            ( model, Cmd.none )
+
         None ->
             ( model, Cmd.none )
 

@@ -30,6 +30,11 @@ loadAllBrehons =
     requestAllBrehons 0
 
 
+loadAllEvents : Cmd Msg
+loadAllEvents =
+    requestAllEvents 0
+
+
 acceptContractByParty : PartyModel -> Cmd Msg
 acceptContractByParty party =
     requestAcceptContractByParty party.struct
