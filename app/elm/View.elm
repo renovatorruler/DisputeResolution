@@ -9,17 +9,20 @@ import Models exposing (Model, Address, ContractInfo, Settlement, Wei, PartyMode
 
 view : Model -> Html Msg
 view model =
-    div [ class "main-container lg-h4 md-h4 sm-h4" ]
+    div [ class "main-container lg-h4 md-h4 sm-h4 clearfix" ]
         [ contractDetailView model
-        , div [ class "party-list flex flex-wrap" ]
-            [ partyView model.partyA "images/partyA.png" model
-            , partyView model.partyB "images/partyB.png" model
+        , div [ class "col col-8" ]
+            [ div [ class "party-list flex flex-wrap" ]
+                [ partyView model.partyA "images/partyA.png" model
+                , partyView model.partyB "images/partyB.png" model
+                ]
+            , div [ class "brehon-list flex flex-wrap flex-column" ]
+                [ brehonView model.primaryBrehon "images/partyPrimaryBrehon.png" model.loadedAccount
+                , brehonView model.secondaryBrehon "images/partySecondaryBrehon.png" model.loadedAccount
+                , brehonView model.tertiaryBrehon "images/partyTertiaryBrehon.png" model.loadedAccount
+                ]
             ]
-        , div [ class "brehon-list flex flex-wrap flex-column" ]
-            [ brehonView model.primaryBrehon "images/partyPrimaryBrehon.png" model.loadedAccount
-            , brehonView model.secondaryBrehon "images/partySecondaryBrehon.png" model.loadedAccount
-            , brehonView model.tertiaryBrehon "images/partyTertiaryBrehon.png" model.loadedAccount
-            ]
+        , div [ class "col col-2" ] [ text "log" ]
         ]
 
 
@@ -29,7 +32,7 @@ contractDetailView model =
         showProposedSettlement =
             model.contractInfo.stage /= Completed
     in
-        div [ class "contract-detail p2" ]
+        div [ class "contract-detail p2 col col-2" ]
             [ div []
                 [ text "Contract Deployed At: "
                 , textAddress model.contractInfo.deployedAt
@@ -89,7 +92,17 @@ canPartyAcceptSettlement party contractInfo =
             False
 
         Just settlement ->
-            settlement.proposingPartyAddr /= party.struct.addr
+            settlement.proposingPartyAddr
+                /= party.struct.addr
+                && contractInfo.stage
+                /= Completed
+
+
+canDepositIntoContract : PartyModel -> ContractInfo -> Bool
+canDepositIntoContract party contractInfo =
+    party.struct.contractAccepted
+        && contractInfo.stage
+        /= Completed
 
 
 partyView : PartyModel -> FilePath -> Model -> Html Msg
@@ -97,6 +110,10 @@ partyView party profileImage model =
     let
         ownerView =
             model.loadedAccount == party.struct.addr
+
+        canDeposit =
+            ownerView
+                && canDepositIntoContract party model.contractInfo
 
         canStartContract =
             ownerView
@@ -140,7 +157,7 @@ partyView party profileImage model =
                     ]
                 , depositView party
                 ]
-                |> conditionalBlock (ownerView && party.struct.contractAccepted)
+                |> conditionalBlock canDeposit
             , div
                 [ class "block my1 p1" ]
                 [ startContractView party
