@@ -55,6 +55,7 @@
     "html-webpack-plugin": "^2.28.0",
     "json-loader": "^0.5.4",
     "npm-run-all": "^4.0.1",
+    "status-dev-cli": "^2.2.1",
     "style-loader": "^0.13.2",
     "truffle": "^3.0.5",
     "url-loader": "^0.5.8",
