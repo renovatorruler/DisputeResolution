@@ -74,6 +74,15 @@ function updateProposedSettlement(ports, brehonApp) {
     .then(ports.receiveProposedSettlement.send);
 }
 
+function getPortCallbackByEvent(ports, eventName) {
+  const eventNameCallbackMap = {
+    ExecutionStarted: ports.receiveExecutionStartedEvent,
+    SettlementProposed: ports.receiveSettlementProposedEvent,
+    DisputeResolved: ports.receiveDisputeResolvedEvent,
+  };
+  return eventNameCallbackMap[eventName];
+}
+
 function portHooks(elmApp, currentProvider) {
   const self = window;
   const ports = elmApp.ports;
@@ -142,10 +151,22 @@ function portHooks(elmApp, currentProvider) {
       new BigNumber(proposal[2]))
     .then(() => updateContractInfo(ports, brehonApp)));
 
+  const getDefaultBigNum = x => R.defaultTo(new BigNumber(0), x).valueOf();
+
   ports.requestAllEvents.subscribe(() =>
-    brehonApp.getAllEvents()
-    .then(console.debug));
-    //.then(ports.requestConsoleLog.send));
+    brehonApp.getAllEvents((error, eventObj) => {
+      if (error) console.error(error);
+      const portEventObj = {
+        txHash: eventObj.transactionHash,
+        caller: eventObj.args._caller,
+        totalDeposits: getDefaultBigNum(eventObj.args._totalDeposits),
+        proposingParty: eventObj.args._proposingParty,
+        awardPartyA: getDefaultBigNum(eventObj.args._awardPartyA),
+        awardPartyB: getDefaultBigNum(eventObj.args._awardPartyB),
+      };
+      getPortCallbackByEvent(ports, eventObj.event)
+        .send(portEventObj);
+    }));
 }
 
 document.addEventListener('DOMContentLoaded', () => {

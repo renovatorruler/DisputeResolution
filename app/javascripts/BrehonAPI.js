@@ -134,15 +134,9 @@ export default class BrehonAPI {
         }));
   }
 
-  getAllEvents() {
-    return new Promise((resolve, reject) => {
-      this.brehonContract.deployed()
-        .then(instance =>
-          instance.allEvents({ fromBlock: 0, toBlock: 'latest' }, (error, event) => {
-            if (error) reject(error);
-            console.debug('inside AllEvents', event);
-            resolve(event);
-          }));
-    });
+  getAllEvents(callback) {
+    this.brehonContract.deployed()
+      .then(instance =>
+        instance.allEvents({ fromBlock: 0, toBlock: 'latest' }, callback));
   }
 }

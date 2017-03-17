@@ -100,3 +100,25 @@ type Stage
     | AppealPeriod
     | Appeal
     | Completed
+
+
+type alias ExecutionStartedEvent =
+    { txHash : Address
+    , caller : Address
+    , totalDeposits : Wei
+    }
+
+
+type alias SettlementProposedEvent =
+    { txHash : Address
+    , proposingParty : Address
+    , awardPartyA : Wei
+    , awardPartyB : Wei
+    }
+
+
+type alias DisputeResolvedEvent =
+    { txHash : Address
+    , awardPartyA : Wei
+    , awardPartyB : Wei
+    }

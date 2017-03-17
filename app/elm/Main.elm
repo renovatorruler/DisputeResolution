@@ -49,11 +49,12 @@ subscriptions model =
         , receiveProposedSettlement Msgs.LoadProposedSettlement
         , receiveAllParties Msgs.LoadAllParties
         , receiveAllBrehons Msgs.LoadAllBrehons
+        , receiveSettlementProposedEvent Msgs.LoadSettlementProposedEvent
         ]
 
 
 
--- MAIn
+-- MAIN
 
 
 main : Program Never Model Msg

@@ -86,6 +86,15 @@ update msg model =
         LoadAllEvents ->
             ( model, Cmd.none )
 
+        LoadSettlementProposedEvent event ->
+            ( model, Cmd.none )
+
+        LoadDisputeResolvedEvent event ->
+            ( model, Cmd.none )
+
+        LoadExecutionStartedEvent event ->
+            ( model, Cmd.none )
+
         None ->
             ( model, Cmd.none )
 
