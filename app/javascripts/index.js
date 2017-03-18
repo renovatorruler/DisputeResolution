@@ -12,6 +12,28 @@ import './../index.html';
 
 import '../stylesheets/brehon.css';
 
+const EventStructs = {
+  ExecutionStarted: [
+    'blockNumber',
+    'txHash',
+    'caller',
+    'totalDeposits',
+  ],
+  SettlementProposed: [
+    'blockNumber',
+    'txHash',
+    'proposingParty',
+    'awardPartyA',
+    'awardPartyB',
+  ],
+  DisputeResolved: [
+    'blockNumber',
+    'txHash',
+    'awardPartyA',
+    'awardPartyB',
+  ],
+};
+
 function updateAllParties(ports, brehonApp) {
   return Promise.all([
     brehonApp.getPartyA(),
@@ -73,6 +95,20 @@ function updateProposedSettlement(ports, brehonApp) {
   brehonApp.getProposedSettlement()
     .then(ports.receiveProposedSettlement.send);
 }
+
+function getPortCallbackByEvent(ports, eventName) {
+  const eventNameCallbackMap = {
+    ExecutionStarted: ports.receiveExecutionStartedEvent,
+    SettlementProposed: ports.receiveSettlementProposedEvent,
+    DisputeResolved: ports.receiveDisputeResolvedEvent,
+  };
+  return eventNameCallbackMap[eventName];
+}
+
+function getPortArgsByEvent(ports, eventName, portEventObj) {
+  return R.map(value => portEventObj[value], EventStructs[eventName]);
+}
+
 
 function portHooks(elmApp, currentProvider) {
   const self = window;
@@ -141,6 +177,24 @@ function portHooks(elmApp, currentProvider) {
       new BigNumber(proposal[1]),
       new BigNumber(proposal[2]))
     .then(() => updateContractInfo(ports, brehonApp)));
+
+  const getDefaultBigNum = x => R.defaultTo(new BigNumber(0), x).valueOf();
+
+  ports.requestAllEvents.subscribe(() =>
+    brehonApp.getAllEvents((error, eventObj) => {
+      if (error) console.error(error);
+      const portEventObj = {
+        blockNumber: eventObj.blockNumber,
+        txHash: eventObj.transactionHash,
+        caller: eventObj.args._caller,
+        totalDeposits: getDefaultBigNum(eventObj.args._totalDeposits),
+        proposingParty: eventObj.args._proposingParty,
+        awardPartyA: getDefaultBigNum(eventObj.args._awardPartyA),
+        awardPartyB: getDefaultBigNum(eventObj.args._awardPartyB),
+      };
+      getPortCallbackByEvent(ports, eventObj.event)
+        .send(getPortArgsByEvent(ports, eventObj.event, portEventObj));
+    }));
 }
 
 document.addEventListener('DOMContentLoaded', () => {

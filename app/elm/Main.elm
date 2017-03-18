@@ -16,6 +16,7 @@ init : ( Model, Cmd Msg )
 init =
     ( Model
         initContractInfo
+        []
         Nothing
         zeroWei
         zeroWei
@@ -32,6 +33,7 @@ init =
         , loadProposedSettlement
         , loadAllParties
         , loadAllBrehons
+        , loadAllEvents
         ]
     )
 
@@ -48,11 +50,14 @@ subscriptions model =
         , receiveProposedSettlement Msgs.LoadProposedSettlement
         , receiveAllParties Msgs.LoadAllParties
         , receiveAllBrehons Msgs.LoadAllBrehons
+        , receiveExecutionStartedEvent Msgs.LoadExecutionStartedEvent
+        , receiveSettlementProposedEvent Msgs.LoadSettlementProposedEvent
+        , receiveDisputeResolvedEvent Msgs.LoadDisputeResolvedEvent
         ]
 
 
 
--- MAIn
+-- MAIN
 
 
 main : Program Never Model Msg

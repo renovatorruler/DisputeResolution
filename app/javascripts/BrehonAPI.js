@@ -133,4 +133,10 @@ export default class BrehonAPI {
           ]);
         }));
   }
+
+  getAllEvents(callback) {
+    this.brehonContract.deployed()
+      .then(instance =>
+        instance.allEvents({ fromBlock: 0, toBlock: 'latest' }, callback));
+  }
 }
