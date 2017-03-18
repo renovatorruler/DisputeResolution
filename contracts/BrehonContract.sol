@@ -33,6 +33,7 @@ contract BrehonContract is
 
   int8 public appealLevel;
   uint public transactionAmount;
+  uint public minimumContractAmount;
   bytes32 public contractTermsHash;
   Party public partyA;
   Party public partyB;
@@ -121,6 +122,11 @@ contract BrehonContract is
     tertiaryBrehon.fixedFee = _tertiaryBrehonFixedFee;
     tertiaryBrehon.disputeFee = _tertiaryBrehonDisputeFee;
 
+    minimumContractAmount = primaryBrehon.fixedFee + primaryBrehon.disputeFee +
+        secondaryBrehon.fixedFee + secondaryBrehon.disputeFee +
+        tertiaryBrehon.fixedFee + tertiaryBrehon.disputeFee +
+        transactionAmount;
+
     //Defaults
     stage = Stages.Negotiation;
     appealLevel = -1;
@@ -172,11 +178,7 @@ contract BrehonContract is
          !tertiaryBrehon.contractAccepted) throw;
 
       if ((partyA.deposit + partyB.deposit) >=
-          (primaryBrehon.fixedFee + primaryBrehon.disputeFee +
-          secondaryBrehon.fixedFee + secondaryBrehon.disputeFee +
-          tertiaryBrehon.fixedFee + tertiaryBrehon.disputeFee +
-          transactionAmount)
-         ) {
+          minimumContractAmount) {
              ExecutionStarted(msg.sender, partyA.deposit + partyB.deposit);
              stage = Stages.Execution;
       } else throw;
