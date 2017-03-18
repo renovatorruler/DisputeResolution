@@ -12,6 +12,28 @@ import './../index.html';
 
 import '../stylesheets/brehon.css';
 
+const EventStructs = {
+  ExecutionStarted: [
+    'blockNumber',
+    'txHash',
+    'caller',
+    'totalDeposits',
+  ],
+  SettlementProposed: [
+    'blockNumber',
+    'txHash',
+    'proposingParty',
+    'awardPartyA',
+    'awardPartyB',
+  ],
+  DisputeResolved: [
+    'blockNumber',
+    'txHash',
+    'awardPartyA',
+    'awardPartyB',
+  ],
+};
+
 function updateAllParties(ports, brehonApp) {
   return Promise.all([
     brehonApp.getPartyA(),
@@ -82,6 +104,11 @@ function getPortCallbackByEvent(ports, eventName) {
   };
   return eventNameCallbackMap[eventName];
 }
+
+function getPortArgsByEvent(ports, eventName, portEventObj) {
+  return R.map(value => portEventObj[value], EventStructs[eventName]);
+}
+
 
 function portHooks(elmApp, currentProvider) {
   const self = window;
@@ -157,6 +184,7 @@ function portHooks(elmApp, currentProvider) {
     brehonApp.getAllEvents((error, eventObj) => {
       if (error) console.error(error);
       const portEventObj = {
+        blockNumber: eventObj.blockNumber,
         txHash: eventObj.transactionHash,
         caller: eventObj.args._caller,
         totalDeposits: getDefaultBigNum(eventObj.args._totalDeposits),
@@ -165,7 +193,7 @@ function portHooks(elmApp, currentProvider) {
         awardPartyB: getDefaultBigNum(eventObj.args._awardPartyB),
       };
       getPortCallbackByEvent(ports, eventObj.event)
-        .send(portEventObj);
+        .send(getPortArgsByEvent(ports, eventObj.event, portEventObj));
     }));
 }
 

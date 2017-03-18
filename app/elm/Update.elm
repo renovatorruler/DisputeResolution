@@ -1,7 +1,7 @@
 module Update exposing (..)
 
 import Msgs exposing (..)
-import Models exposing (Model, Stage(..), ContractInfo, Settlement, Address, Wei, zeroWei, Parties, PartyModel, Party, Brehons, BrehonModel, Brehon)
+import Models exposing (Model, Stage(..), Event(..), ContractInfo, Settlement, Address, Wei, zeroWei, Parties, PartyModel, Party, Brehons, BrehonModel, Brehon)
 import Commands exposing (..)
 
 
@@ -86,14 +86,42 @@ update msg model =
         LoadAllEvents ->
             ( model, Cmd.none )
 
-        LoadSettlementProposedEvent event ->
-            ( model, Cmd.none )
+        LoadExecutionStartedEvent ( blockNumber, txHash, caller, totalDeposits ) ->
+            ( { model
+                | eventLog =
+                    ExecutionStartedEvent blockNumber
+                        txHash
+                        caller
+                        totalDeposits
+                        :: model.eventLog
+              }
+            , Cmd.none
+            )
 
-        LoadDisputeResolvedEvent event ->
-            ( model, Cmd.none )
+        LoadSettlementProposedEvent ( blockNumber, txHash, proposingParty, awardPartyA, awardPartyB ) ->
+            ( { model
+                | eventLog =
+                    SettlementProposedEvent blockNumber
+                        txHash
+                        proposingParty
+                        awardPartyA
+                        awardPartyB
+                        :: model.eventLog
+              }
+            , Cmd.none
+            )
 
-        LoadExecutionStartedEvent event ->
-            ( model, Cmd.none )
+        LoadDisputeResolvedEvent ( blockNumber, txHash, awardPartyA, awardPartyB ) ->
+            ( { model
+                | eventLog =
+                    DisputeResolvedEvent blockNumber
+                        txHash
+                        awardPartyA
+                        awardPartyB
+                        :: model.eventLog
+              }
+            , Cmd.none
+            )
 
         None ->
             ( model, Cmd.none )

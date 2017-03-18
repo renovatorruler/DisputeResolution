@@ -1,6 +1,17 @@
 module Msgs exposing (..)
 
-import Models exposing (Address, ContractInfo, Settlement, Wei, PartyModel, BrehonModel, Parties, Brehons, SettlementProposedEvent, DisputeResolvedEvent, ExecutionStartedEvent)
+import Models
+    exposing
+        ( Address
+        , ContractInfo
+        , Settlement
+        , Wei
+        , PartyModel
+        , BrehonModel
+        , Parties
+        , Brehons
+        , Event
+        )
 
 
 type Msg
@@ -19,7 +30,7 @@ type Msg
     | ProposeSettlement PartyModel
     | AcceptSettlement PartyModel
     | LoadAllEvents
-    | LoadSettlementProposedEvent SettlementProposedEvent
-    | LoadDisputeResolvedEvent DisputeResolvedEvent
-    | LoadExecutionStartedEvent ExecutionStartedEvent
+    | LoadExecutionStartedEvent ( Int, Address, Address, Wei )
+    | LoadSettlementProposedEvent ( Int, Address, Address, Wei, Wei )
+    | LoadDisputeResolvedEvent ( Int, Address, Wei, Wei )
     | None

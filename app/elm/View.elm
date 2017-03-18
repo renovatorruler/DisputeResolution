@@ -1,10 +1,10 @@
 module View exposing (..)
 
-import Html exposing (Html, Attribute, a, button, div, img, input, label, p, span, i, text)
+import Html exposing (Html, Attribute, a, button, div, ul, li, img, input, label, p, span, i, text)
 import Html.Attributes exposing (class, href, src, type_, placeholder)
 import Html.Events exposing (onClick, onInput)
 import Msgs exposing (Msg)
-import Models exposing (Model, Address, ContractInfo, Settlement, Wei, PartyModel, BrehonModel, FilePath, Stage(..))
+import Models exposing (Model, Address, Event(..), ContractInfo, Settlement, Wei, PartyModel, BrehonModel, FilePath, Stage(..))
 
 
 view : Model -> Html Msg
@@ -22,7 +22,7 @@ view model =
                 , brehonView model.tertiaryBrehon "images/partyTertiaryBrehon.png" model.loadedAccount
                 ]
             ]
-        , div [ class "col col-2" ] [ text "log" ]
+        , div [ class "col col-2" ] [ logView model ]
         ]
 
 
@@ -331,6 +331,47 @@ contractAcceptanceView isContractAccepted ownerView messageDispatch =
                     [ i [ class "fa fa-minus-square mr1 red" ] []
                     , text "Contract Not Accepted"
                     ]
+
+
+logView : Model -> Html Msg
+logView model =
+    ul []
+        (model.eventLog
+            |> List.map singleLogView
+        )
+
+
+singleLogView : Event -> Html Msg
+singleLogView event =
+    case event of
+        ExecutionStartedEvent blockNumber txHash caller totalDeposits ->
+            li []
+                [ text "Contract started by "
+                , textAddress caller
+                , text " with a total deposit of "
+                , text totalDeposits
+                ]
+
+        SettlementProposedEvent blockNumber txHash proposingParty awardPartyA awardPartyB ->
+            li []
+                [ text "Settlement proposed by "
+                , textAddress proposingParty
+                , text " with an award of "
+                , text awardPartyA
+                , text " for Party A and "
+                , text awardPartyB
+                , text " for Party B"
+                ]
+
+        DisputeResolvedEvent blockNumber txHash awardPartyA awardPartyB ->
+            li []
+                [ text "Resolution reached "
+                , text " with an award of "
+                , text awardPartyA
+                , text " for Party A and "
+                , text awardPartyB
+                , text " for Party B"
+                ]
 
 
 textAddress : Address -> Html Msg

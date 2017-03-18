@@ -13,6 +13,7 @@ initContractInfo =
 
 type alias Model =
     { contractInfo : ContractInfo
+    , eventLog : List Event
     , loadedAccount : Address
     , depositField : Wei
     , totalDeposits : Wei
@@ -102,6 +103,14 @@ type Stage
     | Completed
 
 
+type Event
+    = ExecutionStartedEvent Int Address Address Wei
+    | SettlementProposedEvent Int Address Address Wei Wei
+    | DisputeResolvedEvent Int Address Wei Wei
+
+
+
+{--
 type alias ExecutionStartedEvent =
     { txHash : Address
     , caller : Address
@@ -122,3 +131,4 @@ type alias DisputeResolvedEvent =
     , awardPartyA : Wei
     , awardPartyB : Wei
     }
+--}
