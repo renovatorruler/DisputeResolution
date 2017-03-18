@@ -22,7 +22,7 @@ view model =
                 , brehonView model.tertiaryBrehon "images/partyTertiaryBrehon.png" model.loadedAccount
                 ]
             ]
-        , div [ class "col col-2" ] [ logView model ]
+        , div [ class "col col-2 h6" ] [ logView model ]
         ]
 
 
@@ -32,7 +32,7 @@ contractDetailView model =
         showProposedSettlement =
             model.contractInfo.stage /= Completed
     in
-        div [ class "contract-detail p2 col col-2" ]
+        div [ class "contract-detail sm-h5 p2 col col-2" ]
             [ div []
                 [ text "Contract Deployed At: "
                 , textAddress model.contractInfo.deployedAt
@@ -335,7 +335,7 @@ contractAcceptanceView isContractAccepted ownerView messageDispatch =
 
 logView : Model -> Html Msg
 logView model =
-    ul []
+    ul [ class "" ]
         (model.eventLog
             |> List.map singleLogView
         )
