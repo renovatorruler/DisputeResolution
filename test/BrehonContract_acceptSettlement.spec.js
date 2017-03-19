@@ -65,8 +65,7 @@ contract('BrehonContract acceptSettlement should only be allowed at one of the c
         return brehonContract.proposeSettlement(
           settlement.partyA,
           settlement.partyB,
-          { from: defaults.partyA_addr },
-        );
+          { from: defaults.partyA_addr });
       })
       .catch(assertError('Exception was not thrown when acceptSettlement was triggered at Execution stage'));
   });
@@ -84,24 +83,21 @@ contract('BrehonContract acceptSettlement should only be allowed at one of the c
         return brehonContract.proposeSettlement(
           settlement.partyA,
           settlement.partyB,
-          { from: defaults.partyB_addr },
-        );
+          { from: defaults.partyB_addr });
       })
       .catch(assertNoErrorWithMsg)
       .then(function acceptSettlement() {
         return brehonContract.acceptSettlement(
           settlement.partyA,
           settlement.partyB,
-          { from: defaults.partyA_addr },
-        );
+          { from: defaults.partyA_addr });
       })
       .catch(assertNoErrorWithMsg)
       .then(function acceptSettlement() {
         return brehonContract.acceptSettlement(
           settlement.partyA,
           settlement.partyB,
-          { from: defaults.partyA_addr },
-        );
+          { from: defaults.partyA_addr });
       })
       .catch(assertError('Exception was not thrown when raiseAppeal() was triggerred at the AppealPeriod stage'));
   });
@@ -129,16 +125,14 @@ contract('BrehonContract should allow partyA to accepted a proposed settlement',
         return brehonContract.proposeSettlement(
           settlement.partyA,
           settlement.partyB,
-          { from: defaults.partyB_addr },
-        );
+          { from: defaults.partyB_addr });
       })
       .catch(assertNoErrorWithMsg)
       .then(function acceptSettlement() {
         return brehonContract.acceptSettlement(
           settlement.partyA,
           settlement.partyB,
-          { from: defaults.partyA_addr },
-        );
+          { from: defaults.partyA_addr });
       })
       .then(verifyEvent('DisputeResolved', {
         _awardPartyA: settlement.partyA,
@@ -178,16 +172,14 @@ contract('BrehonContract should allow partyB to accepted a proposed settlement',
         return brehonContract.proposeSettlement(
           settlement.partyA,
           settlement.partyB,
-          { from: defaults.partyA_addr },
-        );
+          { from: defaults.partyA_addr });
       })
       .catch(assertNoErrorWithMsg)
       .then(function acceptSettlement() {
         return brehonContract.acceptSettlement(
           settlement.partyA,
           settlement.partyB,
-          { from: defaults.partyB_addr },
-        );
+          { from: defaults.partyB_addr });
       })
       .then(verifyEvent('DisputeResolved', {
         _awardPartyA: settlement.partyA,
