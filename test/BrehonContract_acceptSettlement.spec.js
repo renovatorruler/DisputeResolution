@@ -138,6 +138,18 @@ contract('BrehonContract should allow partyA to accepted a proposed settlement',
         _awardPartyA: settlement.partyA,
         _awardPartyB: settlement.partyB,
       }))
+      .then(function verifyAwards() {
+        return brehonContract.getActiveJudgmentByParty.call(defaults.partyA_addr,
+          { from: defaults.partyA_addr }).then((award) => {
+            assert.equal(award.valueOf(), settlement.partyA.valueOf(), 'acceptSettlement did not correctly set the award');
+          });
+      })
+      .then(function verifyAwards() {
+        return brehonContract.getActiveJudgmentByParty.call(defaults.partyB_addr,
+          { from: defaults.partyB_addr }).then((award) => {
+            assert.equal(award.valueOf(), settlement.partyB.valueOf(), 'acceptSettlement did not correctly set the award');
+          });
+      })
       .then(function verifyDisputeResolution() {
         return brehonContract.stage.call().then((stage) => {
           assert.equal(stage, StagesEnum.Completed, 'acceptSettlement not correctly changed the state');
