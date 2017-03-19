@@ -22,7 +22,7 @@ view model =
                 , brehonView model.tertiaryBrehon "images/partyTertiaryBrehon.png" model.loadedAccount
                 ]
             ]
-        , div [ class "col col-2 h6" ] [ logView model ]
+        , div [ class "col col-2 lg-h4 sm-h6" ] [ logView model ]
         ]
 
 
@@ -32,49 +32,56 @@ contractDetailView model =
         showProposedSettlement =
             model.contractInfo.stage /= Completed
     in
-        div [ class "contract-detail sm-h5 p2 col col-2" ]
-            [ div []
+        ul [ class "contract-detail sm-h5 p2 col col-2" ]
+            [ li []
                 [ text "Contract Deployed At: "
                 , textAddress model.contractInfo.deployedAt
                 ]
-            , div []
+            , li []
                 [ text "Loaded Account: "
                 , textAddress model.loadedAccount
                 ]
-            , div []
+            , li []
                 [ text "Total Deposits: "
                 , text model.totalDeposits
                 , text " Wei"
                 ]
-            , div []
+            , li []
+                [ text "Minimum Amount to start the contract: "
+                , text model.contractInfo.minimumContractAmt
+                , text " Wei"
+                ]
+            , li []
                 [ text "Contract Stage: "
                 , text (toString model.contractInfo.stage)
                 ]
-            , div []
+            , li []
                 [ text "Transaction Amount : "
                 , text model.contractInfo.transactionAmount
                 ]
-            , div []
+            , li []
                 [ text "Parties Accepted : "
                 , text (toString model.contractInfo.partiesAccepted)
                 ]
-            , div []
+            , li []
                 [ text "Brehons Accepted : "
                 , text (toString model.contractInfo.brehonsAccepted)
                 ]
-            , div []
+            , li []
                 [ proposedSettlementView model.contractInfo.proposedSettlement
-                    |> conditionalBlock showProposedSettlement
                 ]
+                |> conditionalBlock showProposedSettlement
             ]
 
 
-canPartyStartContract : PartyModel -> ContractInfo -> Bool
-canPartyStartContract party contractInfo =
+canPartyStartContract : PartyModel -> ContractInfo -> Wei -> Bool
+canPartyStartContract party contractInfo totalDeposits =
     (contractInfo.partiesAccepted && contractInfo.brehonsAccepted)
         && contractInfo.stage
         == Negotiation
         && party.struct.contractAccepted
+        && totalDeposits
+        >= contractInfo.minimumContractAmt
 
 
 canPartyProposeSettlement : PartyModel -> ContractInfo -> Bool
@@ -117,7 +124,7 @@ partyView party profileImage model =
 
         canStartContract =
             ownerView
-                && canPartyStartContract party model.contractInfo
+                && canPartyStartContract party model.contractInfo model.totalDeposits
 
         canProposeSettlement =
             ownerView
@@ -335,7 +342,7 @@ contractAcceptanceView isContractAccepted ownerView messageDispatch =
 
 logView : Model -> Html Msg
 logView model =
-    ul [ class "" ]
+    ul [ class "list-reset" ]
         (model.eventLog
             |> List.map singleLogView
         )
@@ -345,16 +352,18 @@ singleLogView : Event -> Html Msg
 singleLogView event =
     case event of
         ExecutionStartedEvent blockNumber txHash caller totalDeposits ->
-            li []
-                [ text "Contract started by "
+            li [ class "mb2" ]
+                [ i [ class "fa fa-paper-plane mr1" ] []
+                , text "Contract started by "
                 , textAddress caller
                 , text " with a total deposit of "
                 , text totalDeposits
                 ]
 
         SettlementProposedEvent blockNumber txHash proposingParty awardPartyA awardPartyB ->
-            li []
-                [ text "Settlement proposed by "
+            li [ class "mb2" ]
+                [ i [ class "fa fa-money mr1" ] []
+                , text "Settlement proposed by "
                 , textAddress proposingParty
                 , text " with an award of "
                 , text awardPartyA
@@ -364,8 +373,9 @@ singleLogView event =
                 ]
 
         DisputeResolvedEvent blockNumber txHash awardPartyA awardPartyB ->
-            li []
-                [ text "Resolution reached "
+            li [ class "mb2" ]
+                [ i [ class "fa fa-hand-peace-o mr1" ] []
+                , text "Resolution reached "
                 , text " with an award of "
                 , text awardPartyA
                 , text " for Party A and "
