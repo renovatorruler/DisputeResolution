@@ -105,6 +105,12 @@ canPartyAcceptSettlement party contractInfo =
                 /= Completed
 
 
+canPartyWithdrawFunds : PartyModel -> ContractInfo -> Bool
+canPartyWithdrawFunds party contractInfo =
+    contractInfo.stage
+        == Completed
+
+
 canDepositIntoContract : PartyModel -> ContractInfo -> Bool
 canDepositIntoContract party contractInfo =
     party.struct.contractAccepted
@@ -133,6 +139,10 @@ partyView party profileImage model =
         canAcceptSettlement =
             ownerView
                 && canPartyAcceptSettlement party model.contractInfo
+
+        canWithdrawFunds =
+            ownerView
+                && canPartyWithdrawFunds party model.contractInfo
 
         viewClass ownerView cssClass =
             case ownerView of
@@ -180,8 +190,24 @@ partyView party profileImage model =
                 [ class "block my2 p1 border" ]
                 [ acceptSettlementView party model.contractInfo.proposedSettlement
                 ]
-                |> conditionalBlock (ownerView && canAcceptSettlement)
+                |> conditionalBlock canAcceptSettlement
+            , div
+                [ class "block my1 p1" ]
+                [ withdrawFundsView party.struct.addr ]
+                |> conditionalBlock canWithdrawFunds
             ]
+
+
+withdrawFundsView : Address -> Html Msg
+withdrawFundsView addr =
+    div [ class "withdraw-funds" ]
+        [ a
+            [ class "btn btn-big btn-primary block center rounded h2 black bg-yellow"
+            , href "#"
+            , onClick (Msgs.WithdrawFunds addr)
+            ]
+            [ text "Withdraw Funds" ]
+        ]
 
 
 proposeSettlementView : PartyModel -> Html Msg

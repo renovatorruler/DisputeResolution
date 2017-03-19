@@ -65,6 +65,11 @@ acceptSettlement addr awardPartyA awardPartyB =
     requestAcceptSettlement ( addr, awardPartyA, awardPartyB )
 
 
+withdrawFunds : Address -> Cmd Msg
+withdrawFunds addr =
+    requestWithdrawFunds addr
+
+
 
 {- For Debugging purposes -}
 

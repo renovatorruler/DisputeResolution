@@ -123,6 +123,9 @@ update msg model =
             , Cmd.none
             )
 
+        WithdrawFunds addr ->
+            ( model, withdrawFunds addr )
+
         None ->
             ( model, Cmd.none )
 

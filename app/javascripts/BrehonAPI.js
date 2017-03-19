@@ -145,4 +145,10 @@ export default class BrehonAPI {
       .then(instance =>
         instance.minimumContractAmt.call());
   }
+
+  withdrawFunds(addr) {
+    return this.brehonContract.deployed()
+    .then(instance =>
+      instance.claimFunds({ from: addr }));
+  }
 }
