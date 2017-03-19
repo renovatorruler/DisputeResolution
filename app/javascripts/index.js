@@ -69,6 +69,12 @@ function updateAllBrehons(ports, brehonApp) {
     brehonApp.getSecondaryBrehon(),
     brehonApp.getTertiaryBrehon(),
   ])
+    .then(R.map(R.over(
+      R.lensProp('fixedFee'),
+      x => x.valueOf())))
+    .then(R.map(R.over(
+      R.lensProp('disputeFee'),
+      x => x.valueOf())))
     .then((brehons) => {
       ports.receiveAllBrehons.send({
         primaryBrehon: R.nth(0, brehons),

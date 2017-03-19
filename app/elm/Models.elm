@@ -65,6 +65,8 @@ type alias Party =
 type alias Brehon =
     { addr : Address
     , contractAccepted : Bool
+    , fixedFee : Wei
+    , disputeFee : Wei
     }
 
 

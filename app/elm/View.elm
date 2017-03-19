@@ -276,10 +276,20 @@ brehonView brehon profileImage loadedAccount =
                 |> class
             ]
             [ text "Brehon"
-            , div [ class "block" ]
+            , div [ class "block p1" ]
                 [ img [ src profileImage ] []
-                , p [] [ text "Address: " ]
-                , textAddress brehon.struct.addr
+                , p []
+                    [ text "Address: "
+                    , textAddress brehon.struct.addr
+                    ]
+                , p []
+                    [ text "Fixed Fee: "
+                    , text brehon.struct.fixedFee
+                    ]
+                , p []
+                    [ text "Dispute Fee: "
+                    , text brehon.struct.disputeFee
+                    ]
                 ]
             , contractAcceptanceView brehon.struct.contractAccepted ownerView (Msgs.AcceptContractByBrehon brehon)
             ]
