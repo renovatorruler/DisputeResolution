@@ -284,16 +284,18 @@ contract BrehonContract is
           throw;
 
       if(msg.sender == partyA.addr) {
-        proposedSettlement.partyAAccepted = true;
+          proposedSettlement.partyAAccepted = true;
       }
 
       if(msg.sender == partyB.addr) {
-        proposedSettlement.partyBAccepted = true;
+          proposedSettlement.partyBAccepted = true;
       }
 
       if(proposedSettlement.partyAAccepted && proposedSettlement.partyBAccepted) {
-        stage = Stages.Completed;
-        DisputeResolved(_awardPartyA, _awardPartyB);
+          awards[partyA.addr] = proposedSettlement.awardPartyA;
+          awards[partyB.addr] = proposedSettlement.awardPartyB;
+          stage = Stages.Completed;
+          DisputeResolved(_awardPartyA, _awardPartyB);
       }
   }
 }
