@@ -8,7 +8,7 @@ zeroWei =
 
 initContractInfo : ContractInfo
 initContractInfo =
-    ContractInfo Nothing Negotiation zeroWei False False Nothing
+    ContractInfo Nothing Negotiation zeroWei zeroWei False False Nothing
 
 
 type alias Model =
@@ -31,6 +31,7 @@ type alias ContractInfo =
     { deployedAt : Address
     , stage : Stage
     , transactionAmount : Wei
+    , minimumContractAmt : Wei
     , partiesAccepted : Bool
     , brehonsAccepted : Bool
     , proposedSettlement : Maybe Settlement
@@ -107,28 +108,3 @@ type Event
     = ExecutionStartedEvent Int Address Address Wei
     | SettlementProposedEvent Int Address Address Wei Wei
     | DisputeResolvedEvent Int Address Wei Wei
-
-
-
-{--
-type alias ExecutionStartedEvent =
-    { txHash : Address
-    , caller : Address
-    , totalDeposits : Wei
-    }
-
-
-type alias SettlementProposedEvent =
-    { txHash : Address
-    , proposingParty : Address
-    , awardPartyA : Wei
-    , awardPartyB : Wei
-    }
-
-
-type alias DisputeResolvedEvent =
-    { txHash : Address
-    , awardPartyA : Wei
-    , awardPartyB : Wei
-    }
---}

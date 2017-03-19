@@ -139,4 +139,10 @@ export default class BrehonAPI {
       .then(instance =>
         instance.allEvents({ fromBlock: 0, toBlock: 'latest' }, callback));
   }
+
+  getMinimumContractAmt() {
+    return this.brehonContract.deployed()
+      .then(instance =>
+        instance.minimumContractAmt.call());
+  }
 }

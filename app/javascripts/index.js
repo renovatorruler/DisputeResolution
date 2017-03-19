@@ -83,11 +83,13 @@ function updateContractInfo(ports, brehonApp) {
     brehonContract.instance.stage.call()
       .then(stage =>
         brehonApp.getTransactionAmount().then(transactionAmount =>
-          ports.receiveContractInfo.send([
-            brehonContract.address,
-            Number(stage.valueOf()),
-            transactionAmount.valueOf(),
-          ])));
+          brehonApp.getMinimumContractAmt().then(minimumContractAmt =>
+            ports.receiveContractInfo.send([
+              brehonContract.address,
+              Number(stage.valueOf()),
+              transactionAmount.valueOf(),
+              minimumContractAmt.valueOf(),
+            ]))));
   });
 }
 
