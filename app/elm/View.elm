@@ -32,7 +32,7 @@ contractDetailView model =
         showProposedSettlement =
             model.contractInfo.stage /= Completed
     in
-        ul [ class "contract-detail sm-h5 p2 col col-2" ]
+        ul [ class "contract-detail sm-h5 p2 col col-2 list-reset" ]
             [ li []
                 [ text "Contract Deployed At: "
                 , textAddress model.contractInfo.deployedAt
