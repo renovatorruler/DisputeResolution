@@ -10,7 +10,6 @@ const fastForwardTime = contractHelpers.fastForwardTime;
 const assertError = contractHelpers.assertError;
 const assertNoError = contractHelpers.assertNoError;
 const assertNoErrorWithMsg = assertNoError(false, 'No Exception must be thrown');
-const StagesEnum = contractHelpers.StagesEnum;
 const startContractAndRaiseDispute = contractHelpers.startContractAndRaiseDispute;
 const verifyEvent = contractHelpers.verifyEvent;
 const getMinimumContractAmt = contractHelpers.getMinimumContractAmt;
@@ -95,6 +94,10 @@ contract('BrehonContract should allow partyA to be able to withdraw funds', () =
       .then(function claimFunds() {
         return brehonContract.claimFunds({ from: defaults.partyA_addr });
       })
+      .then(verifyEvent('FundsClaimed', {
+        claimingParty: defaults.partyA_addr,
+        amount: settlement.partyA,
+      }))
       .then((result) => {
         const newBalance = web3.eth.getBalance(defaults.partyA_addr);
         const tx = web3.eth.getTransaction(result.tx);
@@ -175,6 +178,10 @@ contract('BrehonContract should allow partyB to be able to withdraw funds', () =
       .then(function claimFunds() {
         return brehonContract.claimFunds({ from: defaults.partyB_addr });
       })
+      .then(verifyEvent('FundsClaimed', {
+        claimingParty: defaults.partyB_addr,
+        amount: settlement.partyB,
+      }))
       .then((result) => {
         const newBalance = web3.eth.getBalance(defaults.partyB_addr);
         const tx = web3.eth.getTransaction(result.tx);
@@ -227,6 +234,7 @@ contract('BrehonContract should allow partyA to withdraw funds after a settlemen
   };
   it('at Execution stage', () => {
     let brehonContract;
+    let startingBalance;
     return BrehonContract.deployed()
       .then(function captureReference(instance) {
         brehonContract = instance;
@@ -251,30 +259,84 @@ contract('BrehonContract should allow partyA to withdraw funds after a settlemen
           settlement.partyB,
           { from: defaults.partyA_addr });
       })
-      .then(verifyEvent('DisputeResolved', {
-        _awardPartyA: settlement.partyA,
-        _awardPartyB: settlement.partyB,
+      .catch(assertNoErrorWithMsg)
+      .then(() => {
+        startingBalance = web3.eth.getBalance(defaults.partyA_addr);
+      })
+      .then(function claimFunds() {
+        return brehonContract.claimFunds({ from: defaults.partyA_addr });
+      })
+      .then(verifyEvent('FundsClaimed', {
+        claimingParty: defaults.partyA_addr,
+        amount: settlement.partyA,
       }))
-      .then(function verifyAwards() {
-        return brehonContract.getActiveJudgmentByParty.call(defaults.partyA_addr,
-          { from: defaults.partyA_addr }).then((award) => {
-            assert.equal(award.valueOf(), settlement.partyA.valueOf(), 'acceptSettlement did not correctly set the award');
-          });
-      })
-      .then(function verifyAwards() {
-        return brehonContract.getActiveJudgmentByParty.call(defaults.partyB_addr,
-          { from: defaults.partyB_addr }).then((award) => {
-            assert.equal(award.valueOf(), settlement.partyB.valueOf(), 'acceptSettlement did not correctly set the award');
-          });
-      })
-      .then(function verifyDisputeResolution() {
-        return brehonContract.stage.call().then((stage) => {
-          assert.equal(stage, StagesEnum.Completed, 'acceptSettlement not correctly changed the state');
-        });
+      .then((result) => {
+        const newBalance = web3.eth.getBalance(defaults.partyA_addr);
+        const tx = web3.eth.getTransaction(result.tx);
+        const block = web3.eth.getBlock(tx.blockNumber);
+        const gasPaid = new BigNumber(block.gasUsed).mul(tx.gasPrice);
+        assert.isTrue(startingBalance.minus(gasPaid).plus(settlement.partyA).eq(newBalance));
       })
       .catch(function handleException(err) {
         console.error(err);
         assert.isNull(err, 'Exception was thrown when partyA tried to accept settlement');
+      });
+  });
+});
+
+contract('BrehonContract should allow partyB to withdraw funds after a settlement', () => {
+  const settlement = {
+    partyA: getSplitForPrimaryBrehon(40),
+    partyB: getSplitForPrimaryBrehon(60),
+  };
+  it('at Execution stage', () => {
+    let brehonContract;
+    let startingBalance;
+    return BrehonContract.deployed()
+      .then(function captureReference(instance) {
+        brehonContract = instance;
+        return instance;
+      })
+      .then(startContract(
+        [{
+          addr: defaults.partyB_addr,
+          value: getMinimumContractAmt(defaults),
+        }], defaults.partyB_addr))
+      .catch(assertNoErrorWithMsg)
+      .then(function proposeSettlement() {
+        return brehonContract.proposeSettlement(
+          settlement.partyA,
+          settlement.partyB,
+          { from: defaults.partyA_addr });
+      })
+      .catch(assertNoErrorWithMsg)
+      .then(function acceptSettlement() {
+        return brehonContract.acceptSettlement(
+          settlement.partyA,
+          settlement.partyB,
+          { from: defaults.partyB_addr });
+      })
+      .catch(assertNoErrorWithMsg)
+      .then(() => {
+        startingBalance = web3.eth.getBalance(defaults.partyB_addr);
+      })
+      .then(function claimFunds() {
+        return brehonContract.claimFunds({ from: defaults.partyB_addr });
+      })
+      .then(verifyEvent('FundsClaimed', {
+        claimingParty: defaults.partyB_addr,
+        amount: settlement.partyB,
+      }))
+      .then((result) => {
+        const newBalance = web3.eth.getBalance(defaults.partyB_addr);
+        const tx = web3.eth.getTransaction(result.tx);
+        const block = web3.eth.getBlock(tx.blockNumber);
+        const gasPaid = new BigNumber(block.gasUsed).mul(tx.gasPrice);
+        assert.isTrue(startingBalance.minus(gasPaid).plus(settlement.partyB).eq(newBalance));
+      })
+      .catch(function handleException(err) {
+        console.error(err);
+        assert.isNull(err, 'Exception was thrown when partyB tried to accept settlement');
       });
   });
 });

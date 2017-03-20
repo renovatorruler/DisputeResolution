@@ -18,11 +18,11 @@ contract stateMachine {
     _;
   }
 
-  modifier timedTransition(uint startTime, uint durationInDays, Stages _currStage, Stages _nextStage)
+  modifier timedTransition(bool bypassWaitTime, uint startTime, uint durationInDays, Stages _currStage, Stages _nextStage)
   {
     if (stage != _nextStage) {
         if (stage != _currStage) throw;
-        if (now >= startTime + (durationInDays * 1 days))
+        if (bypassWaitTime || now >= startTime + (durationInDays * 1 days))
             stage = _nextStage;
     }
     _;

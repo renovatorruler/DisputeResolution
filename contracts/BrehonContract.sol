@@ -35,6 +35,7 @@ contract BrehonContract is
   uint public transactionAmount;
   uint public minimumContractAmt;
   bytes32 public contractTermsHash;
+  bool public settlementReached;
   Party public partyA;
   Party public partyB;
   Brehon public primaryBrehon;
@@ -55,6 +56,7 @@ contract BrehonContract is
   event AppealRaised(int8 _appealLevel, address _activeBrehon);
   event SettlementProposed(address _proposingParty, uint _awardPartyA, uint _awardPartyB);
   event DisputeResolved(uint _awardPartyA, uint _awardPartyB);
+  event FundsClaimed(address claimingParty, uint amount);
 
   modifier eitherByParty(Party _party1, Party _party2)
   {
@@ -130,6 +132,7 @@ contract BrehonContract is
     //Defaults
     stage = Stages.Negotiation;
     appealLevel = -1;
+    settlementReached = false;
     partyA.contractAccepted = false;
     partyA.deposit = 0;
 
@@ -218,7 +221,7 @@ contract BrehonContract is
   }
 
   function claimFunds()
-    timedTransition(appealPeriodStartTime, appealPeriodInDays, Stages.AppealPeriod, Stages.Completed)
+    timedTransition(settlementReached, appealPeriodStartTime, appealPeriodInDays, Stages.AppealPeriod, Stages.Completed)
     atStage(Stages.Completed)
     eitherByParty(partyA, partyB)
     returns (bool)
@@ -226,6 +229,7 @@ contract BrehonContract is
     uint amount = awards[msg.sender];
     awards[msg.sender] = 0;
     if(msg.sender.send(amount)) {
+      FundsClaimed(msg.sender, amount);
       return true;
     } else {
       awards[msg.sender] = amount;
