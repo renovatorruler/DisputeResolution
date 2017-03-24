@@ -224,16 +224,24 @@ contract BrehonContract is
     timedTransition(settlementReached, appealPeriodStartTime, appealPeriodInDays, Stages.AppealPeriod, Stages.Completed)
     atStage(Stages.Completed)
     eitherByParty(partyA, partyB)
-    returns (bool)
   {
     uint amount = awards[msg.sender];
+
+    if (amount == 0) {
+      throw;
+    }
+
+    if (this.balance < amount) {
+      throw;
+    }
+
     awards[msg.sender] = 0;
+
     if(msg.sender.send(amount)) {
       FundsClaimed(msg.sender, amount);
-      return true;
     } else {
       awards[msg.sender] = amount;
-      return false;
+      throw;
     }
   }
 
