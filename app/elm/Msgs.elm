@@ -33,4 +33,5 @@ type Msg
     | LoadExecutionStartedEvent ( Int, Address, Address, Wei )
     | LoadSettlementProposedEvent ( Int, Address, Address, Wei, Wei )
     | LoadDisputeResolvedEvent ( Int, Address, Wei, Wei )
+    | WithdrawFunds Address
     | None

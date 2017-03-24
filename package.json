@@ -6,6 +6,7 @@
     "start": "truffle serve",
     "testrpc": "testrpc -m 'myth like bonus scare over problem client lizard pioneer submit female collect' --hostname 0.0.0.0 --gasPrice 20",
     "testrpc-silent": "testrpc -m 'myth like bonus scare over problem client lizard pioneer submit female collect' --hostname 0.0.0.0 --gasPrice 20 > /dev/null",
+    "truffle": "truffle",
     "truffletest": "truffle test",
     "migrate": "truffle migrate",
     "test": "run-p -r \"testrpc-silent\" \"truffletest\"",

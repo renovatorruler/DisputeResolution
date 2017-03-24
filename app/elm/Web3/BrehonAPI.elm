@@ -76,3 +76,6 @@ port receiveSettlementProposedEvent : (( Int, Address, Address, Wei, Wei ) -> ms
 
 
 port receiveDisputeResolvedEvent : (( Int, Address, Wei, Wei ) -> msg) -> Sub msg
+
+
+port requestWithdrawFunds : Address -> Cmd msg

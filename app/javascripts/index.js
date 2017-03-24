@@ -203,6 +203,11 @@ function portHooks(elmApp, currentProvider) {
       getPortCallbackByEvent(ports, eventObj.event)
         .send(getPortArgsByEvent(ports, eventObj.event, portEventObj));
     }));
+
+  ports.requestWithdrawFunds.subscribe(withdrawingAddress =>
+    brehonApp.withdrawFunds(withdrawingAddress)
+    .then(R.tap(console.debug))
+    .then((returnVal) => updateContractInfo(ports, brehonApp)));
 }
 
 document.addEventListener('DOMContentLoaded', () => {
