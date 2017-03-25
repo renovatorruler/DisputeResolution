@@ -5,6 +5,7 @@ import Models
         ( Address
         , ContractInfo
         , Settlement
+        , Awards
         , Wei
         , PartyModel
         , BrehonModel
@@ -27,6 +28,7 @@ type Msg
     | SettlementPartyBFieldChanged Wei
     | StartContract PartyModel
     | LoadProposedSettlement (Maybe Settlement)
+    | LoadAwards (Maybe Awards)
     | ProposeSettlement PartyModel
     | AcceptSettlement PartyModel
     | LoadAllEvents
@@ -34,6 +36,8 @@ type Msg
     | LoadSettlementProposedEvent ( Int, Address, Address, Wei, Wei )
     | LoadDisputeResolvedEvent ( Int, Address, Wei, Wei )
     | LoadContractDisputedEvent ( Address, Address )
+    | LoadAppealPeriodStartedEvent ( Int, String, Address, Wei, Wei )
     | RaiseDispute Address
+    | Adjudicate BrehonModel
     | WithdrawFunds Address
     | None

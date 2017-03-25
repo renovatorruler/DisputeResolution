@@ -5,6 +5,7 @@ import Models
         ( Address
         , Event
         , Settlement
+        , Awards
         , Parties
         , Party
         , PartyModel
@@ -81,7 +82,16 @@ port receiveDisputeResolvedEvent : (( Int, Address, Wei, Wei ) -> msg) -> Sub ms
 port receiveContractDisputedEvent : (( Address, Address ) -> msg) -> Sub msg
 
 
+port receiveAppealPeriodStartedEvent : (( Int, String, Address, Wei, Wei ) -> msg) -> Sub msg
+
+
 port requestRaiseDispute : Address -> Cmd msg
+
+
+port requestAdjudicate : ( Address, Wei, Wei ) -> Cmd msg
+
+
+port receiveAwards : (Maybe Awards -> msg) -> Sub msg
 
 
 port requestWithdrawFunds : Address -> Cmd msg

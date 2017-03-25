@@ -1,5 +1,7 @@
 module Models exposing (..)
 
+import Date exposing (Date)
+
 
 zeroWei : Wei
 zeroWei =
@@ -8,7 +10,7 @@ zeroWei =
 
 initContractInfo : ContractInfo
 initContractInfo =
-    ContractInfo Nothing Negotiation zeroWei zeroWei False False Nothing Nothing
+    ContractInfo Nothing Negotiation zeroWei zeroWei False False Nothing Nothing Nothing
 
 
 type alias Model =
@@ -35,6 +37,7 @@ type alias ContractInfo =
     , partiesAccepted : Bool
     , brehonsAccepted : Bool
     , proposedSettlement : Maybe Settlement
+    , awards : Maybe Awards
     , activeBrehon : Address
     }
 
@@ -43,6 +46,13 @@ type alias Settlement =
     { proposingPartyAddr : Address
     , settlementPartyA : Wei
     , settlementPartyB : Wei
+    }
+
+
+type alias Awards =
+    { adjudicatingBrehonAddr : Address
+    , awardPartyA : Wei
+    , awardPartyB : Wei
     }
 
 
@@ -112,3 +122,4 @@ type Event
     | SettlementProposedEvent Int Address Address Wei Wei
     | DisputeResolvedEvent Int Address Wei Wei
     | ContractDisputedEvent Address Address
+    | AppealPeriodStartedEvent Int Date Address Wei Wei

@@ -48,12 +48,14 @@ subscriptions model =
         [ receiveAccounts Msgs.LoadAccounts
         , receiveContractInfo Msgs.LoadContractInfo
         , receiveProposedSettlement Msgs.LoadProposedSettlement
+        , receiveAwards Msgs.LoadAwards
         , receiveAllParties Msgs.LoadAllParties
         , receiveAllBrehons Msgs.LoadAllBrehons
         , receiveExecutionStartedEvent Msgs.LoadExecutionStartedEvent
         , receiveSettlementProposedEvent Msgs.LoadSettlementProposedEvent
         , receiveDisputeResolvedEvent Msgs.LoadDisputeResolvedEvent
         , receiveContractDisputedEvent Msgs.LoadContractDisputedEvent
+        , receiveAppealPeriodStartedEvent Msgs.LoadAppealPeriodStartedEvent
         ]
 
 

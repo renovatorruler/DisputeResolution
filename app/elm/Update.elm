@@ -1,7 +1,8 @@
 module Update exposing (..)
 
 import Msgs exposing (..)
-import Models exposing (Model, Stage(..), Event(..), ContractInfo, Settlement, Address, Wei, zeroWei, Parties, PartyModel, Party, Brehons, BrehonModel, Brehon)
+import Date exposing (Date)
+import Models exposing (Model, Stage(..), Event(..), ContractInfo, Settlement, Awards, Address, Wei, zeroWei, Parties, PartyModel, Party, Brehons, BrehonModel, Brehon)
 import Commands exposing (..)
 
 
@@ -66,6 +67,9 @@ update msg model =
 
         LoadProposedSettlement proposedSettlement ->
             ( { model | contractInfo = updateContractInfoSettlement model.contractInfo proposedSettlement }, Cmd.none )
+
+        LoadAwards awards ->
+            ( { model | contractInfo = updateAwards model.contractInfo awards }, Cmd.none )
 
         ProposeSettlement party ->
             ( model, proposeSettlement party.struct.addr model.settlementPartyAField model.settlementPartyBField )
@@ -133,6 +137,22 @@ update msg model =
             , Cmd.none
             )
 
+        LoadAppealPeriodStartedEvent ( appealLevel, startTime, activeBrehon, awardPartyA, awardPartyB ) ->
+            ( { model
+                | eventLog =
+                    AppealPeriodStartedEvent appealLevel
+                        (toDate startTime)
+                        activeBrehon
+                        awardPartyA
+                        awardPartyB
+                        :: model.eventLog
+              }
+            , Cmd.none
+            )
+
+        Adjudicate brehon ->
+            ( model, adjudicate brehon.struct.addr model.settlementPartyAField model.settlementPartyBField )
+
         WithdrawFunds addr ->
             ( model, withdrawFunds addr )
 
@@ -185,6 +205,11 @@ updateContractInfoSettlement contractInfo settlement =
     { contractInfo | proposedSettlement = settlement }
 
 
+updateAwards : ContractInfo -> Maybe Awards -> ContractInfo
+updateAwards contractInfo awards =
+    { contractInfo | awards = awards }
+
+
 updateContractInfo : ContractInfo -> Address -> Int -> Wei -> Wei -> Address -> ContractInfo
 updateContractInfo contractInfo addr stageInt transactionAmount minimumContractAmt activeBrehon =
     let
@@ -227,3 +252,13 @@ updatePartyModel partyModel party =
 updateBrehonModel : BrehonModel -> Brehon -> BrehonModel
 updateBrehonModel brehonModel brehon =
     { brehonModel | struct = brehon }
+
+
+toDate : String -> Date
+toDate dateString =
+    case Date.fromString dateString of
+        Err e ->
+            Date.fromTime 0
+
+        Ok r ->
+            r
