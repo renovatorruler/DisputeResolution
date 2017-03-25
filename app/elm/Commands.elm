@@ -70,6 +70,11 @@ withdrawFunds addr =
     requestWithdrawFunds addr
 
 
+raiseDispute : Address -> Cmd Msg
+raiseDispute addr =
+    requestRaiseDispute addr
+
+
 
 {- For Debugging purposes -}
 

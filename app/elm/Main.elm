@@ -53,6 +53,7 @@ subscriptions model =
         , receiveExecutionStartedEvent Msgs.LoadExecutionStartedEvent
         , receiveSettlementProposedEvent Msgs.LoadSettlementProposedEvent
         , receiveDisputeResolvedEvent Msgs.LoadDisputeResolvedEvent
+        , receiveContractDisputedEvent Msgs.LoadContractDisputedEvent
         ]
 
 

@@ -110,3 +110,4 @@ type Event
     = ExecutionStartedEvent Int Address Address Wei
     | SettlementProposedEvent Int Address Address Wei Wei
     | DisputeResolvedEvent Int Address Wei Wei
+    | ContractDisputedEvent Address Address

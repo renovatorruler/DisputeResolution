@@ -146,6 +146,12 @@ export default class BrehonAPI {
         instance.minimumContractAmt.call());
   }
 
+  raiseDispute(addr) {
+    return this.brehonContract.deployed()
+    .then(instance =>
+      instance.raiseDispute({ from: addr }));
+  }
+
   withdrawFunds(addr) {
     return this.brehonContract.deployed()
     .then(instance =>

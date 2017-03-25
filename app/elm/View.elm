@@ -111,6 +111,12 @@ canPartyWithdrawFunds party contractInfo =
         == Completed
 
 
+canPartyRaiseDispute : PartyModel -> ContractInfo -> Bool
+canPartyRaiseDispute party contractInfo =
+    contractInfo.stage
+        == Execution
+
+
 canDepositIntoContract : PartyModel -> ContractInfo -> Bool
 canDepositIntoContract party contractInfo =
     party.struct.contractAccepted
@@ -143,6 +149,10 @@ partyView party profileImage model =
         canWithdrawFunds =
             ownerView
                 && canPartyWithdrawFunds party model.contractInfo
+
+        canRaiseDispute =
+            ownerView
+                && canPartyRaiseDispute party model.contractInfo
 
         viewClass ownerView cssClass =
             case ownerView of
@@ -195,6 +205,10 @@ partyView party profileImage model =
                 [ class "block my1 p1" ]
                 [ withdrawFundsView party.struct.addr ]
                 |> conditionalBlock canWithdrawFunds
+            , div
+                [ class "block my1 p1" ]
+                [ raiseDisputeView party.struct.addr ]
+                |> conditionalBlock canRaiseDispute
             ]
 
 
@@ -207,6 +221,18 @@ withdrawFundsView addr =
             , onClick (Msgs.WithdrawFunds addr)
             ]
             [ text "Withdraw Funds" ]
+        ]
+
+
+raiseDisputeView : Address -> Html Msg
+raiseDisputeView addr =
+    div [ class "raise-dispute" ]
+        [ a
+            [ class "btn btn-big btn-primary block center rounded h2 white bg-red"
+            , href "#"
+            , onClick (Msgs.RaiseDispute addr)
+            ]
+            [ text "Raise Dispute" ]
         ]
 
 
@@ -417,6 +443,17 @@ singleLogView event =
                 , text " for Party A and "
                 , text awardPartyB
                 , text " for Party B"
+                ]
+
+        ContractDisputedEvent disputingParty activeBrehon ->
+            li [ class "mb2" ]
+                [ i [ class "fa fa-fire mr1" ] []
+                , text "Dispute raised "
+                , text " by "
+                , textAddress disputingParty
+                , text ". Brehon "
+                , textAddress activeBrehon
+                , text " is presiding."
                 ]
 
 

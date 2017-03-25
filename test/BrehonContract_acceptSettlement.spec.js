@@ -86,8 +86,7 @@ contract('BrehonContract acceptSettlement should only be allowed at one of the c
           { from: defaults.partyB_addr });
       })
       .catch(assertNoErrorWithMsg)
-      .then(function acceptSettlement() {
-        return brehonContract.acceptSettlement(
+      .then(function acceptSettlement() { return brehonContract.acceptSettlement(
           settlement.partyA,
           settlement.partyB,
           { from: defaults.partyA_addr });
