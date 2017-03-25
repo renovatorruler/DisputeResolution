@@ -123,8 +123,21 @@ update msg model =
             , Cmd.none
             )
 
+        LoadContractDisputedEvent ( disputingParty, activeBrehon ) ->
+            ( { model
+                | eventLog =
+                    ContractDisputedEvent disputingParty
+                        activeBrehon
+                        :: model.eventLog
+              }
+            , Cmd.none
+            )
+
         WithdrawFunds addr ->
             ( model, withdrawFunds addr )
+
+        RaiseDispute addr ->
+            ( model, raiseDispute addr )
 
         None ->
             ( model, Cmd.none )

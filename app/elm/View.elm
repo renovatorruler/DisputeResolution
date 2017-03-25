@@ -230,7 +230,7 @@ raiseDisputeView addr =
         [ a
             [ class "btn btn-big btn-primary block center rounded h2 white bg-red"
             , href "#"
-            , onClick (Msgs.WithdrawFunds addr)
+            , onClick (Msgs.RaiseDispute addr)
             ]
             [ text "Raise Dispute" ]
         ]
@@ -443,6 +443,17 @@ singleLogView event =
                 , text " for Party A and "
                 , text awardPartyB
                 , text " for Party B"
+                ]
+
+        ContractDisputedEvent disputingParty activeBrehon ->
+            li [ class "mb2" ]
+                [ i [ class "fa fa-hand-peace-o mr1" ] []
+                , text "Dispute raised "
+                , text " by "
+                , textAddress disputingParty
+                , text ". Brehon "
+                , textAddress activeBrehon
+                , text " is presiding."
                 ]
 
 
