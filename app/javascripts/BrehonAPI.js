@@ -146,6 +146,18 @@ export default class BrehonAPI {
         instance.minimumContractAmt.call());
   }
 
+  getActiveBrehon() {
+    return this.brehonContract.deployed()
+      .then(instance =>
+        instance.activeBrehon.call())
+        .then(activeBrehon => ({
+          addr: activeBrehon[BrehonStruct.addr],
+          contractAccepted: activeBrehon[BrehonStruct.contractAccepted],
+          fixedFee: activeBrehon[BrehonStruct.fixedFee],
+          disputeFee: activeBrehon[BrehonStruct.disputeFee],
+        }));
+  }
+
   raiseDispute(addr) {
     return this.brehonContract.deployed()
     .then(instance =>

@@ -11,9 +11,9 @@ update msg model =
         LoadAccounts accounts ->
             ( setLoadedAddress model (List.head accounts), Cmd.none )
 
-        LoadContractInfo ( deployedAddr, stage, transactionAmount, minimumContractAmt ) ->
+        LoadContractInfo ( deployedAddr, stage, transactionAmount, minimumContractAmt, activeBrehon ) ->
             ( { model
-                | contractInfo = updateContractInfo model.contractInfo deployedAddr stage transactionAmount minimumContractAmt
+                | contractInfo = updateContractInfo model.contractInfo deployedAddr stage transactionAmount minimumContractAmt activeBrehon
               }
             , Cmd.none
             )
@@ -185,14 +185,15 @@ updateContractInfoSettlement contractInfo settlement =
     { contractInfo | proposedSettlement = settlement }
 
 
-updateContractInfo : ContractInfo -> Address -> Int -> Wei -> Wei -> ContractInfo
-updateContractInfo contractInfo addr stageInt transactionAmount minimumContractAmt =
+updateContractInfo : ContractInfo -> Address -> Int -> Wei -> Wei -> Address -> ContractInfo
+updateContractInfo contractInfo addr stageInt transactionAmount minimumContractAmt activeBrehon =
     let
         contractInfoUpdated =
             { contractInfo
                 | deployedAt = addr
                 , transactionAmount = transactionAmount
                 , minimumContractAmt = minimumContractAmt
+                , activeBrehon = activeBrehon
             }
     in
         case stageInt of

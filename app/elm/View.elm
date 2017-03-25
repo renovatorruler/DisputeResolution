@@ -17,9 +17,9 @@ view model =
                 , partyView model.partyB "images/partyB.png" model
                 ]
             , div [ class "brehon-list flex flex-wrap flex-column" ]
-                [ brehonView model.primaryBrehon "images/partyPrimaryBrehon.png" model.loadedAccount
-                , brehonView model.secondaryBrehon "images/partySecondaryBrehon.png" model.loadedAccount
-                , brehonView model.tertiaryBrehon "images/partyTertiaryBrehon.png" model.loadedAccount
+                [ brehonView model.primaryBrehon "images/partyPrimaryBrehon.png" model
+                , brehonView model.secondaryBrehon "images/partySecondaryBrehon.png" model
+                , brehonView model.tertiaryBrehon "images/partyTertiaryBrehon.png" model
                 ]
             ]
         , div [ class "col col-2 lg-h4 sm-h6" ] [ logView model ]
@@ -71,6 +71,10 @@ contractDetailView model =
                 [ proposedSettlementView model.contractInfo.proposedSettlement
                 ]
                 |> conditionalBlock showProposedSettlement
+            , li []
+                [ text "Active Brehon: "
+                , textAddress model.contractInfo.activeBrehon
+                ]
             ]
 
 
@@ -308,11 +312,15 @@ proposedSettlementView proposedSettlement =
                 ]
 
 
-brehonView : BrehonModel -> FilePath -> Address -> Html Msg
-brehonView brehon profileImage loadedAccount =
+brehonView : BrehonModel -> FilePath -> Model -> Html Msg
+brehonView brehon profileImage model =
     let
         ownerView =
-            loadedAccount == brehon.struct.addr
+            model.loadedAccount == brehon.struct.addr
+
+        canAdjudicate =
+            ownerView
+                && canBrehonAdjudicate brehon model.contractInfo
 
         viewClass ownerView cssClass =
             case ownerView of
@@ -345,6 +353,11 @@ brehonView brehon profileImage loadedAccount =
                 ]
             , contractAcceptanceView brehon.struct.contractAccepted ownerView (Msgs.AcceptContractByBrehon brehon)
             ]
+
+
+canBrehonAdjudicate : BrehonModel -> ContractInfo -> Bool
+canBrehonAdjudicate brehon contractInfo =
+    True
 
 
 startContractView : PartyModel -> Html Msg
