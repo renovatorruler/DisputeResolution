@@ -43,7 +43,7 @@ contract BrehonContract is
   Brehon public tertiaryBrehon;
   Brehon public activeBrehon;
 
-  mapping (address => uint) awards;
+  mapping (address => uint) public awards;
   Resolution public proposedSettlement;
 
   uint appealPeriodInDays = 5;
@@ -51,8 +51,8 @@ contract BrehonContract is
 
   event ExecutionStarted(address _caller, uint _totalDeposits);
   event ContractDisputed(address _disputingParty, address _activeBrehon);
-  event AppealPeriodStarted(int8 _appealLevel, uint _startTime, address _activeBrehon, uint _awardPartyA, uint _awardPartyB);
-  //TODO: Provide the information about the party which appaled
+  event AppealPeriodStarted(int8 _appealLevel, uint _appealPeriodStartTime, address _activeBrehon, uint _awardPartyA, uint _awardPartyB);
+  //TODO: Provide the information about the party which appealed
   event AppealRaised(int8 _appealLevel, address _activeBrehon);
   event SettlementProposed(address _proposingParty, uint _awardPartyA, uint _awardPartyB);
   event DisputeResolved(uint _awardPartyA, uint _awardPartyB);
@@ -209,7 +209,7 @@ contract BrehonContract is
     awards[partyA.addr] = _awardPartyA;
     awards[partyB.addr] = _awardPartyB;
     
-    AppealPeriodStarted(appealLevel, appealPeriodInDays, activeBrehon.addr, _awardPartyA, _awardPartyB);
+    AppealPeriodStarted(appealLevel, appealPeriodStartTime, activeBrehon.addr, _awardPartyA, _awardPartyB);
   }
 
   function getActiveJudgmentByParty(address _partyAddress)

@@ -36,6 +36,13 @@ const EventStructs = {
     'disputingParty',
     'activeBrehon',
   ],
+  AppealPeriodStarted: [
+    'appealLevel',
+    'appealPeriodStartTime',
+    'activeBrehon',
+    'awardPartyA',
+    'awardPartyB',
+  ],
 };
 
 function updateAllParties(ports, brehonApp) {
@@ -94,12 +101,14 @@ function updateContractInfo(ports, brehonApp) {
       .then(stage =>
         brehonApp.getTransactionAmount().then(transactionAmount =>
           brehonApp.getMinimumContractAmt().then(minimumContractAmt =>
-            ports.receiveContractInfo.send([
-              brehonContract.address,
-              Number(stage.valueOf()),
-              transactionAmount.valueOf(),
-              minimumContractAmt.valueOf(),
-            ]))));
+            brehonApp.getActiveBrehon().then(activeBrehon =>
+              ports.receiveContractInfo.send([
+                brehonContract.address,
+                Number(stage.valueOf()),
+                transactionAmount.valueOf(),
+                minimumContractAmt.valueOf(),
+                activeBrehon.addr,
+              ])))));
   });
 }
 
@@ -108,12 +117,19 @@ function updateProposedSettlement(ports, brehonApp) {
     .then(ports.receiveProposedSettlement.send);
 }
 
+function updateAwards(ports, brehonApp) {
+  brehonApp.getAwards()
+    .then(ports.receiveAwards.send);
+}
+
+
 function getPortCallbackByEvent(ports, eventName) {
   const eventNameCallbackMap = {
     ExecutionStarted: ports.receiveExecutionStartedEvent,
     SettlementProposed: ports.receiveSettlementProposedEvent,
     DisputeResolved: ports.receiveDisputeResolvedEvent,
     ContractDisputed: ports.receiveContractDisputedEvent,
+    AppealPeriodStarted: ports.receiveAppealPeriodStartedEvent,
   };
   return eventNameCallbackMap[eventName];
 }
@@ -206,6 +222,8 @@ function portHooks(elmApp, currentProvider) {
         awardPartyB: getDefaultBigNum(eventObj.args._awardPartyB),
         disputingParty: eventObj.args._disputingParty,
         activeBrehon: eventObj.args._activeBrehon,
+        appealLevel: Number(eventObj.args._appealLevel),
+        appealPeriodStartTime: getDefaultBigNum(eventObj.args._appealPeriodStartTime),
       };
       getPortCallbackByEvent(ports, eventObj.event)
         .send(getPortArgsByEvent(ports, eventObj.event, portEventObj));
@@ -214,6 +232,15 @@ function portHooks(elmApp, currentProvider) {
   ports.requestRaiseDispute.subscribe(disputingAddress =>
     brehonApp.raiseDispute(disputingAddress)
     .then(() => updateContractInfo(ports, brehonApp)));
+
+  ports.requestAdjudicate.subscribe(judgment => {
+    console.log(judgment);
+    return brehonApp.adjudicate(
+      judgment[0],
+      new BigNumber(judgment[1]),
+      new BigNumber(judgment[2]))
+    .then(() => updateAwards(ports, brehonApp))});
+
 
   ports.requestWithdrawFunds.subscribe(withdrawingAddress =>
     brehonApp.withdrawFunds(withdrawingAddress)

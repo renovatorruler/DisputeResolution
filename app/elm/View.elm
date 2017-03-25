@@ -4,7 +4,7 @@ import Html exposing (Html, Attribute, a, button, div, ul, li, img, input, label
 import Html.Attributes exposing (class, href, src, type_, placeholder)
 import Html.Events exposing (onClick, onInput)
 import Msgs exposing (Msg)
-import Models exposing (Model, Address, Event(..), ContractInfo, Settlement, Wei, PartyModel, BrehonModel, FilePath, Stage(..))
+import Models exposing (Model, Address, Event(..), ContractInfo, Settlement, Awards, Wei, PartyModel, BrehonModel, FilePath, Stage(..))
 
 
 view : Model -> Html Msg
@@ -17,9 +17,9 @@ view model =
                 , partyView model.partyB "images/partyB.png" model
                 ]
             , div [ class "brehon-list flex flex-wrap flex-column" ]
-                [ brehonView model.primaryBrehon "images/partyPrimaryBrehon.png" model.loadedAccount
-                , brehonView model.secondaryBrehon "images/partySecondaryBrehon.png" model.loadedAccount
-                , brehonView model.tertiaryBrehon "images/partyTertiaryBrehon.png" model.loadedAccount
+                [ brehonView model.primaryBrehon "images/partyPrimaryBrehon.png" model
+                , brehonView model.secondaryBrehon "images/partySecondaryBrehon.png" model
+                , brehonView model.tertiaryBrehon "images/partyTertiaryBrehon.png" model
                 ]
             ]
         , div [ class "col col-2 lg-h4 sm-h6" ] [ logView model ]
@@ -31,6 +31,9 @@ contractDetailView model =
     let
         showProposedSettlement =
             model.contractInfo.stage /= Completed
+
+        showActiveBrehon =
+            model.contractInfo.stage == Dispute
     in
         ul [ class "contract-detail sm-h5 p2 col col-2 list-reset" ]
             [ li []
@@ -71,6 +74,15 @@ contractDetailView model =
                 [ proposedSettlementView model.contractInfo.proposedSettlement
                 ]
                 |> conditionalBlock showProposedSettlement
+            , li []
+                [ text "Active Brehon: "
+                , textAddress model.contractInfo.activeBrehon
+                ]
+                |> conditionalBlock showActiveBrehon
+            , li []
+                [ awardsView model.contractInfo.awards
+                ]
+                |> justValue model.contractInfo.awards
             ]
 
 
@@ -236,6 +248,16 @@ raiseDisputeView addr =
         ]
 
 
+ctaButton : String -> String -> Msg -> Html Msg
+ctaButton label cssClass msg =
+    a
+        [ class ("btn btn-big btn-primary block center rounded h2 " ++ cssClass)
+        , href "#"
+        , onClick msg
+        ]
+        [ text label ]
+
+
 proposeSettlementView : PartyModel -> Html Msg
 proposeSettlementView party =
     div [ class "propose-settlement" ]
@@ -308,11 +330,38 @@ proposedSettlementView proposedSettlement =
                 ]
 
 
-brehonView : BrehonModel -> FilePath -> Address -> Html Msg
-brehonView brehon profileImage loadedAccount =
+awardsView : Maybe Awards -> Html Msg
+awardsView awards =
+    case awards of
+        Nothing ->
+            div [] []
+
+        Just awards ->
+            div []
+                [ div []
+                    [ text "Adjudicating Brehon: "
+                    , textAddress awards.adjudicatingBrehonAddr
+                    ]
+                , div []
+                    [ text "Award Party A: "
+                    , text awards.awardPartyA
+                    ]
+                , div []
+                    [ text "Award Party B: "
+                    , text awards.awardPartyB
+                    ]
+                ]
+
+
+brehonView : BrehonModel -> FilePath -> Model -> Html Msg
+brehonView brehon profileImage model =
     let
         ownerView =
-            loadedAccount == brehon.struct.addr
+            model.loadedAccount == brehon.struct.addr
+
+        canAdjudicate =
+            ownerView
+                && canBrehonAdjudicate brehon model.contractInfo
 
         viewClass ownerView cssClass =
             case ownerView of
@@ -343,8 +392,45 @@ brehonView brehon profileImage loadedAccount =
                     , text brehon.struct.disputeFee
                     ]
                 ]
-            , contractAcceptanceView brehon.struct.contractAccepted ownerView (Msgs.AcceptContractByBrehon brehon)
+            , div
+                [ class "block my1 p1" ]
+                [ contractAcceptanceView brehon.struct.contractAccepted ownerView (Msgs.AcceptContractByBrehon brehon) ]
+            , div
+                [ class "block my1 p1" ]
+                [ adjudicateView brehon ]
+                |> conditionalBlock canAdjudicate
             ]
+
+
+canBrehonAdjudicate : BrehonModel -> ContractInfo -> Bool
+canBrehonAdjudicate brehon contractInfo =
+    contractInfo.stage
+        == Dispute
+
+
+adjudicateView : BrehonModel -> Html Msg
+adjudicateView brehon =
+    div [ class "adjudicate" ]
+        [ label [ class "label" ] [ text "Award for Party A" ]
+        , input
+            [ class "input"
+            , placeholder "0 Wei"
+            , onInput Msgs.SettlementPartyAFieldChanged
+            ]
+            []
+        , label [ class "label" ] [ text "Award for Party B" ]
+        , input
+            [ class "input"
+            , placeholder "0 wei"
+            , onInput Msgs.SettlementPartyBFieldChanged
+            ]
+            []
+        , button
+            [ class "btn btn-primary"
+            , onClick (Msgs.Adjudicate brehon)
+            ]
+            [ text "Adjudicate" ]
+        ]
 
 
 startContractView : PartyModel -> Html Msg
@@ -456,6 +542,19 @@ singleLogView event =
                 , text " is presiding."
                 ]
 
+        AppealPeriodStartedEvent appealLevel startTime activeBrehon awardPartyA awardPartyB ->
+            li [ class "mb2" ]
+                [ i [ class "fa fa-gavel mr1" ] []
+                , text "Brehon "
+                , textAddress activeBrehon
+                , text " provided a judgment by awarding "
+                , text awardPartyA
+                , text " to partyA and "
+                , text awardPartyB
+                , text " to partyB at "
+                , text (toString startTime)
+                ]
+
 
 textAddress : Address -> Html Msg
 textAddress address =
@@ -479,3 +578,13 @@ conditionalBlock flag htmlEl =
 
         False ->
             text ""
+
+
+justValue : Maybe a -> Html Msg -> Html Msg
+justValue a htmlEl =
+    case a of
+        Nothing ->
+            text ""
+
+        Just a ->
+            htmlEl

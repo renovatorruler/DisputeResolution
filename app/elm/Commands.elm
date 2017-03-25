@@ -75,6 +75,11 @@ raiseDispute addr =
     requestRaiseDispute addr
 
 
+adjudicate : Address -> Wei -> Wei -> Cmd Msg
+adjudicate addr awardPartyA awardPartyB =
+    requestAdjudicate ( addr, awardPartyA, awardPartyB )
+
+
 
 {- For Debugging purposes -}
 
