@@ -43,7 +43,7 @@ contract BrehonContract is
   Brehon public tertiaryBrehon;
   Brehon public activeBrehon;
 
-  mapping (address => uint) awards;
+  mapping (address => uint) public awards;
   Resolution public proposedSettlement;
 
   uint appealPeriodInDays = 5;
