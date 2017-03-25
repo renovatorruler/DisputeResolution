@@ -447,7 +447,7 @@ singleLogView event =
 
         ContractDisputedEvent disputingParty activeBrehon ->
             li [ class "mb2" ]
-                [ i [ class "fa fa-hand-peace-o mr1" ] []
+                [ i [ class "fa fa-fire mr1" ] []
                 , text "Dispute raised "
                 , text " by "
                 , textAddress disputingParty
