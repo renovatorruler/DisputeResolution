@@ -306,6 +306,7 @@ contract BrehonContract is
       if(proposedSettlement.partyAAccepted && proposedSettlement.partyBAccepted) {
           awards[partyA.addr] = proposedSettlement.awardPartyA;
           awards[partyB.addr] = proposedSettlement.awardPartyB;
+          settlementReached = true;
           stage = Stages.Completed;
           DisputeResolved(_awardPartyA, _awardPartyB);
       }
