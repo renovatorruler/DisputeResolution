@@ -50,8 +50,7 @@ type alias Settlement =
 
 
 type alias Awards =
-    { adjudicatingBrehonAddr : Address
-    , awardPartyA : Wei
+    { awardPartyA : Wei
     , awardPartyB : Wei
     }
 

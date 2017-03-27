@@ -334,15 +334,11 @@ awardsView : Maybe Awards -> Html Msg
 awardsView awards =
     case awards of
         Nothing ->
-            div [] []
+            div [] [ text "Nothing" ]
 
         Just awards ->
             div []
                 [ div []
-                    [ text "Adjudicating Brehon: "
-                    , textAddress awards.adjudicatingBrehonAddr
-                    ]
-                , div []
                     [ text "Award Party A: "
                     , text awards.awardPartyA
                     ]
@@ -399,6 +395,9 @@ brehonView brehon profileImage model =
                 [ class "block my1 p1" ]
                 [ adjudicateView brehon ]
                 |> conditionalBlock canAdjudicate
+            , div
+                [ class "block my1 p1" ]
+                [ awardsView model.contractInfo.awards ]
             ]
 
 
