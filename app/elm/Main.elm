@@ -56,6 +56,7 @@ subscriptions model =
         , receiveDisputeResolvedEvent Msgs.LoadDisputeResolvedEvent
         , receiveContractDisputedEvent Msgs.LoadContractDisputedEvent
         , receiveAppealPeriodStartedEvent Msgs.LoadAppealPeriodStartedEvent
+        , receiveFundsClaimedEvent Msgs.LoadFundsClaimed
         ]
 
 

@@ -37,6 +37,7 @@ type Msg
     | LoadDisputeResolvedEvent ( Int, Address, Wei, Wei )
     | LoadContractDisputedEvent ( Address, Address )
     | LoadAppealPeriodStartedEvent ( Int, String, Address, Wei, Wei )
+    | LoadFundsClaimed ( Address, Wei )
     | RaiseDispute Address
     | Adjudicate BrehonModel
     | WithdrawFunds Address

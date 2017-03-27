@@ -43,6 +43,10 @@ const EventStructs = {
     'awardPartyA',
     'awardPartyB',
   ],
+  FundsClaimed: [
+    'claimingParty',
+    'amount',
+  ],
 };
 
 function updateAllParties(ports, brehonApp) {
@@ -132,6 +136,7 @@ function getPortCallbackByEvent(ports, eventName) {
     DisputeResolved: ports.receiveDisputeResolvedEvent,
     ContractDisputed: ports.receiveContractDisputedEvent,
     AppealPeriodStarted: ports.receiveAppealPeriodStartedEvent,
+    FundsClaimed: ports.receiveFundsClaimedEvent,
   };
   return eventNameCallbackMap[eventName];
 }
@@ -226,6 +231,8 @@ function portHooks(elmApp, currentProvider) {
         activeBrehon: eventObj.args._activeBrehon,
         appealLevel: Number(eventObj.args._appealLevel),
         appealPeriodStartTime: getDefaultBigNum(eventObj.args._appealPeriodStartTime),
+        claimingParty: eventObj.args.claimingParty,
+        amount: getDefaultBigNum(eventObj.args.amount),
       };
       getPortCallbackByEvent(ports, eventObj.event)
         .send(getPortArgsByEvent(ports, eventObj.event, portEventObj));
