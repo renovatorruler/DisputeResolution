@@ -170,11 +170,23 @@ export default class BrehonAPI {
         instance.adjudicate(awardPartyA, awardPartyB, { from: addr }));
   }
 
-  getAwards() {
+  getAwardsByAddr(addr) {
     return this.brehonContract.deployed()
       .then(instance =>
-        instance.awards.call())
-      .then(R.tap(console.log));
+        instance.awards.call(addr));
+  }
+
+  getAllAwards() {
+    return Promise.all([
+      this.getPartyA(),
+      this.getPartyB(),
+    ])
+    .then(parties => R.map(
+      x => this.getAwardsByAddr(x),
+      R.map(R.view(R.lensProp('addr')), parties)))
+    .then(x => Promise.all(x))
+    .then(R.map(x => x.valueOf()))
+    .then(R.zipObj(['awardPartyA', 'awardPartyB']));
   }
 
   withdrawFunds(addr) {

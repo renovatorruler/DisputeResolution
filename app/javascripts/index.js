@@ -102,13 +102,15 @@ function updateContractInfo(ports, brehonApp) {
         brehonApp.getTransactionAmount().then(transactionAmount =>
           brehonApp.getMinimumContractAmt().then(minimumContractAmt =>
             brehonApp.getActiveBrehon().then(activeBrehon =>
-              ports.receiveContractInfo.send([
-                brehonContract.address,
-                Number(stage.valueOf()),
-                transactionAmount.valueOf(),
-                minimumContractAmt.valueOf(),
-                activeBrehon.addr,
-              ])))));
+              brehonApp.getAllAwards().then(awards =>
+                ports.receiveContractInfo.send([
+                  brehonContract.address,
+                  Number(stage.valueOf()),
+                  transactionAmount.valueOf(),
+                  minimumContractAmt.valueOf(),
+                  activeBrehon.addr,
+                  awards,
+                ]))))));
   });
 }
 
@@ -234,12 +236,12 @@ function portHooks(elmApp, currentProvider) {
     .then(() => updateContractInfo(ports, brehonApp)));
 
   ports.requestAdjudicate.subscribe(judgment => {
-    console.log(judgment);
     return brehonApp.adjudicate(
       judgment[0],
       new BigNumber(judgment[1]),
       new BigNumber(judgment[2]))
-    .then(() => updateAwards(ports, brehonApp))});
+    .then(() => updateAwards(ports, brehonApp));
+  });
 
 
   ports.requestWithdrawFunds.subscribe(withdrawingAddress =>
