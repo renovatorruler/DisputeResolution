@@ -24,9 +24,9 @@ init =
         zeroWei
         (PartyModel (Party Nothing zeroWei False))
         (PartyModel (Party Nothing zeroWei False))
-        (BrehonModel (Brehon Nothing False zeroWei zeroWei))
-        (BrehonModel (Brehon Nothing False zeroWei zeroWei))
-        (BrehonModel (Brehon Nothing False zeroWei zeroWei))
+        (BrehonModel (Brehon Nothing False zeroWei zeroWei) Nothing)
+        (BrehonModel (Brehon Nothing False zeroWei zeroWei) Nothing)
+        (BrehonModel (Brehon Nothing False zeroWei zeroWei) Nothing)
     , Cmd.batch
         [ loadWeb3Accounts
         , loadContractInfo

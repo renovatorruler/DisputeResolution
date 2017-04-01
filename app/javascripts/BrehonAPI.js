@@ -100,6 +100,12 @@ export default class BrehonAPI {
         instance.transactionAmount.call());
   }
 
+  getAppealPeriodInDays() {
+    return this.brehonContract.deployed()
+      .then(instance =>
+        instance.appealPeriodInDays.call());
+  }
+
   startContract(addr) {
     return this.brehonContract.deployed()
       .then(instance =>

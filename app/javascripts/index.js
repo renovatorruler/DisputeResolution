@@ -4,6 +4,7 @@ import 'font-awesome/css/font-awesome.css';
 import Web3 from 'web3';
 import R from 'ramda';
 import BigNumber from 'bignumber.js';
+import moment from 'moment';
 
 import BrehonAPI from './BrehonAPI';
 import Elm from './../elm/Main.elm';
@@ -106,15 +107,17 @@ function updateContractInfo(ports, brehonApp) {
         brehonApp.getTransactionAmount().then(transactionAmount =>
           brehonApp.getMinimumContractAmt().then(minimumContractAmt =>
             brehonApp.getActiveBrehon().then(activeBrehon =>
-              brehonApp.getAllAwards().then(awards =>
-                ports.receiveContractInfo.send([
-                  brehonContract.address,
-                  Number(stage.valueOf()),
-                  transactionAmount.valueOf(),
-                  minimumContractAmt.valueOf(),
-                  activeBrehon.addr,
-                  awards,
-                ]))))));
+              brehonApp.getAppealPeriodInDays().then(appealPeriodInDays =>
+                brehonApp.getAllAwards().then(awards =>
+                  ports.receiveContractInfo.send([
+                    brehonContract.address,
+                    Number(stage.valueOf()),
+                    transactionAmount.valueOf(),
+                    minimumContractAmt.valueOf(),
+                    Number(appealPeriodInDays.valueOf()),
+                    activeBrehon.addr,
+                    awards,
+                  ])))))));
   });
 }
 
@@ -219,6 +222,7 @@ function portHooks(elmApp, currentProvider) {
   ports.requestAllEvents.subscribe(() =>
     brehonApp.getAllEvents((error, eventObj) => {
       if (error) console.error(error);
+
       const portEventObj = {
         blockNumber: eventObj.blockNumber,
         txHash: eventObj.transactionHash,
@@ -230,7 +234,7 @@ function portHooks(elmApp, currentProvider) {
         disputingParty: eventObj.args._disputingParty,
         activeBrehon: eventObj.args._activeBrehon,
         appealLevel: Number(eventObj.args._appealLevel),
-        appealPeriodStartTime: getDefaultBigNum(eventObj.args._appealPeriodStartTime),
+        appealPeriodStartTime: moment.unix(parseInt(getDefaultBigNum(eventObj.args._appealPeriodStartTime), 10)).format(),
         claimingParty: eventObj.args.claimingParty,
         amount: getDefaultBigNum(eventObj.args.amount),
       };

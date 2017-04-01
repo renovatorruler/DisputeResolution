@@ -1,7 +1,7 @@
 module Update exposing (..)
 
 import Msgs exposing (..)
-import Date exposing (Date)
+import Time.DateTime as DateTime exposing (DateTime, dateTime, zero, addDays, fromISO8601)
 import Models exposing (Model, Stage(..), Event(..), ContractInfo, Settlement, Awards, Address, Wei, zeroWei, Parties, PartyModel, Party, Brehons, BrehonModel, Brehon)
 import Commands exposing (..)
 
@@ -12,9 +12,9 @@ update msg model =
         LoadAccounts accounts ->
             ( setLoadedAddress model (List.head accounts), Cmd.none )
 
-        LoadContractInfo ( deployedAddr, stage, transactionAmount, minimumContractAmt, activeBrehon, awards ) ->
+        LoadContractInfo ( deployedAddr, stage, transactionAmount, minimumContractAmt, appealPeriodInDays, activeBrehon, awards ) ->
             ( { model
-                | contractInfo = updateContractInfo model.contractInfo deployedAddr stage transactionAmount minimumContractAmt activeBrehon awards
+                | contractInfo = updateContractInfo model.contractInfo deployedAddr stage transactionAmount minimumContractAmt appealPeriodInDays activeBrehon awards
               }
             , Cmd.none
             )
@@ -141,11 +141,14 @@ update msg model =
             ( { model
                 | eventLog =
                     AppealPeriodStartedEvent appealLevel
-                        (toDate startTime)
+                        (toDateTime startTime)
                         activeBrehon
                         awardPartyA
                         awardPartyB
                         :: model.eventLog
+                , primaryBrehon = updateBrehonAwards model.primaryBrehon activeBrehon awardPartyA awardPartyB
+                , secondaryBrehon = updateBrehonAwards model.secondaryBrehon activeBrehon awardPartyA awardPartyB
+                , contractInfo = updateAppealPeriodStart model.contractInfo (toDateTime startTime)
               }
             , Cmd.none
             )
@@ -220,16 +223,33 @@ updateAwards contractInfo awards =
     { contractInfo | awards = awards }
 
 
-updateContractInfo : ContractInfo -> Address -> Int -> Wei -> Wei -> Address -> Maybe Awards -> ContractInfo
-updateContractInfo contractInfo addr stageInt transactionAmount minimumContractAmt activeBrehon awards =
+updateContractInfo :
+    ContractInfo
+    -> Address
+    -> Int
+    -> Wei
+    -> Wei
+    -> Int
+    -> Address
+    -> Maybe Awards
+    -> ContractInfo
+updateContractInfo contractInfo addr stageInt transactionAmount minimumContractAmt appealPeriodInDays activeBrehon awards =
     let
         contractInfoUpdated =
             { contractInfo
                 | deployedAt = addr
                 , transactionAmount = transactionAmount
                 , minimumContractAmt = minimumContractAmt
+                , appealPeriodInDays = appealPeriodInDays
                 , activeBrehon = activeBrehon
                 , awards = awards
+                , appealPeriodEnd =
+                    case contractInfo.appealPeriodStart of
+                        Nothing ->
+                            Nothing
+
+                        Just appealPeriodStart ->
+                            Just (addDays appealPeriodInDays appealPeriodStart)
             }
     in
         case stageInt of
@@ -265,11 +285,27 @@ updateBrehonModel brehonModel brehon =
     { brehonModel | struct = brehon }
 
 
-toDate : String -> Date
-toDate dateString =
-    case Date.fromString dateString of
+updateBrehonAwards : BrehonModel -> Address -> Wei -> Wei -> BrehonModel
+updateBrehonAwards brehonModel activeBrehonAddr awardPartyA awardPartyB =
+    if brehonModel.struct.addr == activeBrehonAddr then
+        { brehonModel | awards = Just (Awards awardPartyA awardPartyB) }
+    else
+        brehonModel
+
+
+updateAppealPeriodStart : ContractInfo -> DateTime -> ContractInfo
+updateAppealPeriodStart contractInfo appealPeriodStart =
+    { contractInfo
+        | appealPeriodStart = Just appealPeriodStart
+        , appealPeriodEnd = Just (addDays contractInfo.appealPeriodInDays appealPeriodStart)
+    }
+
+
+toDateTime : String -> DateTime
+toDateTime dateString =
+    case fromISO8601 dateString of
         Err e ->
-            Date.fromTime 0
+            dateTime zero
 
         Ok r ->
             r

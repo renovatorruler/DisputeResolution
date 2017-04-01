@@ -3,6 +3,7 @@ module View exposing (..)
 import Html exposing (Html, Attribute, a, button, div, ul, li, img, input, label, p, span, i, text)
 import Html.Attributes exposing (class, href, src, type_, placeholder)
 import Html.Events exposing (onClick, onInput)
+import Time.DateTime as DateTime exposing (toISO8601)
 import Msgs exposing (Msg)
 import Models exposing (Model, Address, Event(..), ContractInfo, Settlement, Awards, Wei, PartyModel, BrehonModel, FilePath, Stage(..))
 
@@ -80,6 +81,27 @@ contractDetailView model =
                 ]
                 |> conditionalBlock showActiveBrehon
             , li []
+                [ text "Appeal Period Start time: "
+                , text
+                    (model.contractInfo.appealPeriodStart
+                        |> toJustString toISO8601
+                    )
+                ]
+                |> justValue model.contractInfo.appealPeriodStart
+            , li []
+                [ text "Appeal Period Duration (days): "
+                , text (toString model.contractInfo.appealPeriodInDays)
+                ]
+                |> justValue model.contractInfo.appealPeriodEnd
+            , li []
+                [ text "Appeal Period End time: "
+                , text
+                    (model.contractInfo.appealPeriodEnd
+                        |> toJustString toISO8601
+                    )
+                ]
+                |> justValue model.contractInfo.appealPeriodEnd
+            , li []
                 [ awardsView model.contractInfo.awards
                 ]
                 |> justValue model.contractInfo.awards
@@ -123,6 +145,7 @@ canPartyWithdrawFunds party contractInfo =
         == Completed
         || (contractInfo.stage
                 == AppealPeriod
+            --&& contractInfo.appealPeriodStart +
            )
 
 
@@ -130,6 +153,12 @@ canPartyRaiseDispute : PartyModel -> ContractInfo -> Bool
 canPartyRaiseDispute party contractInfo =
     contractInfo.stage
         == Execution
+
+
+canPartyAppeal : PartyModel -> ContractInfo -> Bool
+canPartyAppeal party contractInfo =
+    contractInfo.stage
+        == AppealPeriod
 
 
 canDepositIntoContract : PartyModel -> ContractInfo -> Bool
@@ -168,6 +197,10 @@ partyView party profileImage model =
         canRaiseDispute =
             ownerView
                 && canPartyRaiseDispute party model.contractInfo
+
+        canAppeal =
+            ownerView
+                && canPartyAppeal party model.contractInfo
 
         viewClass ownerView cssClass =
             case ownerView of
@@ -224,6 +257,10 @@ partyView party profileImage model =
                 [ class "block my1 p1" ]
                 [ raiseDisputeView party.struct.addr ]
                 |> conditionalBlock canRaiseDispute
+            , div
+                [ class "block my1 p1" ]
+                [ appealView party.struct.addr ]
+                |> conditionalBlock canAppeal
             ]
 
 
@@ -248,6 +285,18 @@ raiseDisputeView addr =
             , onClick (Msgs.RaiseDispute addr)
             ]
             [ text "Raise Dispute" ]
+        ]
+
+
+appealView : Address -> Html Msg
+appealView addr =
+    div [ class "appeal" ]
+        [ a
+            [ class "btn btn-big btn-primary block center rounded h2 bg-aqua"
+            , href "#"
+            , onClick (Msgs.RaiseDispute addr)
+            ]
+            [ text "Appeal" ]
         ]
 
 
@@ -337,7 +386,7 @@ awardsView : Maybe Awards -> Html Msg
 awardsView awards =
     case awards of
         Nothing ->
-            div [] [ text "Nothing" ]
+            div [] []
 
         Just awards ->
             div []
@@ -400,7 +449,7 @@ brehonView brehon profileImage model =
                 |> conditionalBlock canAdjudicate
             , div
                 [ class "block my1 p1" ]
-                [ awardsView model.contractInfo.awards ]
+                [ awardsView brehon.awards ]
             ]
 
 
@@ -554,7 +603,7 @@ singleLogView event =
                 , text " to partyA and "
                 , text awardPartyB
                 , text " to partyB at "
-                , text (toString startTime)
+                , text (toISO8601 startTime)
                 ]
 
         FundsClaimedEvent claimingParty amount ->
@@ -600,3 +649,13 @@ justValue a htmlEl =
 
         Just a ->
             htmlEl
+
+
+toJustString : (a -> String) -> Maybe a -> String
+toJustString fn a =
+    case a of
+        Nothing ->
+            ""
+
+        Just a ->
+            fn a

@@ -46,7 +46,7 @@ contract BrehonContract is
   mapping (address => uint) public awards;
   Resolution public proposedSettlement;
 
-  uint appealPeriodInDays = 5;
+  uint public appealPeriodInDays = 5;
   uint public appealPeriodStartTime;
 
   event ExecutionStarted(address _caller, uint _totalDeposits);
