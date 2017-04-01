@@ -124,7 +124,7 @@ function updateProposedSettlement(ports, brehonApp) {
 }
 
 function updateAwards(ports, brehonApp) {
-  brehonApp.getAwards()
+  brehonApp.getAllAwards()
     .then(ports.receiveAwards.send);
 }
 
@@ -247,7 +247,7 @@ function portHooks(elmApp, currentProvider) {
       judgment[0],
       new BigNumber(judgment[1]),
       new BigNumber(judgment[2]))
-    .then(() => updateAwards(ports, brehonApp));
+    .then(() => updateContractInfo(ports, brehonApp));
   });
 
 
