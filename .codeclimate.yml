@@ -2,9 +2,9 @@
 engines:
   csslint:
     enabled: true
-  checks:
-    Similar code:
-      enabled: false
+    checks:
+      Similar code:
+        enabled: false
   duplication:
     enabled: false
     config:
