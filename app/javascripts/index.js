@@ -114,7 +114,7 @@ function updateContractInfo(ports, brehonApp) {
                     Number(stage.valueOf()),
                     transactionAmount.valueOf(),
                     minimumContractAmt.valueOf(),
-                    Number(appealPeriodInDays),
+                    Number(appealPeriodInDays.valueOf()),
                     activeBrehon.addr,
                     awards,
                   ])))))));
@@ -221,6 +221,8 @@ function portHooks(elmApp, currentProvider) {
 
   ports.requestAllEvents.subscribe(() =>
     brehonApp.getAllEvents((error, eventObj) => {
+      if (error) console.error(error);
+
       const portEventObj = {
         blockNumber: eventObj.blockNumber,
         txHash: eventObj.transactionHash,

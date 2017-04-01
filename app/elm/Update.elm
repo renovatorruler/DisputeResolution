@@ -14,7 +14,7 @@ update msg model =
 
         LoadContractInfo ( deployedAddr, stage, transactionAmount, minimumContractAmt, appealPeriodInDays, activeBrehon, awards ) ->
             ( { model
-                | contractInfo = updateContractInfo model.contractInfo deployedAddr stage transactionAmount minimumContractAmt activeBrehon awards
+                | contractInfo = updateContractInfo model.contractInfo deployedAddr stage transactionAmount minimumContractAmt appealPeriodInDays activeBrehon awards
               }
             , Cmd.none
             )
@@ -223,16 +223,33 @@ updateAwards contractInfo awards =
     { contractInfo | awards = awards }
 
 
-updateContractInfo : ContractInfo -> Address -> Int -> Wei -> Wei -> Address -> Maybe Awards -> ContractInfo
-updateContractInfo contractInfo addr stageInt transactionAmount minimumContractAmt activeBrehon awards =
+updateContractInfo :
+    ContractInfo
+    -> Address
+    -> Int
+    -> Wei
+    -> Wei
+    -> Int
+    -> Address
+    -> Maybe Awards
+    -> ContractInfo
+updateContractInfo contractInfo addr stageInt transactionAmount minimumContractAmt appealPeriodInDays activeBrehon awards =
     let
         contractInfoUpdated =
             { contractInfo
                 | deployedAt = addr
                 , transactionAmount = transactionAmount
                 , minimumContractAmt = minimumContractAmt
+                , appealPeriodInDays = appealPeriodInDays
                 , activeBrehon = activeBrehon
                 , awards = awards
+                , appealPeriodEnd =
+                    case contractInfo.appealPeriodStart of
+                        Nothing ->
+                            Nothing
+
+                        Just appealPeriodStart ->
+                            Just (addDays appealPeriodInDays appealPeriodStart)
             }
     in
         case stageInt of

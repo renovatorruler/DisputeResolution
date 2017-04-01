@@ -89,6 +89,19 @@ contractDetailView model =
                 ]
                 |> justValue model.contractInfo.appealPeriodStart
             , li []
+                [ text "Appeal Period Duration (days): "
+                , text (toString model.contractInfo.appealPeriodInDays)
+                ]
+                |> justValue model.contractInfo.appealPeriodEnd
+            , li []
+                [ text "Appeal Period End time: "
+                , text
+                    (model.contractInfo.appealPeriodEnd
+                        |> toJustString toISO8601
+                    )
+                ]
+                |> justValue model.contractInfo.appealPeriodEnd
+            , li []
                 [ awardsView model.contractInfo.awards
                 ]
                 |> justValue model.contractInfo.awards
