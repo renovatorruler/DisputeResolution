@@ -121,6 +121,9 @@ canPartyWithdrawFunds : PartyModel -> ContractInfo -> Bool
 canPartyWithdrawFunds party contractInfo =
     contractInfo.stage
         == Completed
+        || (contractInfo.stage
+                == AppealPeriod
+           )
 
 
 canPartyRaiseDispute : PartyModel -> ContractInfo -> Bool
@@ -552,6 +555,16 @@ singleLogView event =
                 , text awardPartyB
                 , text " to partyB at "
                 , text (toString startTime)
+                ]
+
+        FundsClaimedEvent claimingParty amount ->
+            li [ class "mb2" ]
+                [ i [ class "fa fa-money mr1" ] []
+                , text "Funds claimed "
+                , text " by "
+                , textAddress claimingParty
+                , text " in the amount of "
+                , text amount
                 ]
 
 

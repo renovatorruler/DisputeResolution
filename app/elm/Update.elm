@@ -150,6 +150,16 @@ update msg model =
             , Cmd.none
             )
 
+        LoadFundsClaimed ( claimingParty, amount ) ->
+            ( { model
+                | eventLog =
+                    FundsClaimedEvent claimingParty
+                        amount
+                        :: model.eventLog
+              }
+            , Cmd.none
+            )
+
         Adjudicate brehon ->
             ( model, adjudicate brehon.struct.addr model.settlementPartyAField model.settlementPartyBField )
 
