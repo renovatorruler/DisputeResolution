@@ -10,7 +10,7 @@ zeroWei =
 
 initContractInfo : ContractInfo
 initContractInfo =
-    ContractInfo Nothing Negotiation zeroWei zeroWei False False Nothing Nothing 0 Nothing Nothing
+    ContractInfo Nothing Negotiation zeroWei zeroWei False False Nothing Nothing Nothing 0 Nothing Nothing
 
 
 type alias Model =
@@ -38,6 +38,7 @@ type alias ContractInfo =
     , brehonsAccepted : Bool
     , proposedSettlement : Maybe Settlement
     , appealPeriodStart : Maybe DateTime
+    , appealPeriodEnd : Maybe DateTime
     , appealPeriodInDays : Int
     , awards : Maybe Awards
     , activeBrehon : Address

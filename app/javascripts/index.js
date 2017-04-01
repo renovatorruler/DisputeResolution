@@ -107,15 +107,17 @@ function updateContractInfo(ports, brehonApp) {
         brehonApp.getTransactionAmount().then(transactionAmount =>
           brehonApp.getMinimumContractAmt().then(minimumContractAmt =>
             brehonApp.getActiveBrehon().then(activeBrehon =>
-              brehonApp.getAllAwards().then(awards =>
-                ports.receiveContractInfo.send([
-                  brehonContract.address,
-                  Number(stage.valueOf()),
-                  transactionAmount.valueOf(),
-                  minimumContractAmt.valueOf(),
-                  activeBrehon.addr,
-                  awards,
-                ]))))));
+              brehonApp.getAppealPeriodInDays().then(appealPeriodInDays =>
+                brehonApp.getAllAwards().then(awards =>
+                  ports.receiveContractInfo.send([
+                    brehonContract.address,
+                    Number(stage.valueOf()),
+                    transactionAmount.valueOf(),
+                    minimumContractAmt.valueOf(),
+                    Number(appealPeriodInDays),
+                    activeBrehon.addr,
+                    awards,
+                  ])))))));
   });
 }
 

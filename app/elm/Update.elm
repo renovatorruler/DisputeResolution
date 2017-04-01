@@ -1,7 +1,7 @@
 module Update exposing (..)
 
 import Msgs exposing (..)
-import Time.DateTime as DateTime exposing (DateTime, dateTime, zero, fromISO8601)
+import Time.DateTime as DateTime exposing (DateTime, dateTime, zero, addDays, fromISO8601)
 import Models exposing (Model, Stage(..), Event(..), ContractInfo, Settlement, Awards, Address, Wei, zeroWei, Parties, PartyModel, Party, Brehons, BrehonModel, Brehon)
 import Commands exposing (..)
 
@@ -12,7 +12,7 @@ update msg model =
         LoadAccounts accounts ->
             ( setLoadedAddress model (List.head accounts), Cmd.none )
 
-        LoadContractInfo ( deployedAddr, stage, transactionAmount, minimumContractAmt, activeBrehon, awards ) ->
+        LoadContractInfo ( deployedAddr, stage, transactionAmount, minimumContractAmt, appealPeriodInDays, activeBrehon, awards ) ->
             ( { model
                 | contractInfo = updateContractInfo model.contractInfo deployedAddr stage transactionAmount minimumContractAmt activeBrehon awards
               }
@@ -278,7 +278,10 @@ updateBrehonAwards brehonModel activeBrehonAddr awardPartyA awardPartyB =
 
 updateAppealPeriodStart : ContractInfo -> DateTime -> ContractInfo
 updateAppealPeriodStart contractInfo appealPeriodStart =
-    { contractInfo | appealPeriodStart = Just appealPeriodStart }
+    { contractInfo
+        | appealPeriodStart = Just appealPeriodStart
+        , appealPeriodEnd = Just (addDays contractInfo.appealPeriodInDays appealPeriodStart)
+    }
 
 
 toDateTime : String -> DateTime

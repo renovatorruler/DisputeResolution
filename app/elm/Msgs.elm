@@ -17,7 +17,7 @@ import Models
 
 type Msg
     = LoadAccounts (List Address)
-    | LoadContractInfo ( Address, Int, Wei, Wei, Address, Maybe Awards )
+    | LoadContractInfo ( Address, Int, Wei, Wei, Int, Address, Maybe Awards )
     | LoadAllParties Parties
     | LoadAllBrehons Brehons
     | AcceptContractByParty PartyModel
