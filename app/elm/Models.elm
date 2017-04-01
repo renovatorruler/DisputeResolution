@@ -10,7 +10,7 @@ zeroWei =
 
 initContractInfo : ContractInfo
 initContractInfo =
-    ContractInfo Nothing Negotiation zeroWei zeroWei False False Nothing Nothing Nothing
+    ContractInfo Nothing Negotiation zeroWei zeroWei False False Nothing Nothing Nothing Nothing
 
 
 type alias Model =
@@ -37,6 +37,7 @@ type alias ContractInfo =
     , partiesAccepted : Bool
     , brehonsAccepted : Bool
     , proposedSettlement : Maybe Settlement
+    , appealPeriodStart : Maybe Date
     , awards : Maybe Awards
     , activeBrehon : Address
     }
@@ -62,6 +63,7 @@ type alias PartyModel =
 
 type alias BrehonModel =
     { struct : Brehon
+    , awards : Maybe Awards
     }
 
 

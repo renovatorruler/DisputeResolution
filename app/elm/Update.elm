@@ -146,6 +146,9 @@ update msg model =
                         awardPartyA
                         awardPartyB
                         :: model.eventLog
+                , primaryBrehon = updateBrehonAwards model.primaryBrehon activeBrehon awardPartyA awardPartyB
+                , secondaryBrehon = updateBrehonAwards model.secondaryBrehon activeBrehon awardPartyA awardPartyB
+                , contractInfo = updateAppealPeriodStart model.contractInfo (toDate startTime)
               }
             , Cmd.none
             )
@@ -263,6 +266,19 @@ updatePartyModel partyModel party =
 updateBrehonModel : BrehonModel -> Brehon -> BrehonModel
 updateBrehonModel brehonModel brehon =
     { brehonModel | struct = brehon }
+
+
+updateBrehonAwards : BrehonModel -> Address -> Wei -> Wei -> BrehonModel
+updateBrehonAwards brehonModel activeBrehonAddr awardPartyA awardPartyB =
+    if brehonModel.struct.addr == activeBrehonAddr then
+        { brehonModel | awards = Just (Awards awardPartyA awardPartyB) }
+    else
+        brehonModel
+
+
+updateAppealPeriodStart : ContractInfo -> Date -> ContractInfo
+updateAppealPeriodStart contractInfo appealPeriodStart =
+    { contractInfo | appealPeriodStart = Just appealPeriodStart }
 
 
 toDate : String -> Date

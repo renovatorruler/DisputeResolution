@@ -80,6 +80,11 @@ contractDetailView model =
                 ]
                 |> conditionalBlock showActiveBrehon
             , li []
+                [ text "Appeal Period Start time: "
+                , text (toJustString model.contractInfo.appealPeriodStart)
+                ]
+                |> justValue model.contractInfo.appealPeriodStart
+            , li []
                 [ awardsView model.contractInfo.awards
                 ]
                 |> justValue model.contractInfo.awards
@@ -337,7 +342,7 @@ awardsView : Maybe Awards -> Html Msg
 awardsView awards =
     case awards of
         Nothing ->
-            div [] [ text "Nothing" ]
+            div [] []
 
         Just awards ->
             div []
@@ -400,7 +405,7 @@ brehonView brehon profileImage model =
                 |> conditionalBlock canAdjudicate
             , div
                 [ class "block my1 p1" ]
-                [ awardsView model.contractInfo.awards ]
+                [ awardsView brehon.awards ]
             ]
 
 
@@ -600,3 +605,13 @@ justValue a htmlEl =
 
         Just a ->
             htmlEl
+
+
+toJustString : Maybe a -> String
+toJustString a =
+    case a of
+        Nothing ->
+            ""
+
+        Just a ->
+            toString a
