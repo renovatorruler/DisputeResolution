@@ -4,6 +4,7 @@ import 'font-awesome/css/font-awesome.css';
 import Web3 from 'web3';
 import R from 'ramda';
 import BigNumber from 'bignumber.js';
+import moment from 'moment';
 
 import BrehonAPI from './BrehonAPI';
 import Elm from './../elm/Main.elm';
@@ -218,7 +219,6 @@ function portHooks(elmApp, currentProvider) {
 
   ports.requestAllEvents.subscribe(() =>
     brehonApp.getAllEvents((error, eventObj) => {
-      if (error) console.error(error);
       const portEventObj = {
         blockNumber: eventObj.blockNumber,
         txHash: eventObj.transactionHash,
@@ -230,7 +230,7 @@ function portHooks(elmApp, currentProvider) {
         disputingParty: eventObj.args._disputingParty,
         activeBrehon: eventObj.args._activeBrehon,
         appealLevel: Number(eventObj.args._appealLevel),
-        appealPeriodStartTime: getDefaultBigNum(eventObj.args._appealPeriodStartTime),
+        appealPeriodStartTime: moment.unix(parseInt(getDefaultBigNum(eventObj.args._appealPeriodStartTime), 10)).format(),
         claimingParty: eventObj.args.claimingParty,
         amount: getDefaultBigNum(eventObj.args.amount),
       };

@@ -1,7 +1,7 @@
 module Update exposing (..)
 
 import Msgs exposing (..)
-import Date exposing (Date)
+import Time.DateTime as DateTime exposing (DateTime, dateTime, zero, fromISO8601)
 import Models exposing (Model, Stage(..), Event(..), ContractInfo, Settlement, Awards, Address, Wei, zeroWei, Parties, PartyModel, Party, Brehons, BrehonModel, Brehon)
 import Commands exposing (..)
 
@@ -141,14 +141,14 @@ update msg model =
             ( { model
                 | eventLog =
                     AppealPeriodStartedEvent appealLevel
-                        (toDate startTime)
+                        (toDateTime startTime)
                         activeBrehon
                         awardPartyA
                         awardPartyB
                         :: model.eventLog
                 , primaryBrehon = updateBrehonAwards model.primaryBrehon activeBrehon awardPartyA awardPartyB
                 , secondaryBrehon = updateBrehonAwards model.secondaryBrehon activeBrehon awardPartyA awardPartyB
-                , contractInfo = updateAppealPeriodStart model.contractInfo (toDate startTime)
+                , contractInfo = updateAppealPeriodStart model.contractInfo (toDateTime startTime)
               }
             , Cmd.none
             )
@@ -276,16 +276,16 @@ updateBrehonAwards brehonModel activeBrehonAddr awardPartyA awardPartyB =
         brehonModel
 
 
-updateAppealPeriodStart : ContractInfo -> Date -> ContractInfo
+updateAppealPeriodStart : ContractInfo -> DateTime -> ContractInfo
 updateAppealPeriodStart contractInfo appealPeriodStart =
     { contractInfo | appealPeriodStart = Just appealPeriodStart }
 
 
-toDate : String -> Date
-toDate dateString =
-    case Date.fromString dateString of
+toDateTime : String -> DateTime
+toDateTime dateString =
+    case fromISO8601 dateString of
         Err e ->
-            Date.fromTime 0
+            dateTime zero
 
         Ok r ->
             r

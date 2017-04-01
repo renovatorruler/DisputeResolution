@@ -1,6 +1,6 @@
 module Models exposing (..)
 
-import Date exposing (Date)
+import Time.DateTime as DateTime exposing (DateTime, dateTime)
 
 
 zeroWei : Wei
@@ -10,7 +10,7 @@ zeroWei =
 
 initContractInfo : ContractInfo
 initContractInfo =
-    ContractInfo Nothing Negotiation zeroWei zeroWei False False Nothing Nothing Nothing Nothing
+    ContractInfo Nothing Negotiation zeroWei zeroWei False False Nothing Nothing 0 Nothing Nothing
 
 
 type alias Model =
@@ -37,7 +37,8 @@ type alias ContractInfo =
     , partiesAccepted : Bool
     , brehonsAccepted : Bool
     , proposedSettlement : Maybe Settlement
-    , appealPeriodStart : Maybe Date
+    , appealPeriodStart : Maybe DateTime
+    , appealPeriodInDays : Int
     , awards : Maybe Awards
     , activeBrehon : Address
     }
@@ -123,5 +124,5 @@ type Event
     | SettlementProposedEvent Int Address Address Wei Wei
     | DisputeResolvedEvent Int Address Wei Wei
     | ContractDisputedEvent Address Address
-    | AppealPeriodStartedEvent Int Date Address Wei Wei
+    | AppealPeriodStartedEvent Int DateTime Address Wei Wei
     | FundsClaimedEvent Address Wei
