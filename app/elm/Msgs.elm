@@ -1,5 +1,6 @@
 module Msgs exposing (..)
 
+import Time exposing (Time)
 import Models
     exposing
         ( Address
@@ -38,6 +39,7 @@ type Msg
     | LoadContractDisputedEvent ( Address, Address )
     | LoadAppealPeriodStartedEvent ( Int, String, Address, Wei, Wei )
     | LoadFundsClaimed ( Address, Wei )
+    | UpdateTimestamp Time
     | RaiseDispute Address
     | Adjudicate BrehonModel
     | WithdrawFunds Address

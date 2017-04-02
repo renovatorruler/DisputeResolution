@@ -1,7 +1,8 @@
 module Update exposing (..)
 
 import Msgs exposing (..)
-import Time.DateTime as DateTime exposing (DateTime, dateTime, zero, addDays, fromISO8601)
+import Time.DateTime as DateTime exposing (DateTime, dateTime, zero, addDays, fromISO8601, compare, fromTimestamp)
+import Time as Time exposing (Time)
 import Models exposing (Model, Stage(..), Event(..), ContractInfo, Settlement, Awards, Address, Wei, zeroWei, Parties, PartyModel, Party, Brehons, BrehonModel, Brehon)
 import Commands exposing (..)
 
@@ -14,7 +15,7 @@ update msg model =
 
         LoadContractInfo ( deployedAddr, stage, transactionAmount, minimumContractAmt, appealPeriodInDays, activeBrehon, awards ) ->
             ( { model
-                | contractInfo = updateContractInfo model.contractInfo deployedAddr stage transactionAmount minimumContractAmt appealPeriodInDays activeBrehon awards
+                | contractInfo = updateContractInfo model.contractInfo deployedAddr stage transactionAmount minimumContractAmt appealPeriodInDays model.currentTimestamp activeBrehon awards
               }
             , Cmd.none
             )
@@ -148,7 +149,7 @@ update msg model =
                         :: model.eventLog
                 , primaryBrehon = updateBrehonAwards model.primaryBrehon activeBrehon awardPartyA awardPartyB
                 , secondaryBrehon = updateBrehonAwards model.secondaryBrehon activeBrehon awardPartyA awardPartyB
-                , contractInfo = updateAppealPeriodStart model.contractInfo (toDateTime startTime)
+                , contractInfo = updateAppealPeriodInfo model.contractInfo model.currentTimestamp (toDateTime startTime)
               }
             , Cmd.none
             )
@@ -162,6 +163,9 @@ update msg model =
               }
             , Cmd.none
             )
+
+        UpdateTimestamp time ->
+            ( { model | currentTimestamp = time }, Cmd.none )
 
         Adjudicate brehon ->
             ( model, adjudicate brehon.struct.addr model.settlementPartyAField model.settlementPartyBField )
@@ -230,11 +234,20 @@ updateContractInfo :
     -> Wei
     -> Wei
     -> Int
+    -> Time
     -> Address
     -> Maybe Awards
     -> ContractInfo
-updateContractInfo contractInfo addr stageInt transactionAmount minimumContractAmt appealPeriodInDays activeBrehon awards =
+updateContractInfo contractInfo addr stageInt transactionAmount minimumContractAmt appealPeriodInDays time activeBrehon awards =
     let
+        appealPeriodEnd =
+            case contractInfo.appealPeriodStart of
+                Nothing ->
+                    Nothing
+
+                Just appealPeriodStart ->
+                    Just (addDays appealPeriodInDays appealPeriodStart)
+
         contractInfoUpdated =
             { contractInfo
                 | deployedAt = addr
@@ -243,13 +256,14 @@ updateContractInfo contractInfo addr stageInt transactionAmount minimumContractA
                 , appealPeriodInDays = appealPeriodInDays
                 , activeBrehon = activeBrehon
                 , awards = awards
-                , appealPeriodEnd =
-                    case contractInfo.appealPeriodStart of
+                , appealPeriodEnd = appealPeriodEnd
+                , appealPeriodInProgress =
+                    case appealPeriodEnd of
                         Nothing ->
-                            Nothing
+                            False
 
-                        Just appealPeriodStart ->
-                            Just (addDays appealPeriodInDays appealPeriodStart)
+                        Just appealPeriodEnd ->
+                            updateAppealPeriodInProgress appealPeriodEnd time
             }
     in
         case stageInt of
@@ -293,12 +307,27 @@ updateBrehonAwards brehonModel activeBrehonAddr awardPartyA awardPartyB =
         brehonModel
 
 
-updateAppealPeriodStart : ContractInfo -> DateTime -> ContractInfo
-updateAppealPeriodStart contractInfo appealPeriodStart =
-    { contractInfo
-        | appealPeriodStart = Just appealPeriodStart
-        , appealPeriodEnd = Just (addDays contractInfo.appealPeriodInDays appealPeriodStart)
-    }
+updateAppealPeriodInfo : ContractInfo -> Time -> DateTime -> ContractInfo
+updateAppealPeriodInfo contractInfo time appealPeriodStart =
+    let
+        appealPeriodEnd =
+            addDays contractInfo.appealPeriodInDays appealPeriodStart
+    in
+        { contractInfo
+            | appealPeriodStart = Just appealPeriodStart
+            , appealPeriodEnd = Just appealPeriodEnd
+            , appealPeriodInProgress = updateAppealPeriodInProgress appealPeriodEnd time
+        }
+
+
+updateAppealPeriodInProgress : DateTime -> Time -> Bool
+updateAppealPeriodInProgress appealPeriodEnd time =
+    case DateTime.compare appealPeriodEnd (fromTimestamp time) of
+        LT ->
+            False
+
+        _ ->
+            True
 
 
 toDateTime : String -> DateTime

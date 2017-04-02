@@ -3,7 +3,8 @@ module View exposing (..)
 import Html exposing (Html, Attribute, a, button, div, ul, li, img, input, label, p, span, i, text)
 import Html.Attributes exposing (class, href, src, type_, placeholder)
 import Html.Events exposing (onClick, onInput)
-import Time.DateTime as DateTime exposing (toISO8601)
+import Time exposing (now)
+import Time.DateTime as DateTime exposing (toISO8601, fromTimestamp)
 import Msgs exposing (Msg)
 import Models exposing (Model, Address, Event(..), ContractInfo, Settlement, Awards, Wei, PartyModel, BrehonModel, FilePath, Stage(..))
 
@@ -40,6 +41,13 @@ contractDetailView model =
             [ li []
                 [ text "Contract Deployed At: "
                 , textAddress model.contractInfo.deployedAt
+                ]
+            , li []
+                [ text "Timestamp: "
+                , model.currentTimestamp
+                    |> fromTimestamp
+                    |> toISO8601
+                    |> text
                 ]
             , li []
                 [ text "Loaded Account: "
@@ -145,7 +153,7 @@ canPartyWithdrawFunds party contractInfo =
         == Completed
         || (contractInfo.stage
                 == AppealPeriod
-            --&& contractInfo.appealPeriodStart +
+                && not contractInfo.appealPeriodInProgress
            )
 
 
@@ -292,7 +300,7 @@ appealView : Address -> Html Msg
 appealView addr =
     div [ class "appeal" ]
         [ a
-            [ class "btn btn-big btn-primary block center rounded h2 bg-aqua"
+            [ class "btn btn-big btn-primary block center rounded h2 black bg-aqua"
             , href "#"
             , onClick (Msgs.RaiseDispute addr)
             ]

@@ -1,6 +1,7 @@
 module Models exposing (..)
 
 import Time.DateTime as DateTime exposing (DateTime, dateTime)
+import Time as Time exposing (Time, now)
 
 
 zeroWei : Wei
@@ -10,11 +11,12 @@ zeroWei =
 
 initContractInfo : ContractInfo
 initContractInfo =
-    ContractInfo Nothing Negotiation zeroWei zeroWei False False Nothing Nothing Nothing 0 Nothing Nothing
+    ContractInfo Nothing Negotiation zeroWei zeroWei False False Nothing Nothing Nothing 0 False Nothing Nothing
 
 
 type alias Model =
     { contractInfo : ContractInfo
+    , currentTimestamp : Time
     , eventLog : List Event
     , loadedAccount : Address
     , depositField : Wei
@@ -40,6 +42,7 @@ type alias ContractInfo =
     , appealPeriodStart : Maybe DateTime
     , appealPeriodEnd : Maybe DateTime
     , appealPeriodInDays : Int
+    , appealPeriodInProgress : Bool
     , awards : Maybe Awards
     , activeBrehon : Address
     }
