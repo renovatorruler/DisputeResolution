@@ -41,6 +41,7 @@ type Msg
     | LoadFundsClaimed ( Address, Wei )
     | UpdateTimestamp Time
     | RaiseDispute Address
+    | RaiseAppeal Address
     | Adjudicate BrehonModel
     | WithdrawFunds Address
     | None

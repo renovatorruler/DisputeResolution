@@ -82,6 +82,11 @@ raiseDispute addr =
     requestRaiseDispute addr
 
 
+raiseAppeal : Address -> Cmd Msg
+raiseAppeal addr =
+    requestRaiseAppeal addr
+
+
 adjudicate : Address -> Wei -> Wei -> Cmd Msg
 adjudicate addr awardPartyA awardPartyB =
     requestAdjudicate ( addr, awardPartyA, awardPartyB )

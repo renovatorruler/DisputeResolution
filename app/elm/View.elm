@@ -302,7 +302,7 @@ appealView addr =
         [ a
             [ class "btn btn-big btn-primary block center rounded h2 black bg-aqua"
             , href "#"
-            , onClick (Msgs.RaiseDispute addr)
+            , onClick (Msgs.RaiseAppeal addr)
             ]
             [ text "Appeal" ]
         ]

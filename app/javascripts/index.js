@@ -243,6 +243,10 @@ function portHooks(elmApp, currentProvider) {
     brehonApp.raiseDispute(disputingAddress)
     .then(() => updateContractInfo(ports, brehonApp)));
 
+  ports.requestRaiseAppeal.subscribe(disputingAddress =>
+    brehonApp.raiseAppeal(disputingAddress)
+    .then(() => updateContractInfo(ports, brehonApp)));
+
   ports.requestAdjudicate.subscribe(judgment =>
     brehonApp.adjudicate(
       judgment[0],
