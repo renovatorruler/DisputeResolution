@@ -614,6 +614,17 @@ singleLogView event =
                 , text (toISO8601 startTime)
                 ]
 
+        AppealRaisedEvent appealLevel appealingParty activeBrehon ->
+            li [ class "mb2" ]
+                [ i [ class "fa fa-fire mr1" ] []
+                , text "Appeal raised "
+                , text " by "
+                , textAddress appealingParty
+                , text ". Brehon "
+                , textAddress activeBrehon
+                , text " is presiding."
+                ]
+
         FundsClaimedEvent claimingParty amount ->
             li [ class "mb2" ]
                 [ i [ class "fa fa-money mr1" ] []

@@ -129,4 +129,5 @@ type Event
     | DisputeResolvedEvent Int Address Wei Wei
     | ContractDisputedEvent Address Address
     | AppealPeriodStartedEvent Int DateTime Address Wei Wei
+    | AppealRaisedEvent Int Address Address
     | FundsClaimedEvent Address Wei

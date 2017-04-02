@@ -38,6 +38,7 @@ type Msg
     | LoadDisputeResolvedEvent ( Int, Address, Wei, Wei )
     | LoadContractDisputedEvent ( Address, Address )
     | LoadAppealPeriodStartedEvent ( Int, String, Address, Wei, Wei )
+    | LoadAppealRaisedEvent ( Int, Address, Address )
     | LoadFundsClaimed ( Address, Wei )
     | UpdateTimestamp Time
     | RaiseDispute Address

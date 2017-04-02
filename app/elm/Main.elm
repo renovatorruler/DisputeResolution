@@ -59,6 +59,7 @@ subscriptions model =
         , receiveDisputeResolvedEvent Msgs.LoadDisputeResolvedEvent
         , receiveContractDisputedEvent Msgs.LoadContractDisputedEvent
         , receiveAppealPeriodStartedEvent Msgs.LoadAppealPeriodStartedEvent
+        , receiveAppealRaisedEvent Msgs.LoadAppealRaisedEvent
         , receiveFundsClaimedEvent Msgs.LoadFundsClaimed
         , every minute Msgs.UpdateTimestamp
         ]

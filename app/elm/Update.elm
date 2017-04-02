@@ -154,6 +154,17 @@ update msg model =
             , Cmd.none
             )
 
+        LoadAppealRaisedEvent ( appealLevel, appealingParty, activeBrehon ) ->
+            ( { model
+                | eventLog =
+                    AppealRaisedEvent appealLevel
+                        appealingParty
+                        activeBrehon
+                        :: model.eventLog
+              }
+            , Cmd.none
+            )
+
         LoadFundsClaimed ( claimingParty, amount ) ->
             ( { model
                 | eventLog =
