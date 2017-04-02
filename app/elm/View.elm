@@ -43,7 +43,7 @@ contractDetailView model =
                 , textAddress model.contractInfo.deployedAt
                 ]
             , li []
-                [ text "Timestamp: "
+                [ text "Current Time: "
                 , model.currentTimestamp
                     |> fromTimestamp
                     |> toISO8601

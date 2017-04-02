@@ -36,7 +36,7 @@ init =
         , loadAllParties
         , loadAllBrehons
         , loadAllEvents
-        , startTimestamp
+        , updateTimestamp
         ]
     )
 

@@ -7,8 +7,8 @@ import Msgs exposing (Msg)
 import Web3.BrehonAPI exposing (..)
 
 
-startTimestamp : Cmd Msg
-startTimestamp =
+updateTimestamp : Cmd Msg
+updateTimestamp =
     perform Msgs.UpdateTimestamp now
 
 

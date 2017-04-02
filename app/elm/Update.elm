@@ -17,7 +17,7 @@ update msg model =
             ( { model
                 | contractInfo = updateContractInfo model.contractInfo deployedAddr stage transactionAmount minimumContractAmt appealPeriodInDays model.currentTimestamp activeBrehon awards
               }
-            , Cmd.none
+            , updateTimestamp
             )
 
         LoadAllParties parties ->
@@ -165,7 +165,12 @@ update msg model =
             )
 
         UpdateTimestamp time ->
-            ( { model | currentTimestamp = time }, Cmd.none )
+            ( { model
+                | currentTimestamp = time
+                , contractInfo = updateAppealPeriodInProgress model.contractInfo time
+              }
+            , Cmd.none
+            )
 
         Adjudicate brehon ->
             ( model, adjudicate brehon.struct.addr model.settlementPartyAField model.settlementPartyBField )
@@ -257,13 +262,6 @@ updateContractInfo contractInfo addr stageInt transactionAmount minimumContractA
                 , activeBrehon = activeBrehon
                 , awards = awards
                 , appealPeriodEnd = appealPeriodEnd
-                , appealPeriodInProgress =
-                    case appealPeriodEnd of
-                        Nothing ->
-                            False
-
-                        Just appealPeriodEnd ->
-                            updateAppealPeriodInProgress appealPeriodEnd time
             }
     in
         case stageInt of
@@ -316,18 +314,25 @@ updateAppealPeriodInfo contractInfo time appealPeriodStart =
         { contractInfo
             | appealPeriodStart = Just appealPeriodStart
             , appealPeriodEnd = Just appealPeriodEnd
-            , appealPeriodInProgress = updateAppealPeriodInProgress appealPeriodEnd time
         }
 
 
-updateAppealPeriodInProgress : DateTime -> Time -> Bool
-updateAppealPeriodInProgress appealPeriodEnd time =
-    case DateTime.compare appealPeriodEnd (fromTimestamp time) of
-        LT ->
-            False
+updateAppealPeriodInProgress : ContractInfo -> Time -> ContractInfo
+updateAppealPeriodInProgress contractInfo time =
+    { contractInfo
+        | appealPeriodInProgress =
+            case contractInfo.appealPeriodEnd of
+                Nothing ->
+                    False
 
-        _ ->
-            True
+                Just appealPeriodEnd ->
+                    case DateTime.compare appealPeriodEnd (fromTimestamp time) of
+                        LT ->
+                            False
+
+                        _ ->
+                            True
+    }
 
 
 toDateTime : String -> DateTime
