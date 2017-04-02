@@ -97,6 +97,9 @@ port requestRaiseDispute : Address -> Cmd msg
 port requestRaiseAppeal : Address -> Cmd msg
 
 
+port requestRaise2ndAppeal : Address -> Cmd msg
+
+
 port requestAdjudicate : ( Address, Wei, Wei ) -> Cmd msg
 
 

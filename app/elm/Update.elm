@@ -195,6 +195,9 @@ update msg model =
         RaiseAppeal addr ->
             ( model, raiseAppeal addr )
 
+        Raise2ndAppeal addr ->
+            ( model, raise2ndAppeal addr )
+
         None ->
             ( model, Cmd.none )
 

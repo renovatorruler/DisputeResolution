@@ -43,6 +43,7 @@ type Msg
     | UpdateTimestamp Time
     | RaiseDispute Address
     | RaiseAppeal Address
+    | Raise2ndAppeal Address
     | Adjudicate BrehonModel
     | WithdrawFunds Address
     | None
