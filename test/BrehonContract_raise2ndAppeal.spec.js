@@ -16,13 +16,6 @@ const getSplitForSecondaryBrehon = contractHelpers.getPercentageSplit(defaults, 
 const PartyStruct = contractHelpers.PartyStruct;
 const BrehonStruct = contractHelpers.BrehonStruct;
 
-/**
- * Spec:
- * + Must use verifyEvent method
- * + Error verification should happen via assertError
- * - Must check for all stages
- **/
-
 contract('BrehonContract raiseAppeal should only be allowed at Dispute stage', (accounts) => {
   it('by preventing it from being called at Negotiation stage', () => {
     var brehonContract;
@@ -283,8 +276,9 @@ contract('BrehonContract should allow partyA to raise an appeal', (accounts) => 
         );
       })
       .then(verifyEvent('AppealRaised', {
-        '_appealLevel': 2,
-        '_activeBrehon': defaults.tertiaryBrehon_addr
+        'appealLevel': 2,
+        'appealingParty': defaults.partyA_addr,
+        'activeBrehon': defaults.tertiaryBrehon_addr
       }))
       .then(function verifyStage() {
         return brehonContract.stage.call().then((stage) => {
@@ -349,8 +343,9 @@ contract('BrehonContract should allow partyB to raise an appeal', (accounts) => 
         );
       })
       .then(verifyEvent('AppealRaised', {
-        '_appealLevel': 2,
-        '_activeBrehon': defaults.tertiaryBrehon_addr
+        'appealLevel': 2,
+        'appealingParty': defaults.partyB_addr,
+        'activeBrehon': defaults.tertiaryBrehon_addr
       }))
       .then(function verifyStage() {
         return brehonContract.stage.call().then((stage) => {

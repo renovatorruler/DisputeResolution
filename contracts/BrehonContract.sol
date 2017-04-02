@@ -53,7 +53,7 @@ contract BrehonContract is
   event ContractDisputed(address _disputingParty, address _activeBrehon);
   event AppealPeriodStarted(int8 _appealLevel, uint _appealPeriodStartTime, address _activeBrehon, uint _awardPartyA, uint _awardPartyB);
   //TODO: Provide the information about the party which appealed
-  event AppealRaised(int8 _appealLevel, address _activeBrehon);
+  event AppealRaised(int8 appealLevel, address appealingParty, address activeBrehon);
   event SettlementProposed(address _proposingParty, uint _awardPartyA, uint _awardPartyB);
   event DisputeResolved(uint _awardPartyA, uint _awardPartyB);
   event FundsClaimed(address claimingParty, uint amount);
@@ -254,7 +254,7 @@ contract BrehonContract is
 
     activeBrehon = secondaryBrehon;
 
-    AppealRaised(appealLevel, activeBrehon.addr);
+    AppealRaised(appealLevel, msg.sender, activeBrehon.addr);
   }
 
   function raise2ndAppeal()
@@ -266,7 +266,7 @@ contract BrehonContract is
 
     activeBrehon = tertiaryBrehon;
 
-    AppealRaised(appealLevel, activeBrehon.addr);
+    AppealRaised(appealLevel, msg.sender, activeBrehon.addr);
   }
 
   function proposeSettlement(uint _awardPartyA, uint _awardPartyB)
