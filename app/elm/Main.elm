@@ -3,6 +3,7 @@ port module Main exposing (..)
 import Html exposing (Html, div, text, program)
 import Msgs exposing (Msg)
 import Models exposing (Model, Party, zeroWei, initContractInfo, Brehon, PartyModel, BrehonModel, ContractInfo, Stage(..))
+import Time exposing (every, minute, second)
 import View exposing (view)
 import Update exposing (update)
 import Web3.BrehonAPI exposing (..)
@@ -16,6 +17,7 @@ init : ( Model, Cmd Msg )
 init =
     ( Model
         initContractInfo
+        0
         []
         Nothing
         zeroWei
@@ -34,6 +36,7 @@ init =
         , loadAllParties
         , loadAllBrehons
         , loadAllEvents
+        , updateTimestamp
         ]
     )
 
@@ -56,7 +59,9 @@ subscriptions model =
         , receiveDisputeResolvedEvent Msgs.LoadDisputeResolvedEvent
         , receiveContractDisputedEvent Msgs.LoadContractDisputedEvent
         , receiveAppealPeriodStartedEvent Msgs.LoadAppealPeriodStartedEvent
+        , receiveAppealRaisedEvent Msgs.LoadAppealRaisedEvent
         , receiveFundsClaimedEvent Msgs.LoadFundsClaimed
+        , every minute Msgs.UpdateTimestamp
         ]
 
 

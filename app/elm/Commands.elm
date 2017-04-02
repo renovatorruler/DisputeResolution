@@ -1,8 +1,15 @@
 module Commands exposing (..)
 
 import Models exposing (Address, Wei, PartyModel, BrehonModel)
+import Task exposing (perform)
+import Time as Time exposing (Time, now)
 import Msgs exposing (Msg)
 import Web3.BrehonAPI exposing (..)
+
+
+updateTimestamp : Cmd Msg
+updateTimestamp =
+    perform Msgs.UpdateTimestamp now
 
 
 loadWeb3Accounts : Cmd Msg
@@ -73,6 +80,11 @@ withdrawFunds addr =
 raiseDispute : Address -> Cmd Msg
 raiseDispute addr =
     requestRaiseDispute addr
+
+
+raiseAppeal : Address -> Cmd Msg
+raiseAppeal addr =
+    requestRaiseAppeal addr
 
 
 adjudicate : Address -> Wei -> Wei -> Cmd Msg

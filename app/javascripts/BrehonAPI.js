@@ -170,6 +170,12 @@ export default class BrehonAPI {
       instance.raiseDispute({ from: addr }));
   }
 
+  raiseAppeal(addr) {
+    return this.brehonContract.deployed()
+    .then(instance =>
+      instance.raiseAppeal({ from: addr }));
+  }
+
   adjudicate(addr, awardPartyA, awardPartyB) {
     return this.brehonContract.deployed()
       .then(instance =>
