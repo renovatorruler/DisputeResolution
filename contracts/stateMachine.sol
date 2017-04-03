@@ -8,6 +8,8 @@ contract stateMachine {
     Resolved,
     AppealPeriod,
     Appeal,
+    SecondAppealPeriod,
+    SecondAppeal,
     Completed
   }
 

@@ -8,7 +8,7 @@ const raiseDispute = contractHelpers.raiseDispute;
 const assertError = contractHelpers.assertError;
 const assertNoError = contractHelpers.assertNoError;
 const assertNoErrorWithMsg = assertNoError('No Exception must be thrown');
-const StagesEnum = contractHelpers.StagesEnum;
+const StagesStruct = contractHelpers.StagesStruct;
 const startContractAndRaiseDispute = contractHelpers.startContractAndRaiseDispute;
 const verifyEvent = contractHelpers.verifyEvent;
 const getMinimumContractAmt = contractHelpers.getMinimumContractAmt;
@@ -86,7 +86,8 @@ contract('BrehonContract acceptSettlement should only be allowed at one of the c
           { from: defaults.partyB_addr });
       })
       .catch(assertNoErrorWithMsg)
-      .then(function acceptSettlement() { return brehonContract.acceptSettlement(
+      .then(function acceptSettlement() {
+        return brehonContract.acceptSettlement(
           settlement.partyA,
           settlement.partyB,
           { from: defaults.partyA_addr });
@@ -151,7 +152,7 @@ contract('BrehonContract should allow partyA to accepted a proposed settlement',
       })
       .then(function verifyDisputeResolution() {
         return brehonContract.stage.call().then((stage) => {
-          assert.equal(stage, StagesEnum.Completed, 'acceptSettlement not correctly changed the state');
+          assert.equal(stage, StagesStruct.Completed, 'acceptSettlement not correctly changed the state');
         });
       })
       .catch(function handleException(err) {
@@ -198,7 +199,7 @@ contract('BrehonContract should allow partyB to accepted a proposed settlement',
       }))
       .then(function verifyDisputeResolution() {
         return brehonContract.stage.call().then((stage) => {
-          assert.equal(stage, StagesEnum.Completed, 'acceptSettlement not correctly changed the state');
+          assert.equal(stage, StagesStruct.Completed, 'acceptSettlement not correctly changed the state');
         });
       })
       .catch(function handleException(err) {

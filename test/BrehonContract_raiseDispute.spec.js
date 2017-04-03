@@ -213,7 +213,7 @@ contract('BrehonContract raiseDispute should not be raised by unauthorized addre
   });
 });
 
-contract('BrehonContract should set appealLevel to 0 and trigger ContractDisputed event', (accounts) => {
+contract('BrehonContract should trigger ContractDisputed event', (accounts) => {
   it('when dispute is first raised', () => {
     var brehonContract;
     return BrehonContract.deployed()
@@ -233,10 +233,6 @@ contract('BrehonContract should set appealLevel to 0 and trigger ContractDispute
         assert.equal(contractDisputedEvent.args._activeBrehon, defaults.primaryBrehon_addr,
           "ContractDisputed event did not correctly provide the deposits at the time of contract start");
         assert.isDefined(contractDisputedEvent, "ContractStarted event was not emitted");
-
-        return brehonContract.appealLevel.call().then((appealLevel) => {
-          assert.equal(appealLevel.valueOf(), 0, 'appealLevel is not set to 0 when dispute  is raised'); 
-        });
       });
   });
 });

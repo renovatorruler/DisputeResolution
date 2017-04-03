@@ -31,7 +31,6 @@ contract BrehonContract is
     bool partyBAccepted;
   }
 
-  int8 public appealLevel;
   uint public transactionAmount;
   uint public minimumContractAmt;
   bytes32 public contractTermsHash;
@@ -51,9 +50,10 @@ contract BrehonContract is
 
   event ExecutionStarted(address _caller, uint _totalDeposits);
   event ContractDisputed(address _disputingParty, address _activeBrehon);
-  event AppealPeriodStarted(int8 _appealLevel, uint _appealPeriodStartTime, address _activeBrehon, uint _awardPartyA, uint _awardPartyB);
+  event AppealPeriodStarted(uint _appealPeriodStartTime, address _activeBrehon, uint _awardPartyA, uint _awardPartyB);
   //TODO: Provide the information about the party which appealed
-  event AppealRaised(int8 appealLevel, address appealingParty, address activeBrehon);
+  event AppealRaised(address appealingParty, address activeBrehon);
+  event SecondAppealRaised(address appealingParty, address activeBrehon);
   event SettlementProposed(address _proposingParty, uint _awardPartyA, uint _awardPartyB);
   event DisputeResolved(uint _awardPartyA, uint _awardPartyB);
   event FundsClaimed(address claimingParty, uint amount);
@@ -66,12 +66,21 @@ contract BrehonContract is
     _;
   }
 
+  modifier atAdjudicatableStages()
+  {
+    if(stage != Stages.Dispute &&
+       stage != Stages.Appeal &&
+       stage != Stages.SecondAppeal)
+        throw;
+    _;
+  }
+
   modifier afterContractStarts()
   {
     if(stage != Stages.Execution &&
        stage != Stages.Dispute &&
        stage != Stages.AppealPeriod &&
-       stage != Stages.Appeal)
+       stage != Stages.SecondAppealPeriod)
         throw;
     _;
   }
@@ -131,7 +140,6 @@ contract BrehonContract is
 
     //Defaults
     stage = Stages.Negotiation;
-    appealLevel = -1;
     settlementReached = false;
     partyA.contractAccepted = false;
     partyA.deposit = 0;
@@ -192,24 +200,29 @@ contract BrehonContract is
     eitherByParty(partyA, partyB)
   {
     stage = Stages.Dispute;
-    appealLevel = 0;
     activeBrehon = primaryBrehon;
     ContractDisputed(msg.sender, primaryBrehon.addr);
   }
 
   function adjudicate(uint _awardPartyA, uint _awardPartyB)
-    atStage(Stages.Dispute)
+    atAdjudicatableStages()
     onlyByBrehon(activeBrehon)
   {
     if((_awardPartyA + _awardPartyB) > (partyA.deposit + partyB.deposit)) throw;
 
-    stage = Stages.AppealPeriod;
+    if (stage == Stages.Dispute)
+        stage = Stages.AppealPeriod;
+    else if (stage == Stages.Appeal)
+        stage = Stages.SecondAppealPeriod;
+    else
+        throw;
+
     appealPeriodStartTime = now;
 
     awards[partyA.addr] = _awardPartyA;
     awards[partyB.addr] = _awardPartyB;
     
-    AppealPeriodStarted(appealLevel, appealPeriodStartTime, activeBrehon.addr, _awardPartyA, _awardPartyB);
+    AppealPeriodStarted(appealPeriodStartTime, activeBrehon.addr, _awardPartyA, _awardPartyB);
   }
 
   function getActiveJudgmentByParty(address _partyAddress)
@@ -221,10 +234,16 @@ contract BrehonContract is
   }
 
   function claimFunds()
-    timedTransition(settlementReached, appealPeriodStartTime, appealPeriodInDays, Stages.AppealPeriod, Stages.Completed)
-    atStage(Stages.Completed)
     eitherByParty(partyA, partyB)
   {
+    if (stage != Stages.Completed) {
+        if (stage != Stages.AppealPeriod && stage != Stages.SecondAppealPeriod) throw;
+        if (settlementReached || now >= appealPeriodStartTime + (appealPeriodInDays * 1 days))
+            stage = Stages.Completed;
+    }
+
+    if (stage != Stages.Completed) throw;
+
     uint amount = awards[msg.sender];
 
     if (amount == 0) {
@@ -249,24 +268,22 @@ contract BrehonContract is
     atStage(Stages.AppealPeriod)
     eitherByParty(partyA, partyB)
   {
-    stage = Stages.Dispute;
-    appealLevel = 1;
+    stage = Stages.Appeal;
 
     activeBrehon = secondaryBrehon;
 
-    AppealRaised(appealLevel, msg.sender, activeBrehon.addr);
+    AppealRaised(msg.sender, activeBrehon.addr);
   }
 
   function raise2ndAppeal()
-    atStage(Stages.AppealPeriod)
+    atStage(Stages.SecondAppealPeriod)
     eitherByParty(partyA, partyB)
   {
-    stage = Stages.Dispute;
-    appealLevel = 2;
+    stage = Stages.SecondAppeal;
 
     activeBrehon = tertiaryBrehon;
 
-    AppealRaised(appealLevel, msg.sender, activeBrehon.addr);
+    SecondAppealRaised(msg.sender, activeBrehon.addr);
   }
 
   function proposeSettlement(uint _awardPartyA, uint _awardPartyB)
