@@ -452,7 +452,7 @@ brehonView brehon profileImage model =
         viewClass ownerView cssClass =
             case ownerView of
                 True ->
-                    cssClass ++ " white bg-maroon border-gray"
+                    cssClass ++ " owner white bg-maroon border-gray"
 
                 False ->
                     cssClass
