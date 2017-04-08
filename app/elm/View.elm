@@ -3,7 +3,6 @@ module View exposing (..)
 import Html exposing (Html, Attribute, a, button, div, ul, li, img, input, label, p, span, i, text)
 import Html.Attributes exposing (class, href, src, type_, placeholder)
 import Html.Events exposing (onClick, onInput)
-import Time exposing (now)
 import Time.DateTime as DateTime exposing (toISO8601, fromTimestamp)
 import Msgs exposing (Msg)
 import Models exposing (Model, Address, Event(..), ContractInfo, Settlement, Awards, Wei, PartyModel, BrehonModel, FilePath, Stage(..))
@@ -463,8 +462,13 @@ brehonView brehon profileImage model =
 
 canBrehonAdjudicate : BrehonModel -> ContractInfo -> Bool
 canBrehonAdjudicate brehon contractInfo =
-    contractInfo.stage
-        == Dispute
+    brehon.struct.addr == contractInfo.activeBrehon &&
+    ((contractInfo.stage
+        == Dispute) ||
+    (contractInfo.stage
+        == Appeal) ||
+    (contractInfo.stage
+        == SecondAppeal))
 
 
 adjudicateView : BrehonModel -> Html Msg

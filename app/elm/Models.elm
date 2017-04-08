@@ -120,8 +120,9 @@ type Stage
     | Resolved
     | AppealPeriod
     | Appeal
+    | SecondAppealPeriod
+    | SecondAppeal
     | Completed
-
 
 type Event
     = ExecutionStartedEvent Int Address Address Wei
