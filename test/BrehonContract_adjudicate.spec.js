@@ -204,6 +204,57 @@ contract('BrehonContract adjudication should only be allowed at Dispute stage', 
   });
 });
 
+contract('BrehonContract should allow only primaryBrehon to adjudicate the contract when contract is in Appeal stage', () => {
+  it('by preventing secondaryBrehon from adjudicating', () => {
+    let brehonContract;
+    return BrehonContract.deployed()
+      .then(function captureReference(instance) {
+        brehonContract = instance;
+        return instance;
+      })
+      .then(startContractAndRaiseDispute(
+        [{
+          addr: defaults.partyA_addr,
+          value: getMinimumContractAmt(defaults),
+        }], defaults.partyA_addr, defaults.partyA_addr))
+      .catch(assertNoError('No Exception must be thrown after raiseDispute'))
+      .then(function adjudicate() {
+        return brehonContract.adjudicate(
+          getSplitForSecondaryBrehon(100),
+          getSplitForSecondaryBrehon(0),
+          { from: defaults.secondaryBrehon_addr });
+      })
+      .catch(function handleException(err) {
+        assert.isNotNull(err, 'Exception was not thrown when secondaryBrehon tried to adjudicate during Appeal stage');
+      });
+  });
+});
+
+contract('BrehonContract should allow only primaryBrehon to adjudicate the contract when contract is in Appeal stage', () => {
+  it('by preventing tertiaryBrehon from adjudicating', () => {
+    let brehonContract;
+    return BrehonContract.deployed()
+      .then(function captureReference(instance) {
+        brehonContract = instance;
+        return instance;
+      })
+      .then(startContractAndRaiseDispute(
+        [{
+          addr: defaults.partyA_addr,
+          value: getMinimumContractAmt(defaults),
+        }], defaults.partyA_addr, defaults.partyA_addr))
+      .catch(assertNoError('No Exception must be thrown after raiseDispute'))
+      .then(function adjudicate() {
+        return brehonContract.adjudicate(
+          getSplitForTertiaryBrehon(100),
+          getSplitForTertiaryBrehon(0),
+          { from: defaults.tertiaryBrehon_addr });
+      })
+      .catch(function handleException(err) {
+        assert.isNotNull(err, 'Exception was not thrown when tertiaryBrehon tried to adjudicate during Appeal stage');
+      });
+  });
+});
 
 // secondaryBrehon  Tests
 contract('BrehonContract should allow secondaryBrehon to adjudicate the contract', () => {
@@ -311,7 +362,7 @@ contract('BrehonContract should allow secondaryBrehon to adjudicate the contract
 });
 
 contract('BrehonContract should allow secondaryBrehon to adjudicate the contract', () => {
-  it('in the favor of partyA completely', () => {
+  it('by rendering a partial judgment', () => {
     let brehonContract;
     return BrehonContract.deployed()
       .then(function captureReference(instance) {
