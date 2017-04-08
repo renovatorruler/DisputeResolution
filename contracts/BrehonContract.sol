@@ -34,7 +34,7 @@ contract BrehonContract is
   uint public transactionAmount;
   uint public minimumContractAmt;
   bytes32 public contractTermsHash;
-  bool public settlementReached;
+  bool public noWaitPeriod;
   Party public partyA;
   Party public partyB;
   Brehon public primaryBrehon;
@@ -140,7 +140,7 @@ contract BrehonContract is
 
     //Defaults
     stage = Stages.Negotiation;
-    settlementReached = false;
+    noWaitPeriod = false;
     partyA.contractAccepted = false;
     partyA.deposit = 0;
 
@@ -214,15 +214,22 @@ contract BrehonContract is
         stage = Stages.AppealPeriod;
     else if (stage == Stages.Appeal)
         stage = Stages.SecondAppealPeriod;
+    else if (stage == Stages.SecondAppeal)
+        stage = Stages.Completed;
     else
         throw;
 
-    appealPeriodStartTime = now;
 
     awards[partyA.addr] = _awardPartyA;
     awards[partyB.addr] = _awardPartyB;
-    
-    AppealPeriodStarted(appealPeriodStartTime, activeBrehon.addr, _awardPartyA, _awardPartyB);
+
+    if (stage != Stages.Completed) {
+        appealPeriodStartTime = now;
+
+        AppealPeriodStarted(appealPeriodStartTime, activeBrehon.addr, _awardPartyA, _awardPartyB);
+    } else {
+        noWaitPeriod = true;
+    }
   }
 
   function getActiveJudgmentByParty(address _partyAddress)
@@ -238,7 +245,7 @@ contract BrehonContract is
   {
     if (stage != Stages.Completed) {
         if (stage != Stages.AppealPeriod && stage != Stages.SecondAppealPeriod) throw;
-        if (settlementReached || now >= appealPeriodStartTime + (appealPeriodInDays * 1 days))
+        if (noWaitPeriod || now >= appealPeriodStartTime + (appealPeriodInDays * 1 days))
             stage = Stages.Completed;
     }
 
@@ -323,7 +330,7 @@ contract BrehonContract is
       if(proposedSettlement.partyAAccepted && proposedSettlement.partyBAccepted) {
           awards[partyA.addr] = proposedSettlement.awardPartyA;
           awards[partyB.addr] = proposedSettlement.awardPartyB;
-          settlementReached = true;
+          noWaitPeriod = true;
           stage = Stages.Completed;
           DisputeResolved(_awardPartyA, _awardPartyB);
       }

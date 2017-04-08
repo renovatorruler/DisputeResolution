@@ -486,3 +486,68 @@ contract('BrehonContract should allow only secondaryBrehon to adjudicate the con
       });
   });
 });
+
+// tertiaryBrehon  Tests
+contract('BrehonContract should allow tertiaryBrehon to adjudicate the contract', () => {
+  it('in the favor of partyA completely', () => {
+    let brehonContract;
+    return BrehonContract.deployed()
+      .then(function captureReference(instance) {
+        brehonContract = instance;
+        return instance;
+      })
+      .then(startContractAndRaiseDispute(
+        [{
+          addr: defaults.partyA_addr,
+          value: getMinimumContractAmt(defaults),
+        }], defaults.partyA_addr, defaults.partyA_addr))
+      .catch(assertNoError('No Exception must be thrown after raiseDispute'))
+      .then(function adjudicatePrimaryBrehon() {
+        return brehonContract.adjudicate(
+          getSplitForPrimaryBrehon(100),
+          getSplitForPrimaryBrehon(0),
+          { from: defaults.primaryBrehon_addr });
+      })
+      .catch(assertNoError('No Exception must be thrown after primaryBrehon\'s adjudicate'))
+      .then(function raiseAppeal() {
+        return brehonContract.raiseAppeal({ from: defaults.partyB_addr });
+      })
+      .catch(assertNoError('No Exception must be thrown after raiseAppeal'))
+      .then(function adjudicate() {
+        return brehonContract.adjudicate(
+            getSplitForSecondaryBrehon(0),
+            getSplitForSecondaryBrehon(100),
+            { from: defaults.secondaryBrehon_addr });
+      })
+      .catch(assertNoError('No Exception must be thrown after second brehon\'s adjudicate'))
+      .then(function raise2ndAppeal() {
+        return brehonContract.raise2ndAppeal({ from: defaults.partyA_addr });
+      })
+      .catch(assertNoError('No Exception must be thrown after second appeal is raised'))
+      .then(function adjudicate() {
+        return brehonContract.adjudicate(
+            getSplitForTertiaryBrehon(100),
+            getSplitForTertiaryBrehon(0),
+            { from: defaults.tertiaryBrehon_addr });
+      })
+      .then(function verifyStage() {
+        return brehonContract.stage.call().then((stage) => {
+          assert.equal(stage.valueOf(), StagesStruct.Completed, 'stage is not set to Stages.Completed');
+        });
+      })
+      .then(function verifyPartyASplit() {
+        return brehonContract.getActiveJudgmentByParty.call(defaults.partyA_addr).then((award) => {
+          assert.equal(award.valueOf(), getSplitForTertiaryBrehon(100), 'Award for partyA not accurately set');
+        });
+      })
+      .then(function verifyPartyBSplit() {
+        return brehonContract.getActiveJudgmentByParty.call(defaults.partyB_addr).then((award) => {
+          assert.equal(award.valueOf(), getSplitForTertiaryBrehon(0), 'Award for partyB not accurately set');
+        });
+      })
+      .catch(function handleException(err) {
+        console.error(err);
+        assert.isNull(err, 'Exception was thrown when tertiaryBrehon tried to adjudicate a dispute');
+      });
+  });
+});
