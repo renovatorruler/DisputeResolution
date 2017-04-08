@@ -47,6 +47,10 @@ const EventStructs = {
     'appealingParty',
     'activeBrehon',
   ],
+  SecondAppealRaised: [
+    'appealingParty',
+    'activeBrehon',
+  ],
   FundsClaimed: [
     'claimingParty',
     'amount',
@@ -137,6 +141,7 @@ function getPortCallbackByEvent(ports, eventName) {
     ContractDisputed: ports.receiveContractDisputedEvent,
     AppealPeriodStarted: ports.receiveAppealPeriodStartedEvent,
     AppealRaised: ports.receiveAppealRaisedEvent,
+    SecondAppealRaised: ports.receiveSecondAppealRaisedEvent,
     FundsClaimed: ports.receiveFundsClaimedEvent,
   };
   return eventNameCallbackMap[eventName];
@@ -249,6 +254,10 @@ function portHooks(elmApp, currentProvider) {
 
   ports.requestRaiseAppeal.subscribe(disputingAddress =>
     brehonApp.raiseAppeal(disputingAddress)
+    .then(() => updateContractInfo(ports, brehonApp)));
+
+  ports.requestRaiseSecondAppeal.subscribe(disputingAddress =>
+    brehonApp.raiseSecondAppeal(disputingAddress)
     .then(() => updateContractInfo(ports, brehonApp)));
 
   ports.requestAdjudicate.subscribe(judgment =>

@@ -5,7 +5,7 @@ import Html.Attributes exposing (class, href, src, type_, placeholder)
 import Html.Events exposing (onClick, onInput)
 import Time.DateTime as DateTime exposing (toISO8601, fromTimestamp)
 import Msgs exposing (Msg)
-import Models exposing (Model, Address, Event(..), ContractInfo, Settlement, Awards, Wei, PartyModel, BrehonModel, FilePath, Stage(..))
+import Models exposing (Model, Address, Event(..), ContractInfo, Settlement, Awards, Wei, PartyModel, BrehonModel, FilePath, AppealLevel(..), Stage(..))
 
 
 view : Model -> Html Msg
@@ -164,8 +164,13 @@ canPartyRaiseDispute party contractInfo =
 
 canPartyAppeal : PartyModel -> ContractInfo -> Bool
 canPartyAppeal party contractInfo =
-    contractInfo.stage
-        == AppealPeriod
+    (contractInfo.stage
+        == AppealPeriod)
+
+canPartySecondAppeal : PartyModel -> ContractInfo -> Bool
+canPartySecondAppeal party contractInfo =
+    (contractInfo.stage
+        == SecondAppealPeriod)
 
 
 canDepositIntoContract : PartyModel -> ContractInfo -> Bool
@@ -208,6 +213,11 @@ partyView party profileImage model =
         canAppeal =
             ownerView
                 && canPartyAppeal party model.contractInfo
+
+        canSecondAppeal =
+            ownerView
+                && canPartySecondAppeal party model.contractInfo
+
 
         viewClass ownerView cssClass =
             case ownerView of
@@ -266,8 +276,12 @@ partyView party profileImage model =
                 |> conditionalBlock canRaiseDispute
             , div
                 [ class "block my1 p1" ]
-                [ appealView party.struct.addr ]
+                [ appealView party.struct.addr First ]
                 |> conditionalBlock canAppeal
+            , div
+                [ class "block my1 p1" ]
+                [ appealView party.struct.addr Second ]
+                |> conditionalBlock canSecondAppeal
             ]
 
 
@@ -295,13 +309,19 @@ raiseDisputeView addr =
         ]
 
 
-appealView : Address -> Html Msg
-appealView addr =
+appealView : Address -> AppealLevel -> Html Msg
+appealView addr appealLevel =
     div [ class "appeal" ]
         [ a
             [ class "btn btn-big btn-primary block center rounded h2 black bg-aqua"
             , href "#"
-            , onClick (Msgs.RaiseAppeal addr)
+            , onClick (
+              case appealLevel of
+                First ->
+                  Msgs.RaiseAppeal addr
+                Second ->
+                  Msgs.RaiseSecondAppeal addr
+              )
             ]
             [ text "Appeal" ]
         ]
@@ -418,6 +438,17 @@ brehonView brehon profileImage model =
             ownerView
                 && canBrehonAdjudicate brehon model.contractInfo
 
+        brehonClass activeBrehon brehon cssClass =
+          if activeBrehon == brehon.struct.addr
+          then cssClass ++ " active-brehon"
+          else cssClass
+
+
+        brehonLabel activeBrehon brehon label =
+          if activeBrehon == brehon.struct.addr
+          then "Active " ++ label
+          else label
+
         viewClass ownerView cssClass =
             case ownerView of
                 True ->
@@ -429,9 +460,12 @@ brehonView brehon profileImage model =
         div
             [ "brehon-view mx-auto max-width-1 border rounded m1 p2"
                 |> viewClass ownerView
+                |> brehonClass model.contractInfo.activeBrehon brehon
                 |> class
             ]
-            [ text "Brehon"
+            [ "Brehon"
+              |> brehonLabel model.contractInfo.activeBrehon brehon
+              |> text
             , div [ class "block p1" ]
                 [ img [ src profileImage ] []
                 , p []
@@ -622,6 +656,18 @@ singleLogView event =
             li [ class "mb2" ]
                 [ i [ class "fa fa-fire mr1" ] []
                 , text "Appeal raised "
+                , text " by "
+                , textAddress appealingParty
+                , text ". Brehon "
+                , textAddress activeBrehon
+                , text " is presiding."
+                ]
+
+        SecondAppealRaisedEvent appealingParty activeBrehon ->
+            li [ class "mb2" ]
+                [ i [ class "fa fa-fire mr1" ] []
+                , i [ class "fa fa-fire mr1" ] []
+                , text "Second Appeal raised "
                 , text " by "
                 , textAddress appealingParty
                 , text ". Brehon "

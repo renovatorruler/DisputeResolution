@@ -86,6 +86,10 @@ raiseAppeal : Address -> Cmd Msg
 raiseAppeal addr =
     requestRaiseAppeal addr
 
+raiseSecondAppeal : Address -> Cmd Msg
+raiseSecondAppeal addr =
+    requestRaiseSecondAppeal addr
+
 
 adjudicate : Address -> Wei -> Wei -> Cmd Msg
 adjudicate addr awardPartyA awardPartyB =

@@ -210,15 +210,15 @@ contract BrehonContract is
   {
     if((_awardPartyA + _awardPartyB) > (partyA.deposit + partyB.deposit)) throw;
 
-    if (stage == Stages.Dispute)
+    if (stage == Stages.Dispute) {
         stage = Stages.AppealPeriod;
-    else if (stage == Stages.Appeal)
+    } else if (stage == Stages.Appeal) {
         stage = Stages.SecondAppealPeriod;
-    else if (stage == Stages.SecondAppeal)
+    } else if (stage == Stages.SecondAppeal) {
         stage = Stages.Completed;
-    else
+    } else {
         throw;
-
+    }
 
     awards[partyA.addr] = _awardPartyA;
     awards[partyB.addr] = _awardPartyB;

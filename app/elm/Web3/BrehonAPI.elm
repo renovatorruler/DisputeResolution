@@ -88,6 +88,9 @@ port receiveAppealPeriodStartedEvent : (( String, Address, Wei, Wei ) -> msg) ->
 port receiveAppealRaisedEvent : (( Address, Address ) -> msg) -> Sub msg
 
 
+port receiveSecondAppealRaisedEvent : (( Address, Address ) -> msg) -> Sub msg
+
+
 port receiveFundsClaimedEvent : (( Address, Wei ) -> msg) -> Sub msg
 
 
@@ -95,6 +98,9 @@ port requestRaiseDispute : Address -> Cmd msg
 
 
 port requestRaiseAppeal : Address -> Cmd msg
+
+
+port requestRaiseSecondAppeal : Address -> Cmd msg
 
 
 port requestAdjudicate : ( Address, Wei, Wei ) -> Cmd msg

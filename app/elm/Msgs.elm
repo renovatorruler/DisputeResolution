@@ -39,10 +39,12 @@ type Msg
     | LoadContractDisputedEvent ( Address, Address )
     | LoadAppealPeriodStartedEvent ( String, Address, Wei, Wei )
     | LoadAppealRaisedEvent ( Address, Address )
+    | LoadSecondAppealRaisedEvent ( Address, Address )
     | LoadFundsClaimed ( Address, Wei )
     | UpdateTimestamp Time
     | RaiseDispute Address
     | RaiseAppeal Address
+    | RaiseSecondAppeal Address
     | Adjudicate BrehonModel
     | WithdrawFunds Address
     | None
