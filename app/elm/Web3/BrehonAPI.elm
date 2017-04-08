@@ -82,10 +82,10 @@ port receiveDisputeResolvedEvent : (( Int, Address, Wei, Wei ) -> msg) -> Sub ms
 port receiveContractDisputedEvent : (( Address, Address ) -> msg) -> Sub msg
 
 
-port receiveAppealPeriodStartedEvent : (( Int, String, Address, Wei, Wei ) -> msg) -> Sub msg
+port receiveAppealPeriodStartedEvent : (( String, Address, Wei, Wei ) -> msg) -> Sub msg
 
 
-port receiveAppealRaisedEvent : (( Int, Address, Address ) -> msg) -> Sub msg
+port receiveAppealRaisedEvent : (( Address, Address ) -> msg) -> Sub msg
 
 
 port receiveFundsClaimedEvent : (( Address, Wei ) -> msg) -> Sub msg

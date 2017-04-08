@@ -38,14 +38,12 @@ const EventStructs = {
     'activeBrehon',
   ],
   AppealPeriodStarted: [
-    'appealLevel',
     'appealPeriodStartTime',
     'activeBrehon',
     'awardPartyA',
     'awardPartyB',
   ],
   AppealRaised: [
-    'appealLevel',
     'appealingParty',
     'activeBrehon',
   ],
@@ -234,9 +232,6 @@ function portHooks(elmApp, currentProvider) {
         disputingParty: eventObj.args._disputingParty,
         activeBrehon: R.defaultTo(eventObj.args._activeBrehon, eventObj.args.activeBrehon),
         appealingParty: eventObj.args.appealingParty,
-        appealLevel: R.defaultTo(
-          Number(eventObj.args._appealLevel),
-          Number(eventObj.args.appealLevel)),
         appealPeriodStartTime:
           moment.unix(parseInt(
             getDefaultBigNum(eventObj.args._appealPeriodStartTime),
