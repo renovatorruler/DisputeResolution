@@ -165,6 +165,17 @@ update msg model =
             , Cmd.none
             )
 
+        LoadSecondAppealRaisedEvent ( appealingParty, activeBrehon ) ->
+            ( { model
+                | eventLog =
+                    SecondAppealRaisedEvent 
+                        appealingParty
+                        activeBrehon
+                        :: model.eventLog
+              }
+            , Cmd.none
+            )
+
         LoadFundsClaimed ( claimingParty, amount ) ->
             ( { model
                 | eventLog =
@@ -194,6 +205,9 @@ update msg model =
 
         RaiseAppeal addr ->
             ( model, raiseAppeal addr )
+
+        RaiseSecondAppeal addr ->
+            ( model, raiseSecondAppeal addr )
 
         None ->
             ( model, Cmd.none )
@@ -295,7 +309,13 @@ updateContractInfo contractInfo addr stageInt transactionAmount minimumContractA
                 { contractInfoUpdated | stage = Appeal }
 
             6 ->
-                { contractInfoUpdated | stage = Completed }
+                { contractInfoUpdated | stage = SecondAppealPeriod }
+
+            7 ->
+                { contractInfoUpdated | stage = SecondAppeal}
+
+            8 ->
+                { contractInfoUpdated | stage = Completed}
 
             _ ->
                 { contractInfoUpdated | stage = Negotiation }

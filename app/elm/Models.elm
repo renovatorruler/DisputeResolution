@@ -120,8 +120,9 @@ type Stage
     | Resolved
     | AppealPeriod
     | Appeal
+    | SecondAppealPeriod
+    | SecondAppeal
     | Completed
-
 
 type Event
     = ExecutionStartedEvent Int Address Address Wei
@@ -130,4 +131,9 @@ type Event
     | ContractDisputedEvent Address Address
     | AppealPeriodStartedEvent DateTime Address Wei Wei
     | AppealRaisedEvent Address Address
+    | SecondAppealRaisedEvent Address Address
     | FundsClaimedEvent Address Wei
+
+type AppealLevel
+    = First
+    | Second

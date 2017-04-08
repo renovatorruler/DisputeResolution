@@ -12,3 +12,7 @@
 .label-title.h4 {
   margin-top: -1.7rem;
 }
+
+.active-brehon:not(.owner) {
+  border-width: 0.2rem;
+}
