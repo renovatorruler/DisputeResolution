@@ -601,7 +601,7 @@ singleLogView event =
                 , text " is presiding."
                 ]
 
-        AppealPeriodStartedEvent appealLevel startTime activeBrehon awardPartyA awardPartyB ->
+        AppealPeriodStartedEvent startTime activeBrehon awardPartyA awardPartyB ->
             li [ class "mb2" ]
                 [ i [ class "fa fa-gavel mr1" ] []
                 , text "Brehon "
@@ -614,7 +614,7 @@ singleLogView event =
                 , text (toISO8601 startTime)
                 ]
 
-        AppealRaisedEvent appealLevel appealingParty activeBrehon ->
+        AppealRaisedEvent appealingParty activeBrehon ->
             li [ class "mb2" ]
                 [ i [ class "fa fa-fire mr1" ] []
                 , text "Appeal raised "

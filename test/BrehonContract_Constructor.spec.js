@@ -7,11 +7,6 @@ const PartyStruct = contractHelpers.PartyStruct;
 const BrehonStruct = contractHelpers.BrehonStruct;
 
 contract('BrehonContract constructor', () => {
-  it('should set appealLevel to -1', () =>
-    BrehonContract.deployed().then(instance =>
-      instance.appealLevel.call().then(appealLevel =>
-        assert.equal(appealLevel.valueOf(), -1))));
-
   it(`should set transactionAmount to ${defaults.transactionAmount}`, () =>
     BrehonContract.deployed().then(instance =>
       instance.transactionAmount.call().then(transactionAmount =>

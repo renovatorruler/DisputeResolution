@@ -138,10 +138,10 @@ update msg model =
             , Cmd.none
             )
 
-        LoadAppealPeriodStartedEvent ( appealLevel, startTime, activeBrehon, awardPartyA, awardPartyB ) ->
+        LoadAppealPeriodStartedEvent ( startTime, activeBrehon, awardPartyA, awardPartyB ) ->
             ( { model
                 | eventLog =
-                    AppealPeriodStartedEvent appealLevel
+                    AppealPeriodStartedEvent
                         (toDateTime startTime)
                         activeBrehon
                         awardPartyA
@@ -154,10 +154,10 @@ update msg model =
             , Cmd.none
             )
 
-        LoadAppealRaisedEvent ( appealLevel, appealingParty, activeBrehon ) ->
+        LoadAppealRaisedEvent ( appealingParty, activeBrehon ) ->
             ( { model
                 | eventLog =
-                    AppealRaisedEvent appealLevel
+                    AppealRaisedEvent 
                         appealingParty
                         activeBrehon
                         :: model.eventLog

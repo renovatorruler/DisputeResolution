@@ -8,7 +8,9 @@ const startContractAndRaiseDispute = contractHelpers.startContractAndRaiseDisput
 const verifyEvent = contractHelpers.verifyEvent;
 const getMinimumContractAmt = contractHelpers.getMinimumContractAmt;
 const getSplitForPrimaryBrehon = contractHelpers.getPercentageSplit(defaults, 0);
+const assertNoError = contractHelpers.assertNoError;
 const BrehonStruct = contractHelpers.BrehonStruct;
+const StagesStruct = contractHelpers.StagesStruct;
 
 contract('BrehonContract raiseAppeal should only be allowed at Dispute stage', () => {
   it('by preventing it from being called at Negotiation stage', () => {
@@ -192,28 +194,25 @@ contract('BrehonContract should allow partyA to raise an appeal', () => {
           addr: defaults.partyA_addr,
           value: getMinimumContractAmt(defaults),
         }], defaults.partyA_addr, defaults.partyA_addr))
+      .catch(assertNoError('No Exception must be thrown after raiseDispute'))
       .then(function adjudicate() {
         return brehonContract.adjudicate(
             getSplitForPrimaryBrehon(100),
             getSplitForPrimaryBrehon(0),
             { from: defaults.primaryBrehon_addr });
       })
+      .catch(assertNoError('No Exception must be thrown after adjudication'))
       .then(function raiseAppeal() {
         return brehonContract.raiseAppeal({ from: defaults.partyA_addr });
       })
+      .catch(assertNoError('No Exception must be thrown after raiseAppeal'))
       .then(verifyEvent('AppealRaised', {
-        appealLevel: 1,
         appealingParty: defaults.partyA_addr,
         activeBrehon: defaults.secondaryBrehon_addr,
       }))
       .then(function verifyStage() {
         return brehonContract.stage.call().then((stage) => {
-          assert.equal(stage.valueOf(), 2, 'stage is not set to Stages.Dispute');
-        });
-      })
-      .then(function verifyAppealLevel() {
-        return brehonContract.appealLevel.call().then((appealLevel) => {
-          assert.equal(appealLevel.valueOf(), 1, 'Appeal level not set correctly');
+          assert.equal(stage.valueOf(), StagesStruct.Appeal, 'stage is not set to Stages.Appeal');
         });
       })
       .then(function verifyActiveBrehon() {
@@ -254,18 +253,12 @@ contract('BrehonContract should allow partyB to raise an appeal', () => {
         return brehonContract.raiseAppeal({ from: defaults.partyB_addr });
       })
       .then(verifyEvent('AppealRaised', {
-        appealLevel: 1,
         appealingParty: defaults.partyB_addr,
         activeBrehon: defaults.secondaryBrehon_addr,
       }))
       .then(function verifyStage() {
         return brehonContract.stage.call().then((stage) => {
-          assert.equal(stage.valueOf(), 2, 'stage is not set to Stages.Dispute');
-        });
-      })
-      .then(function verifyAppealLevel() {
-        return brehonContract.appealLevel.call().then((appealLevel) => {
-          assert.equal(appealLevel.valueOf(), 1, 'Appeal level not set correctly');
+          assert.equal(stage.valueOf(), StagesStruct.Appeal, 'stage is not set to Stages.Appeal');
         });
       })
       .then(function verifyActiveBrehon() {
