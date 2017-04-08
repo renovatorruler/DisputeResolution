@@ -20,7 +20,7 @@ contract stateMachine {
     _;
   }
 
-  modifier timedTransition(bool bypassWaitTime, uint startTime, uint durationInDays, Stages _currStage, Stages _nextStage)
+  modifier timedTransition(bool bypassWaitTime, uint startTime, uint8 durationInDays, Stages _currStage, Stages _nextStage)
   {
     if (stage != _nextStage) {
         if (stage != _currStage) throw;
