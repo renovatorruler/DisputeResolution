@@ -135,8 +135,8 @@ contract('BrehonContract should allow partyA to accepted a proposed settlement',
           { from: defaults.partyA_addr });
       })
       .then(verifyEvent('DisputeResolved', {
-        _awardPartyA: settlement.partyA,
-        _awardPartyB: settlement.partyB,
+        awardPartyA: settlement.partyA,
+        awardPartyB: settlement.partyB,
       }))
       .then(function verifyAwards() {
         return brehonContract.getActiveJudgmentByParty.call(defaults.partyA_addr,
@@ -194,8 +194,8 @@ contract('BrehonContract should allow partyB to accepted a proposed settlement',
           { from: defaults.partyB_addr });
       })
       .then(verifyEvent('DisputeResolved', {
-        _awardPartyA: settlement.partyA,
-        _awardPartyB: settlement.partyB,
+        awardPartyA: settlement.partyA,
+        awardPartyB: settlement.partyB,
       }))
       .then(function verifyDisputeResolution() {
         return brehonContract.stage.call().then((stage) => {

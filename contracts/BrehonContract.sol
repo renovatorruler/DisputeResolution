@@ -49,11 +49,11 @@ contract BrehonContract is
 
   event ExecutionStarted(address caller, uint totalDeposits);
   event ContractDisputed(address disputingParty, address activeBrehon);
-  event AppealPeriodStarted(uint _appealPeriodStartTime, address activeBrehon, uint _awardPartyA, uint _awardPartyB);
+  event AppealPeriodStarted(uint appealPeriodStartTime, address activeBrehon, uint awardPartyA, uint awardPartyB);
   event AppealRaised(address appealingParty, address activeBrehon);
   event SecondAppealRaised(address appealingParty, address activeBrehon);
-  event SettlementProposed(address _proposingParty, uint _awardPartyA, uint _awardPartyB);
-  event DisputeResolved(uint _awardPartyA, uint _awardPartyB);
+  event SettlementProposed(address proposingParty, uint awardPartyA, uint awardPartyB);
+  event DisputeResolved(uint awardPartyA, uint awardPartyB);
   event FundsClaimed(address claimingParty, uint amount);
 
   modifier byEitherEntities() {
