@@ -397,6 +397,56 @@ contract('BrehonContract should allow the Brehons to withdraw funds after a sett
       .catch(function handleException(err) {
         console.error(err);
         assert.isNull(err, 'Exception was thrown when primaryBrehon tried to accept settlement');
+      })
+      .then(() => {
+        startingBalance = web3.eth.getBalance(defaults.secondaryBrehon_addr);
+      })
+      .then(function claimFunds() {
+        return brehonContract.claimFunds({ from: defaults.secondaryBrehon_addr });
+      })
+      .then(verifyEvent('FundsClaimed', {
+        claimingParty: defaults.secondaryBrehon_addr,
+        amount: settlement.secondaryBrehon,
+      }))
+      .then((result) => {
+        const newBalance = web3.eth.getBalance(defaults.secondaryBrehon_addr);
+        const tx = web3.eth.getTransaction(result.tx);
+        const block = web3.eth.getBlock(tx.blockNumber);
+        const gasPaid = new BigNumber(block.gasUsed).mul(tx.gasPrice);
+        assert.isTrue(
+          startingBalance
+          .minus(gasPaid)
+          .plus(settlement.secondaryBrehon)
+          .eq(newBalance));
+      })
+      .catch(function handleException(err) {
+        console.error(err);
+        assert.isNull(err, 'Exception was thrown when secondaryBrehon tried to accept settlement');
+      })
+      .then(() => {
+        startingBalance = web3.eth.getBalance(defaults.tertiaryBrehon_addr);
+      })
+      .then(function claimFunds() {
+        return brehonContract.claimFunds({ from: defaults.tertiaryBrehon_addr });
+      })
+      .then(verifyEvent('FundsClaimed', {
+        claimingParty: defaults.tertiaryBrehon_addr,
+        amount: settlement.tertiaryBrehon,
+      }))
+      .then((result) => {
+        const newBalance = web3.eth.getBalance(defaults.tertiaryBrehon_addr);
+        const tx = web3.eth.getTransaction(result.tx);
+        const block = web3.eth.getBlock(tx.blockNumber);
+        const gasPaid = new BigNumber(block.gasUsed).mul(tx.gasPrice);
+        assert.isTrue(
+          startingBalance
+          .minus(gasPaid)
+          .plus(settlement.tertiaryBrehon)
+          .eq(newBalance));
+      })
+      .catch(function handleException(err) {
+        console.error(err);
+        assert.isNull(err, 'Exception was thrown when tertiaryBrehon tried to accept settlement');
       });
   });
 });
@@ -458,6 +508,56 @@ contract('BrehonContract should allow the Brehons to withdraw funds after a sett
       .catch(function handleException(err) {
         console.error(err);
         assert.isNull(err, 'Exception was thrown when primaryBrehon tried to accept settlement');
+      })
+      .then(() => {
+        startingBalance = web3.eth.getBalance(defaults.secondaryBrehon_addr);
+      })
+      .then(function claimFunds() {
+        return brehonContract.claimFunds({ from: defaults.secondaryBrehon_addr });
+      })
+      .then(verifyEvent('FundsClaimed', {
+        claimingParty: defaults.secondaryBrehon_addr,
+        amount: settlement.secondaryBrehon,
+      }))
+      .then((result) => {
+        const newBalance = web3.eth.getBalance(defaults.secondaryBrehon_addr);
+        const tx = web3.eth.getTransaction(result.tx);
+        const block = web3.eth.getBlock(tx.blockNumber);
+        const gasPaid = new BigNumber(block.gasUsed).mul(tx.gasPrice);
+        assert.isTrue(
+          startingBalance
+          .minus(gasPaid)
+          .plus(settlement.secondaryBrehon)
+          .eq(newBalance));
+      })
+      .catch(function handleException(err) {
+        console.error(err);
+        assert.isNull(err, 'Exception was thrown when secondaryBrehon tried to accept settlement');
+      })
+      .then(() => {
+        startingBalance = web3.eth.getBalance(defaults.tertiaryBrehon_addr);
+      })
+      .then(function claimFunds() {
+        return brehonContract.claimFunds({ from: defaults.tertiaryBrehon_addr });
+      })
+      .then(verifyEvent('FundsClaimed', {
+        claimingParty: defaults.tertiaryBrehon_addr,
+        amount: settlement.tertiaryBrehon,
+      }))
+      .then((result) => {
+        const newBalance = web3.eth.getBalance(defaults.tertiaryBrehon_addr);
+        const tx = web3.eth.getTransaction(result.tx);
+        const block = web3.eth.getBlock(tx.blockNumber);
+        const gasPaid = new BigNumber(block.gasUsed).mul(tx.gasPrice);
+        assert.isTrue(
+          startingBalance
+          .minus(gasPaid)
+          .plus(settlement.tertiaryBrehon)
+          .eq(newBalance));
+      })
+      .catch(function handleException(err) {
+        console.error(err);
+        assert.isNull(err, 'Exception was thrown when tertiaryBrehon tried to accept settlement');
       });
   });
 });
@@ -491,6 +591,7 @@ contract('BrehonContract should allow the Brehons to withdraw funds after a sett
           settlement.partyB,
           { from: defaults.primaryBrehon_addr });
       })
+      .catch(assertNoErrorWithMsg)
       .then(function proposeSettlement() {
         return brehonContract.proposeSettlement(
           settlement.partyA,
@@ -525,6 +626,55 @@ contract('BrehonContract should allow the Brehons to withdraw funds after a sett
       .catch(function handleException(err) {
         console.error(err);
         assert.isNull(err, 'Exception was thrown when primaryBrehon tried to accept settlement');
+      })
+      .then(() => {
+        startingBalance = web3.eth.getBalance(defaults.secondaryBrehon_addr);
+      })
+      .then(function claimFunds() {
+        return brehonContract.claimFunds({ from: defaults.secondaryBrehon_addr });
+      })
+      .then(verifyEvent('FundsClaimed', {
+        claimingParty: defaults.secondaryBrehon_addr,
+        amount: settlement.secondaryBrehon,
+      }))
+      .then((result) => {
+        const newBalance = web3.eth.getBalance(defaults.secondaryBrehon_addr);
+        const tx = web3.eth.getTransaction(result.tx);
+        const block = web3.eth.getBlock(tx.blockNumber);
+        const gasPaid = new BigNumber(block.gasUsed).mul(tx.gasPrice);
+        assert.isTrue(startingBalance
+          .minus(gasPaid)
+          .plus(settlement.secondaryBrehon)
+          .eq(newBalance));
+      })
+      .catch(function handleException(err) {
+        console.error(err);
+        assert.isNull(err, 'Exception was thrown when secondaryBrehon tried to accept settlement');
+      })
+      .then(() => {
+        startingBalance = web3.eth.getBalance(defaults.tertiaryBrehon_addr);
+      })
+      .then(function claimFunds() {
+        return brehonContract.claimFunds({ from: defaults.tertiaryBrehon_addr });
+      })
+      .then(verifyEvent('FundsClaimed', {
+        claimingParty: defaults.tertiaryBrehon_addr,
+        amount: settlement.tertiaryBrehon,
+      }))
+      .then((result) => {
+        const newBalance = web3.eth.getBalance(defaults.tertiaryBrehon_addr);
+        const tx = web3.eth.getTransaction(result.tx);
+        const block = web3.eth.getBlock(tx.blockNumber);
+        const gasPaid = new BigNumber(block.gasUsed).mul(tx.gasPrice);
+        assert.isTrue(
+          startingBalance
+          .minus(gasPaid)
+          .plus(settlement.tertiaryBrehon)
+          .eq(newBalance));
+      })
+      .catch(function handleException(err) {
+        console.error(err);
+        assert.isNull(err, 'Exception was thrown when tertiaryBrehon tried to accept settlement');
       });
   });
 });
