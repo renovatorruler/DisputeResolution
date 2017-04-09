@@ -48,8 +48,8 @@ contract BrehonContract is
   uint public appealPeriodStartTime;
 
   event ExecutionStarted(address caller, uint totalDeposits);
-  event ContractDisputed(address _disputingParty, address _activeBrehon);
-  event AppealPeriodStarted(uint _appealPeriodStartTime, address _activeBrehon, uint _awardPartyA, uint _awardPartyB);
+  event ContractDisputed(address disputingParty, address activeBrehon);
+  event AppealPeriodStarted(uint _appealPeriodStartTime, address activeBrehon, uint _awardPartyA, uint _awardPartyB);
   event AppealRaised(address appealingParty, address activeBrehon);
   event SecondAppealRaised(address appealingParty, address activeBrehon);
   event SettlementProposed(address _proposingParty, uint _awardPartyA, uint _awardPartyB);

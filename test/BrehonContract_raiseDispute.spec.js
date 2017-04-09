@@ -181,9 +181,9 @@ contract('BrehonContract should trigger ContractDisputed event', () => {
       }], defaults.partyA_addr, defaults.partyA_addr))
     .then((result) => {
       const contractDisputedEvent = R.find(R.propEq('event', 'ContractDisputed'), result.logs);
-      assert.equal(contractDisputedEvent.args._disputingParty, defaults.partyA_addr,
+      assert.equal(contractDisputedEvent.args.disputingParty, defaults.partyA_addr,
         'ContractDisputed event did not correctly provide the party disputed the contract');
-      assert.equal(contractDisputedEvent.args._activeBrehon, defaults.primaryBrehon_addr,
+      assert.equal(contractDisputedEvent.args.activeBrehon, defaults.primaryBrehon_addr,
         'ContractDisputed event did not correctly provide the deposits at the time of contract start');
       assert.isDefined(contractDisputedEvent, 'ContractStarted event was not emitted');
     }));

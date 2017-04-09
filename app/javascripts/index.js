@@ -234,8 +234,8 @@ function portHooks(elmApp, currentProvider) {
         proposingParty: eventObj.args._proposingParty,
         awardPartyA: getDefaultBigNum(eventObj.args._awardPartyA),
         awardPartyB: getDefaultBigNum(eventObj.args._awardPartyB),
-        disputingParty: eventObj.args._disputingParty,
-        activeBrehon: R.defaultTo(eventObj.args._activeBrehon, eventObj.args.activeBrehon),
+        disputingParty: eventObj.args.disputingParty,
+        activeBrehon: R.defaultTo(eventObj.args.activeBrehon, eventObj.args.activeBrehon),
         appealingParty: eventObj.args.appealingParty,
         appealPeriodStartTime:
           moment.unix(parseInt(
