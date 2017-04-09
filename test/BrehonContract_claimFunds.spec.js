@@ -1068,3 +1068,90 @@ contract('BrehonContract should allow the Brehons to withdraw funds after a sett
       });
   });
 });
+
+contract('BrehonContract should not allow the Brehons to withdraw funds multiple times', () => {
+  const settlement = {
+    partyA: getSplitForSecondaryBrehon(60),
+    partyB: getSplitForSecondaryBrehon(40),
+    primaryBrehon: new BigNumber(defaults.primaryBrehon_fixedFee)
+      .add(new BigNumber(defaults.primaryBrehon_disputeFee)),
+    secondaryBrehon: new BigNumber(defaults.secondaryBrehon_fixedFee)
+      .add(new BigNumber(defaults.secondaryBrehon_disputeFee)),
+    tertiaryBrehon: new BigNumber(defaults.tertiaryBrehon_fixedFee)
+      .add(new BigNumber(defaults.tertiaryBrehon_disputeFee)),
+  };
+  it('by letting them call claimFunds multiple times', () => {
+    let brehonContract;
+    return BrehonContract.deployed()
+      .then(function captureReference(instance) {
+        brehonContract = instance;
+        return instance;
+      })
+      .then(startContractAndRaiseDispute(
+        [{
+          addr: defaults.partyA_addr,
+          value: getMinimumContractAmt(defaults),
+        }], defaults.partyA_addr, defaults.partyA_addr))
+      .catch(assertNoError(true, 'Exception was thrown during startContractAndRaiseDispute'))
+      .then(function adjudicate() {
+        return brehonContract.adjudicate(
+          getSplitForPrimaryBrehon(60),
+          getSplitForPrimaryBrehon(40),
+          { from: defaults.primaryBrehon_addr });
+      })
+      .catch(assertNoError(true, 'Exception was thrown during primaryBrehon\'s adjudicate'))
+      .then(function raiseAppeal() {
+        return brehonContract.raiseAppeal({ from: defaults.partyB_addr });
+      })
+      .catch(assertNoError(true, 'Exception was thrown during raiseAppeal'))
+      .then(function adjudicate() {
+        return brehonContract.adjudicate(
+          settlement.partyA,
+          settlement.partyB,
+          { from: defaults.secondaryBrehon_addr });
+      })
+      .catch(assertNoError(true, 'Exception was thrown during secondaryBrehon\'s adjudicate'))
+      .then(function raise2ndAppeal() {
+        return brehonContract.raise2ndAppeal({ from: defaults.partyB_addr });
+      })
+      .catch(assertNoError(true, 'Exception was thrown during raise2ndAppeal'))
+      .then(function proposeSettlement() {
+        return brehonContract.proposeSettlement(
+          settlement.partyA,
+          settlement.partyB,
+          { from: defaults.partyB_addr });
+      })
+      .catch(assertNoError(true, 'Exception was thrown during proposeSettlement'))
+      .then(function acceptSettlement() {
+        return brehonContract.acceptSettlement(
+          settlement.partyA,
+          settlement.partyB,
+          { from: defaults.partyA_addr });
+      })
+      .catch(assertNoError(true, 'Exception was thrown during acceptSettlement'))
+      .then(function primaryBrehonClaimFunds() {
+        return brehonContract.claimFunds({ from: defaults.primaryBrehon_addr });
+      })
+      .catch(assertNoError(true, 'Exception was thrown during primaryBrehon\'s claimFunds'))
+      .then(function secondaryBrehonClaimFunds() {
+        return brehonContract.claimFunds({ from: defaults.secondaryBrehon_addr });
+      })
+      .catch(assertNoError(true, 'Exception was thrown during secondaryBrehon\'s claimFunds'))
+      .then(function tertiaryBrehonClaimFunds() {
+        return brehonContract.claimFunds({ from: defaults.tertiaryBrehon_addr });
+      })
+      .catch(assertNoError(true, 'Exception was thrown during tertiaryBrehon\'s claimFunds'))
+      .then(function primaryBrehonClaimFunds() {
+        return brehonContract.claimFunds({ from: defaults.primaryBrehon_addr });
+      })
+      .catch(assertError('No exception was thrown when primaryBrehon tried to claimFunds again'))
+      .then(function secondaryBrehonClaimFunds() {
+        return brehonContract.claimFunds({ from: defaults.secondaryBrehon_addr });
+      })
+      .catch(assertError('No exception was thrown when secondaryBrehon tried to claimFunds again'))
+      .then(function tertiaryBrehonClaimFunds() {
+        return brehonContract.claimFunds({ from: defaults.tertiaryBrehon_addr });
+      })
+      .catch(assertError('No exception was thrown when tertiaryBrehon tried to claimFunds again'));
+  });
+});
