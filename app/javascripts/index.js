@@ -229,8 +229,8 @@ function portHooks(elmApp, currentProvider) {
       const portEventObj = {
         blockNumber: eventObj.blockNumber,
         txHash: eventObj.transactionHash,
-        caller: eventObj.args._caller,
-        totalDeposits: getDefaultBigNum(eventObj.args._totalDeposits),
+        caller: eventObj.args.caller,
+        totalDeposits: getDefaultBigNum(eventObj.args.totalDeposits),
         proposingParty: eventObj.args._proposingParty,
         awardPartyA: getDefaultBigNum(eventObj.args._awardPartyA),
         awardPartyB: getDefaultBigNum(eventObj.args._awardPartyB),

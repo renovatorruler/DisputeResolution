@@ -47,10 +47,9 @@ contract BrehonContract is
   uint8 public appealPeriodInDays = 5;
   uint public appealPeriodStartTime;
 
-  event ExecutionStarted(address _caller, uint _totalDeposits);
+  event ExecutionStarted(address caller, uint totalDeposits);
   event ContractDisputed(address _disputingParty, address _activeBrehon);
   event AppealPeriodStarted(uint _appealPeriodStartTime, address _activeBrehon, uint _awardPartyA, uint _awardPartyB);
-  //TODO: Provide the information about the party which appealed
   event AppealRaised(address appealingParty, address activeBrehon);
   event SecondAppealRaised(address appealingParty, address activeBrehon);
   event SettlementProposed(address _proposingParty, uint _awardPartyA, uint _awardPartyB);
