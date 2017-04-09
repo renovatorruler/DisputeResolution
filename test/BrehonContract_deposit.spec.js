@@ -18,7 +18,7 @@ contract('BrehonContract should accept funds from partyA', () => {
         assert.equal(partyA[PartyStruct.deposit].valueOf(), defaults.transactionAmount,
           'partyA\'s contractAccepted is incorrectly set')))
     .then(() =>
-      brehonContract.partyB.call().then((partyB) =>
+      brehonContract.partyB.call().then(partyB =>
         assert.equal(partyB[PartyStruct.deposit].valueOf(), 0,
         'partyB\'s contractAccepted is incorrectly set')));
   });
@@ -49,7 +49,7 @@ contract('BrehonContract shouldnt\'t accept funds from unauthorized addresses',
     it('like from the primaryBrehon', () => {
       let brehonContract;
       return BrehonContract.deployed()
-        .then(instance => {
+        .then((instance) => {
           brehonContract = instance;
           return brehonContract.deposit({
             from: defaults.primaryBrehon_addr,
@@ -91,37 +91,41 @@ contract('BrehonContract shouldnt\'t accept funds from unauthorized addresses',
       let brehonContract;
       return BrehonContract.deployed().then((instance) => {
         brehonContract = instance;
-        return brehonContract.deposit({ from: defaults.tertiaryBrehon_addr, value: defaults.transactionAmount });
-      })
-        .then(() => brehonContract.partyA.call()
-          .then((partyA) => assert.equal(partyA[PartyStruct.deposit].valueOf(), 0,
-            'partyA\'s contractAccepted is incorrectly set')))
-        .then(() => {
-          return brehonContract.partyB.call().then((partyB) => {
-            assert.equal(partyB[PartyStruct.deposit].valueOf(), 0,
-              'partyB\'s contractAccepted is incorrectly set');
-          });
-        }).catch((err) => {
-          assert.isNotNull(err, 'Exception was not thrown when a tertiaryBrehon tried to deposit funds to the contract');
+        return brehonContract.deposit({
+          from: defaults.tertiaryBrehon_addr,
+          value: defaults.transactionAmount,
         });
+      })
+      .then(() => brehonContract.partyA.call()
+        .then(partyA => assert.equal(partyA[PartyStruct.deposit].valueOf(), 0,
+          'partyA\'s contractAccepted is incorrectly set')))
+      .then(() =>
+        brehonContract.partyB.call()
+        .then(partyB =>
+          assert.equal(partyB[PartyStruct.deposit].valueOf(), 0,
+          'partyB\'s contractAccepted is incorrectly set')))
+        .catch(err => assert.isNotNull(err,
+          'Exception was not thrown when a tertiaryBrehon tried to deposit funds to the contract'));
     });
 
     it('or from a rando', () => {
       let brehonContract;
       return BrehonContract.deployed().then((instance) => {
         brehonContract = instance;
-        return brehonContract.deposit({ from: accounts[6], value: defaults.transactionAmount });
-      }).then(() => {
-        return brehonContract.partyA.call().then((partyA) => {
+        return brehonContract.deposit({
+          from: accounts[6],
+          value: defaults.transactionAmount,
+        });
+      })
+      .then(() =>
+        brehonContract.partyA.call().then(partyA =>
           assert.equal(partyA[PartyStruct.deposit].valueOf(), 0,
-            'partyA\'s contractAccepted is incorrectly set');
-        });
-      }).then(() => {
-        return brehonContract.partyB.call().then((partyB) => {
+            'partyA\'s contractAccepted is incorrectly set')))
+      .then(() =>
+        brehonContract.partyB.call().then(partyB =>
           assert.equal(partyB[PartyStruct.deposit].valueOf(), 0,
-            'partyB\'s contractAccepted is incorrectly set');
-        });
-      }).catch((err) => {
+            'partyB\'s contractAccepted is incorrectly set')))
+      .catch((err) => {
         assert.isNotNull(err, 'Exception was not thrown when a rando tried to deposit funds to the contract');
       });
     });
