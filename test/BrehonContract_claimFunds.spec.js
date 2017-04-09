@@ -340,3 +340,191 @@ contract('BrehonContract should allow partyB to withdraw funds after a settlemen
       });
   });
 });
+
+contract('BrehonContract should allow the Brehons to withdraw funds after a settlement', () => {
+  const settlement = {
+    partyA: getSplitForPrimaryBrehon(60),
+    partyB: getSplitForPrimaryBrehon(40),
+    primaryBrehon: defaults.primaryBrehon_fixedFee,
+    secondaryBrehon: defaults.secondaryBrehon_fixedFee,
+    tertiaryBrehon: defaults.tertiaryBrehon_fixedFee,
+  };
+  it('at Execution stage', () => {
+    let brehonContract;
+    let startingBalance;
+    return BrehonContract.deployed()
+      .then(function captureReference(instance) {
+        brehonContract = instance;
+        return instance;
+      })
+      .then(startContract(
+        [{
+          addr: defaults.partyA_addr,
+          value: getMinimumContractAmt(defaults),
+        }], defaults.partyA_addr))
+      .catch(assertNoErrorWithMsg)
+      .then(function proposeSettlement() {
+        return brehonContract.proposeSettlement(
+          settlement.partyA,
+          settlement.partyB,
+          { from: defaults.partyB_addr });
+      })
+      .catch(assertNoErrorWithMsg)
+      .then(function acceptSettlement() {
+        return brehonContract.acceptSettlement(
+          settlement.partyA,
+          settlement.partyB,
+          { from: defaults.partyA_addr });
+      })
+      .catch(assertNoErrorWithMsg)
+      .then(() => {
+        startingBalance = web3.eth.getBalance(defaults.primaryBrehon_addr);
+      })
+      .then(function claimFunds() {
+        return brehonContract.claimFunds({ from: defaults.primaryBrehon_addr });
+      })
+      .then(verifyEvent('FundsClaimed', {
+        claimingParty: defaults.primaryBrehon_addr,
+        amount: settlement.primaryBrehon,
+      }))
+      .then((result) => {
+        const newBalance = web3.eth.getBalance(defaults.primaryBrehon_addr);
+        const tx = web3.eth.getTransaction(result.tx);
+        const block = web3.eth.getBlock(tx.blockNumber);
+        const gasPaid = new BigNumber(block.gasUsed).mul(tx.gasPrice);
+        assert.isTrue(startingBalance.minus(gasPaid).plus(settlement.primaryBrehon).eq(newBalance));
+      })
+      .catch(function handleException(err) {
+        console.error(err);
+        assert.isNull(err, 'Exception was thrown when primaryBrehon tried to accept settlement');
+      });
+  });
+});
+
+contract('BrehonContract should allow the Brehons to withdraw funds after a settlement', () => {
+  const settlement = {
+    partyA: getSplitForPrimaryBrehon(60),
+    partyB: getSplitForPrimaryBrehon(40),
+    primaryBrehon: new BigNumber(defaults.primaryBrehon_fixedFee)
+      .add(new BigNumber(defaults.primaryBrehon_disputeFee)),
+    secondaryBrehon: defaults.secondaryBrehon_fixedFee,
+    tertiaryBrehon: defaults.tertiaryBrehon_fixedFee,
+  };
+  it('at Dispute stage', () => {
+    let brehonContract;
+    let startingBalance;
+    return BrehonContract.deployed()
+      .then(function captureReference(instance) {
+        brehonContract = instance;
+        return instance;
+      })
+      .then(startContractAndRaiseDispute(
+        [{
+          addr: defaults.partyA_addr,
+          value: getMinimumContractAmt(defaults),
+        }], defaults.partyA_addr, defaults.partyA_addr))
+      .catch(assertNoErrorWithMsg)
+      .then(function proposeSettlement() {
+        return brehonContract.proposeSettlement(
+          settlement.partyA,
+          settlement.partyB,
+          { from: defaults.partyB_addr });
+      })
+      .catch(assertNoErrorWithMsg)
+      .then(function acceptSettlement() {
+        return brehonContract.acceptSettlement(
+          settlement.partyA,
+          settlement.partyB,
+          { from: defaults.partyA_addr });
+      })
+      .catch(assertNoErrorWithMsg)
+      .then(() => {
+        startingBalance = web3.eth.getBalance(defaults.primaryBrehon_addr);
+      })
+      .then(function claimFunds() {
+        return brehonContract.claimFunds({ from: defaults.primaryBrehon_addr });
+      })
+      .then(verifyEvent('FundsClaimed', {
+        claimingParty: defaults.primaryBrehon_addr,
+        amount: settlement.primaryBrehon,
+      }))
+      .then((result) => {
+        const newBalance = web3.eth.getBalance(defaults.primaryBrehon_addr);
+        const tx = web3.eth.getTransaction(result.tx);
+        const block = web3.eth.getBlock(tx.blockNumber);
+        const gasPaid = new BigNumber(block.gasUsed).mul(tx.gasPrice);
+        assert.isTrue(startingBalance.minus(gasPaid).plus(settlement.primaryBrehon).eq(newBalance));
+      })
+      .catch(function handleException(err) {
+        console.error(err);
+        assert.isNull(err, 'Exception was thrown when primaryBrehon tried to accept settlement');
+      });
+  });
+});
+
+contract('BrehonContract should allow the Brehons to withdraw funds after a settlement', () => {
+  const settlement = {
+    partyA: getSplitForPrimaryBrehon(60),
+    partyB: getSplitForPrimaryBrehon(40),
+    primaryBrehon: new BigNumber(defaults.primaryBrehon_fixedFee)
+      .add(new BigNumber(defaults.primaryBrehon_disputeFee)),
+    secondaryBrehon: defaults.secondaryBrehon_fixedFee,
+    tertiaryBrehon: defaults.tertiaryBrehon_fixedFee,
+  };
+  it('at AppealPeriod stage', () => {
+    let brehonContract;
+    let startingBalance;
+    return BrehonContract.deployed()
+      .then(function captureReference(instance) {
+        brehonContract = instance;
+        return instance;
+      })
+      .then(startContractAndRaiseDispute(
+        [{
+          addr: defaults.partyA_addr,
+          value: getMinimumContractAmt(defaults),
+        }], defaults.partyA_addr, defaults.partyA_addr))
+      .catch(assertNoErrorWithMsg)
+      .then(function adjudicate() {
+        return brehonContract.adjudicate(
+          settlement.partyA,
+          settlement.partyB,
+          { from: defaults.primaryBrehon_addr });
+      })
+      .then(function proposeSettlement() {
+        return brehonContract.proposeSettlement(
+          settlement.partyA,
+          settlement.partyB,
+          { from: defaults.partyB_addr });
+      })
+      .catch(assertNoErrorWithMsg)
+      .then(function acceptSettlement() {
+        return brehonContract.acceptSettlement(
+          settlement.partyA,
+          settlement.partyB,
+          { from: defaults.partyA_addr });
+      })
+      .catch(assertNoErrorWithMsg)
+      .then(() => {
+        startingBalance = web3.eth.getBalance(defaults.primaryBrehon_addr);
+      })
+      .then(function claimFunds() {
+        return brehonContract.claimFunds({ from: defaults.primaryBrehon_addr });
+      })
+      .then(verifyEvent('FundsClaimed', {
+        claimingParty: defaults.primaryBrehon_addr,
+        amount: settlement.primaryBrehon,
+      }))
+      .then((result) => {
+        const newBalance = web3.eth.getBalance(defaults.primaryBrehon_addr);
+        const tx = web3.eth.getTransaction(result.tx);
+        const block = web3.eth.getBlock(tx.blockNumber);
+        const gasPaid = new BigNumber(block.gasUsed).mul(tx.gasPrice);
+        assert.isTrue(startingBalance.minus(gasPaid).plus(settlement.primaryBrehon).eq(newBalance));
+      })
+      .catch(function handleException(err) {
+        console.error(err);
+        assert.isNull(err, 'Exception was thrown when primaryBrehon tried to accept settlement');
+      });
+  });
+});

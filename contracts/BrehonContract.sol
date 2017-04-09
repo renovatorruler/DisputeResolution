@@ -58,6 +58,17 @@ contract BrehonContract is
   event DisputeResolved(uint _awardPartyA, uint _awardPartyB);
   event FundsClaimed(address claimingParty, uint amount);
 
+  modifier byEitherEntities() {
+    if (msg.sender != primaryBrehon.addr &&
+        msg.sender != secondaryBrehon.addr &&
+        msg.sender != tertiaryBrehon.addr &&
+        msg.sender != partyA.addr &&
+        msg.sender != partyB.addr) {
+        throw;
+    }
+    _;
+  }
+
   modifier eitherByParty(Party _party1, Party _party2)
   {
     if (msg.sender != _party1.addr &&
@@ -81,15 +92,6 @@ contract BrehonContract is
        stage != Stages.Dispute &&
        stage != Stages.AppealPeriod &&
        stage != Stages.SecondAppealPeriod)
-        throw;
-    _;
-  }
-
-  modifier eitherByBrehon(Brehon _brehon1, Brehon _brehon2, Brehon _brehon3)
-  {
-    if (msg.sender != _brehon1.addr ||
-        msg.sender != _brehon2.addr ||
-        msg.sender != _brehon3.addr)
         throw;
     _;
   }
@@ -191,7 +193,10 @@ contract BrehonContract is
       if ((partyA.deposit + partyB.deposit) >=
           minimumContractAmt) {
              ExecutionStarted(msg.sender, partyA.deposit + partyB.deposit);
-             stage = Stages.Execution;
+             stage = Stages.Execution; // STATECHANGE
+             awards[primaryBrehon.addr] = primaryBrehon.fixedFee;
+             awards[secondaryBrehon.addr] = secondaryBrehon.fixedFee;
+             awards[tertiaryBrehon.addr] = tertiaryBrehon.fixedFee;
       } else throw;
   }
 
@@ -199,7 +204,8 @@ contract BrehonContract is
     atStage(Stages.Execution)
     eitherByParty(partyA, partyB)
   {
-    stage = Stages.Dispute;
+    stage = Stages.Dispute; // STATECHANGE
+    awards[primaryBrehon.addr] += primaryBrehon.disputeFee;
     activeBrehon = primaryBrehon;
     ContractDisputed(msg.sender, primaryBrehon.addr);
   }
@@ -211,11 +217,11 @@ contract BrehonContract is
     if((_awardPartyA + _awardPartyB) > (partyA.deposit + partyB.deposit)) throw;
 
     if (stage == Stages.Dispute) {
-        stage = Stages.AppealPeriod;
+        stage = Stages.AppealPeriod; // STATECHANGE
     } else if (stage == Stages.Appeal) {
-        stage = Stages.SecondAppealPeriod;
+        stage = Stages.SecondAppealPeriod;  // STATECHANGE
     } else if (stage == Stages.SecondAppeal) {
-        stage = Stages.Completed;
+        stage = Stages.Completed; // STATECHANGE
     } else {
         throw;
     }
@@ -241,12 +247,15 @@ contract BrehonContract is
   }
 
   function claimFunds()
-    eitherByParty(partyA, partyB)
+    byEitherEntities()
   {
     if (stage != Stages.Completed) {
-        if (stage != Stages.AppealPeriod && stage != Stages.SecondAppealPeriod) throw;
-        if (noWaitPeriod || now >= appealPeriodStartTime + (appealPeriodInDays * 1 days))
-            stage = Stages.Completed;
+        if (stage != Stages.AppealPeriod && stage != Stages.SecondAppealPeriod) {
+            throw;
+        }
+        if (noWaitPeriod || now >= appealPeriodStartTime + (appealPeriodInDays * 1 days)) {
+            stage = Stages.Completed; // STATECHANGE
+        }
     }
 
     if (stage != Stages.Completed) throw;
@@ -275,7 +284,8 @@ contract BrehonContract is
     atStage(Stages.AppealPeriod)
     eitherByParty(partyA, partyB)
   {
-    stage = Stages.Appeal;
+    stage = Stages.Appeal; // STATECHANGE
+    awards[secondaryBrehon.addr] += secondaryBrehon.disputeFee;
 
     activeBrehon = secondaryBrehon;
 
@@ -286,7 +296,8 @@ contract BrehonContract is
     atStage(Stages.SecondAppealPeriod)
     eitherByParty(partyA, partyB)
   {
-    stage = Stages.SecondAppeal;
+    stage = Stages.SecondAppeal; // STATECHANGE
+    awards[tertiaryBrehon.addr] += tertiaryBrehon.disputeFee;
 
     activeBrehon = tertiaryBrehon;
 
@@ -331,7 +342,7 @@ contract BrehonContract is
           awards[partyA.addr] = proposedSettlement.awardPartyA;
           awards[partyB.addr] = proposedSettlement.awardPartyB;
           noWaitPeriod = true;
-          stage = Stages.Completed;
+          stage = Stages.Completed; // STATECHANGE
           DisputeResolved(_awardPartyA, _awardPartyB);
       }
   }
