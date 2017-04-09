@@ -34,7 +34,6 @@ contract BrehonContract is
   uint public transactionAmount;
   uint public minimumContractAmt;
   bytes32 public contractTermsHash;
-  bool public noWaitPeriod;
   Party public partyA;
   Party public partyB;
   Brehon public primaryBrehon;
@@ -140,7 +139,6 @@ contract BrehonContract is
 
     //Defaults
     stage = Stages.Negotiation;
-    noWaitPeriod = false;
     partyA.contractAccepted = false;
     partyA.deposit = 0;
 
@@ -232,7 +230,7 @@ contract BrehonContract is
 
         AppealPeriodStarted(appealPeriodStartTime, activeBrehon.addr, _awardPartyA, _awardPartyB);
     } else {
-        noWaitPeriod = true;
+        stage = Stages.Completed;
     }
   }
 
@@ -251,7 +249,7 @@ contract BrehonContract is
         if (stage != Stages.AppealPeriod && stage != Stages.SecondAppealPeriod) {
             throw;
         }
-        if (noWaitPeriod || now >= appealPeriodStartTime + (appealPeriodInDays * 1 days)) {
+        if (now >= appealPeriodStartTime + (appealPeriodInDays * 1 days)) {
             stage = Stages.Completed; // STATECHANGE
         }
     }
@@ -339,7 +337,6 @@ contract BrehonContract is
       if(proposedSettlement.partyAAccepted && proposedSettlement.partyBAccepted) {
           awards[partyA.addr] = proposedSettlement.awardPartyA;
           awards[partyB.addr] = proposedSettlement.awardPartyB;
-          noWaitPeriod = true;
           stage = Stages.Completed; // STATECHANGE
           DisputeResolved(_awardPartyA, _awardPartyB);
       }
