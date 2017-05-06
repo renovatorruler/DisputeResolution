@@ -1,12 +1,10 @@
-pragma solidity ^0.4.2;
+pragma solidity ^0.4.8;
 
-import "./priced.sol";
 import "./stateMachine.sol";
 import "./accessRestricted.sol";
 
 /// @title Brehon Contract
 contract BrehonContract is
-    priced,
     stateMachine,
     accessRestricted {
 
