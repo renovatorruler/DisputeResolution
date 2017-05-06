@@ -1,6 +1,6 @@
 const BrehonContractFactory = artifacts.require('./BrehonContractFactory.sol');
 
-contract.only('BrehonContractFactory constructor', () => {
+contract('BrehonContractFactory constructor', () => {
   it('should load the BrehonContractFactory', () => {
   });
 });

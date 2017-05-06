@@ -7,7 +7,7 @@ const contractHelpers = require('../lib/contractHelpers.js');
 const PartyStruct = contractHelpers.PartyStruct;
 const BrehonStruct = contractHelpers.BrehonStruct;
 
-contract.only('BrehonContractFactory newBrehonContract should deploy BrehonContract', () => {
+contract('BrehonContractFactory newBrehonContract should deploy BrehonContract', () => {
   let brehonContractFactory;
   let brehonContract;
 
