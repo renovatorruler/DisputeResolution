@@ -6,40 +6,41 @@ import Html.Events exposing (onClick, onInput)
 import Time.DateTime as DateTime exposing (toISO8601, fromTimestamp)
 import Msgs exposing (Msg)
 import Models exposing (Model, ContractCreatorModel, ContractModel, Address, Event(..), ContractInfo, Settlement, Awards, Wei, PartyModel, BrehonModel, FilePath, AppealLevel(..), Stage(..))
-
 import UrlParsing exposing (..)
 
 
 view : Model -> Html Msg
 view model =
     case model.currentRoute of
-      Just Create ->
-        div [ class "main-container lg-h4 md-h4 sm-h4 clearfix" ]
-            [ contractCreatorView model.creatorModel ]
+        Just Create ->
+            div [ class "main-container lg-h4 md-h4 sm-h4 clearfix" ]
+                [ contractCreatorView model.creatorModel ]
 
-      Just Contract ->
-        div [ class "main-container lg-h4 md-h4 sm-h4 clearfix" ]
-            [ contractDetailView model.contractModel
-            , div [ class "col col-8" ]
-                [ div [ class "party-list flex flex-wrap" ]
-                    [ partyView model.contractModel.partyA "images/partyA.png" model.contractModel
-                    , partyView model.contractModel.partyB "images/partyB.png" model.contractModel
+        Just Contract ->
+            div [ class "main-container lg-h4 md-h4 sm-h4 clearfix" ]
+                [ contractDetailView model.contractModel
+                , div [ class "col col-8" ]
+                    [ div [ class "party-list flex flex-wrap" ]
+                        [ partyView model.contractModel.partyA "images/partyA.png" model.contractModel
+                        , partyView model.contractModel.partyB "images/partyB.png" model.contractModel
+                        ]
+                    , div [ class "brehon-list flex flex-wrap flex-column" ]
+                        [ brehonView model.contractModel.primaryBrehon "images/partyPrimaryBrehon.png" model.contractModel
+                        , brehonView model.contractModel.secondaryBrehon "images/partySecondaryBrehon.png" model.contractModel
+                        , brehonView model.contractModel.tertiaryBrehon "images/partyTertiaryBrehon.png" model.contractModel
+                        ]
                     ]
-                , div [ class "brehon-list flex flex-wrap flex-column" ]
-                    [ brehonView model.contractModel.primaryBrehon "images/partyPrimaryBrehon.png" model.contractModel
-                    , brehonView model.contractModel.secondaryBrehon "images/partySecondaryBrehon.png" model.contractModel
-                    , brehonView model.contractModel.tertiaryBrehon "images/partyTertiaryBrehon.png" model.contractModel
-                    ]
+                , div [ class "col col-2 lg-h4 sm-h6" ] [ logView model.contractModel ]
                 ]
-            , div [ class "col col-2 lg-h4 sm-h6" ] [ logView model.contractModel ]
-            ]
-      Nothing ->
-        div [] [ text "Not found 404" ]
+
+        Nothing ->
+            div [] [ text "Not found 404" ]
 
 
 contractCreatorView : ContractCreatorModel -> Html Msg
 contractCreatorView model =
-  text "contractCreatorView"
+    text "contractCreatorView"
+
 
 contractDetailView : ContractModel -> Html Msg
 contractDetailView model =
@@ -179,12 +180,15 @@ canPartyRaiseDispute party contractInfo =
 canPartyAppeal : PartyModel -> ContractInfo -> Bool
 canPartyAppeal party contractInfo =
     (contractInfo.stage
-        == AppealPeriod)
+        == AppealPeriod
+    )
+
 
 canPartySecondAppeal : PartyModel -> ContractInfo -> Bool
 canPartySecondAppeal party contractInfo =
     (contractInfo.stage
-        == SecondAppealPeriod)
+        == SecondAppealPeriod
+    )
 
 
 canDepositIntoContract : PartyModel -> ContractInfo -> Bool
@@ -231,7 +235,6 @@ partyView party profileImage model =
         canSecondAppeal =
             ownerView
                 && canPartySecondAppeal party model.contractInfo
-
 
         viewClass ownerView cssClass =
             case ownerView of
@@ -329,13 +332,14 @@ appealView addr appealLevel =
         [ a
             [ class "btn btn-big btn-primary block center rounded h2 black bg-aqua"
             , href "#"
-            , onClick (
-              case appealLevel of
-                First ->
-                  Msgs.RaiseAppeal addr
-                Second ->
-                  Msgs.RaiseSecondAppeal addr
-              )
+            , onClick
+                (case appealLevel of
+                    First ->
+                        Msgs.RaiseAppeal addr
+
+                    Second ->
+                        Msgs.RaiseSecondAppeal addr
+                )
             ]
             [ text "Appeal" ]
         ]
@@ -453,15 +457,16 @@ brehonView brehon profileImage model =
                 && canBrehonAdjudicate brehon model.contractInfo
 
         brehonClass activeBrehon brehon cssClass =
-          if activeBrehon == brehon.struct.addr
-          then cssClass ++ " active-brehon"
-          else cssClass
-
+            if activeBrehon == brehon.struct.addr then
+                cssClass ++ " active-brehon"
+            else
+                cssClass
 
         brehonLabel activeBrehon brehon label =
-          if activeBrehon == brehon.struct.addr
-          then "Active " ++ label
-          else label
+            if activeBrehon == brehon.struct.addr then
+                "Active " ++ label
+            else
+                label
 
         viewClass ownerView cssClass =
             case ownerView of
@@ -478,8 +483,8 @@ brehonView brehon profileImage model =
                 |> class
             ]
             [ "Brehon"
-              |> brehonLabel model.contractInfo.activeBrehon brehon
-              |> text
+                |> brehonLabel model.contractInfo.activeBrehon brehon
+                |> text
             , div [ class "block p1" ]
                 [ img [ src profileImage ] []
                 , p []
@@ -510,13 +515,18 @@ brehonView brehon profileImage model =
 
 canBrehonAdjudicate : BrehonModel -> ContractInfo -> Bool
 canBrehonAdjudicate brehon contractInfo =
-    brehon.struct.addr == contractInfo.activeBrehon &&
-    ((contractInfo.stage
-        == Dispute) ||
-    (contractInfo.stage
-        == Appeal) ||
-    (contractInfo.stage
-        == SecondAppeal))
+    brehon.struct.addr
+        == contractInfo.activeBrehon
+        && ((contractInfo.stage
+                == Dispute
+            )
+                || (contractInfo.stage
+                        == Appeal
+                   )
+                || (contractInfo.stage
+                        == SecondAppeal
+                   )
+           )
 
 
 adjudicateView : BrehonModel -> Html Msg
