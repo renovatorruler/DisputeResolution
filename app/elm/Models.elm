@@ -3,18 +3,52 @@ module Models exposing (..)
 import Time.DateTime as DateTime exposing (DateTime, dateTime)
 import Time as Time exposing (Time, now)
 
+import UrlParsing exposing (Route)
+
 
 zeroWei : Wei
 zeroWei =
     "0"
+
+initContractModel : ContractModel
+initContractModel =
+  ContractModel
+    initContractInfo
+    0
+    []
+    Nothing
+    zeroWei
+    zeroWei
+    zeroWei
+    zeroWei
+    (PartyModel (Party Nothing zeroWei False))
+    (PartyModel (Party Nothing zeroWei False))
+    (BrehonModel (Brehon Nothing False zeroWei zeroWei) Nothing)
+    (BrehonModel (Brehon Nothing False zeroWei zeroWei) Nothing)
+    (BrehonModel (Brehon Nothing False zeroWei zeroWei) Nothing)
 
 
 initContractInfo : ContractInfo
 initContractInfo =
     ContractInfo Nothing Negotiation zeroWei zeroWei False False Nothing Nothing Nothing 0 False Nothing Nothing
 
+initContractCreatorModel : ContractCreatorModel
+initContractCreatorModel =
+    ContractCreatorModel "party A"
+
 
 type alias Model =
+    { history : List (Maybe Route)
+    , currentRoute : Maybe Route
+    , creatorModel : ContractCreatorModel
+    , contractModel : ContractModel
+    }
+
+type alias ContractCreatorModel =
+    { partyA : String
+    }
+
+type alias ContractModel =
     { contractInfo : ContractInfo
     , currentTimestamp : Time
     , eventLog : List Event
@@ -29,7 +63,6 @@ type alias Model =
     , secondaryBrehon : BrehonModel
     , tertiaryBrehon : BrehonModel
     }
-
 
 type alias ContractInfo =
     { deployedAt : Address

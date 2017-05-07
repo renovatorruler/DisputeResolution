@@ -1,34 +1,28 @@
 port module Main exposing (..)
 
-import Html exposing (Html, div, text, program)
+import Html exposing (Html, div, text)
 import Msgs exposing (Msg)
-import Models exposing (Model, Party, zeroWei, initContractInfo, Brehon, PartyModel, BrehonModel, ContractInfo, Stage(..))
+import Models exposing (Model, Party, zeroWei, initContractModel, initContractCreatorModel, Brehon, PartyModel, BrehonModel, ContractInfo, Stage(..))
 import Time exposing (every, minute, second)
 import View exposing (view)
 import Update exposing (update)
 import Web3.BrehonAPI exposing (..)
 import Commands exposing (..)
 
+import Navigation
+import UrlParser as Url
+import UrlParsing exposing (..)
 
 -- MODEL
 
 
-init : ( Model, Cmd Msg )
-init =
+init : Navigation.Location -> ( Model, Cmd Msg )
+init location =
     ( Model
-        initContractInfo
-        0
-        []
-        Nothing
-        zeroWei
-        zeroWei
-        zeroWei
-        zeroWei
-        (PartyModel (Party Nothing zeroWei False))
-        (PartyModel (Party Nothing zeroWei False))
-        (BrehonModel (Brehon Nothing False zeroWei zeroWei) Nothing)
-        (BrehonModel (Brehon Nothing False zeroWei zeroWei) Nothing)
-        (BrehonModel (Brehon Nothing False zeroWei zeroWei) Nothing)
+        [ Url.parseHash route location ]
+        (Just Create)
+        initContractCreatorModel
+        initContractModel
     , Cmd.batch
         [ loadWeb3Accounts
         , loadContractInfo
@@ -72,7 +66,7 @@ subscriptions model =
 
 main : Program Never Model Msg
 main =
-    program
+    Navigation.program Msgs.UrlChange
         { init = init
         , view = view
         , update = update

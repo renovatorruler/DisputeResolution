@@ -15,9 +15,12 @@ import Models
         , Event
         )
 
+import Navigation
+
 
 type Msg
-    = LoadAccounts (List Address)
+    = UrlChange Navigation.Location
+    | LoadAccounts (List Address)
     | LoadContractInfo ( Address, Int, Wei, Wei, Int, Address, Maybe Awards )
     | LoadAllParties Parties
     | LoadAllBrehons Brehons

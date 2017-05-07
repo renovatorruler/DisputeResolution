@@ -54,7 +54,7 @@ contract BrehonContract is
   event DisputeResolved(uint awardPartyA, uint awardPartyB);
   event FundsClaimed(address claimingParty, uint amount);
 
-  modifier byEitherEntities() {
+  modifier byAnyEntity() {
     if (msg.sender != primaryBrehon.addr &&
         msg.sender != secondaryBrehon.addr &&
         msg.sender != tertiaryBrehon.addr &&
@@ -240,7 +240,7 @@ contract BrehonContract is
   }
 
   function claimFunds()
-    byEitherEntities()
+    byAnyEntity()
   {
     if (stage != Stages.Completed) {
         if (stage != Stages.AppealPeriod && stage != Stages.SecondAppealPeriod) {

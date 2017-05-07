@@ -5,29 +5,43 @@ import Html.Attributes exposing (class, href, src, type_, placeholder)
 import Html.Events exposing (onClick, onInput)
 import Time.DateTime as DateTime exposing (toISO8601, fromTimestamp)
 import Msgs exposing (Msg)
-import Models exposing (Model, Address, Event(..), ContractInfo, Settlement, Awards, Wei, PartyModel, BrehonModel, FilePath, AppealLevel(..), Stage(..))
+import Models exposing (Model, ContractCreatorModel, ContractModel, Address, Event(..), ContractInfo, Settlement, Awards, Wei, PartyModel, BrehonModel, FilePath, AppealLevel(..), Stage(..))
+
+import UrlParsing exposing (..)
 
 
 view : Model -> Html Msg
 view model =
-    div [ class "main-container lg-h4 md-h4 sm-h4 clearfix" ]
-        [ contractDetailView model
-        , div [ class "col col-8" ]
-            [ div [ class "party-list flex flex-wrap" ]
-                [ partyView model.partyA "images/partyA.png" model
-                , partyView model.partyB "images/partyB.png" model
+    case model.currentRoute of
+      Just Create ->
+        div [ class "main-container lg-h4 md-h4 sm-h4 clearfix" ]
+            [ contractCreatorView model.creatorModel ]
+
+      Just Contract ->
+        div [ class "main-container lg-h4 md-h4 sm-h4 clearfix" ]
+            [ contractDetailView model.contractModel
+            , div [ class "col col-8" ]
+                [ div [ class "party-list flex flex-wrap" ]
+                    [ partyView model.contractModel.partyA "images/partyA.png" model.contractModel
+                    , partyView model.contractModel.partyB "images/partyB.png" model.contractModel
+                    ]
+                , div [ class "brehon-list flex flex-wrap flex-column" ]
+                    [ brehonView model.contractModel.primaryBrehon "images/partyPrimaryBrehon.png" model.contractModel
+                    , brehonView model.contractModel.secondaryBrehon "images/partySecondaryBrehon.png" model.contractModel
+                    , brehonView model.contractModel.tertiaryBrehon "images/partyTertiaryBrehon.png" model.contractModel
+                    ]
                 ]
-            , div [ class "brehon-list flex flex-wrap flex-column" ]
-                [ brehonView model.primaryBrehon "images/partyPrimaryBrehon.png" model
-                , brehonView model.secondaryBrehon "images/partySecondaryBrehon.png" model
-                , brehonView model.tertiaryBrehon "images/partyTertiaryBrehon.png" model
-                ]
+            , div [ class "col col-2 lg-h4 sm-h6" ] [ logView model.contractModel ]
             ]
-        , div [ class "col col-2 lg-h4 sm-h6" ] [ logView model ]
-        ]
+      Nothing ->
+        div [] [ text "Not found 404" ]
 
 
-contractDetailView : Model -> Html Msg
+contractCreatorView : ContractCreatorModel -> Html Msg
+contractCreatorView model =
+  text "contractCreatorView"
+
+contractDetailView : ContractModel -> Html Msg
 contractDetailView model =
     let
         showProposedSettlement =
@@ -180,7 +194,7 @@ canDepositIntoContract party contractInfo =
         /= Completed
 
 
-partyView : PartyModel -> FilePath -> Model -> Html Msg
+partyView : PartyModel -> FilePath -> ContractModel -> Html Msg
 partyView party profileImage model =
     let
         ownerView =
@@ -428,7 +442,7 @@ awardsView awards =
                 ]
 
 
-brehonView : BrehonModel -> FilePath -> Model -> Html Msg
+brehonView : BrehonModel -> FilePath -> ContractModel -> Html Msg
 brehonView brehon profileImage model =
     let
         ownerView =
@@ -585,7 +599,7 @@ contractAcceptanceView isContractAccepted ownerView messageDispatch =
                     ]
 
 
-logView : Model -> Html Msg
+logView : ContractModel -> Html Msg
 logView model =
     ul [ class "list-reset" ]
         (model.eventLog

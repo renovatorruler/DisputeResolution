@@ -1,14 +1,39 @@
 module Update exposing (..)
 
+import Tuple exposing (first, second)
 import Msgs exposing (..)
 import Time.DateTime as DateTime exposing (DateTime, dateTime, zero, addDays, fromISO8601, compare, fromTimestamp)
 import Time as Time exposing (Time)
-import Models exposing (Model, Stage(..), Event(..), ContractInfo, Settlement, Awards, Address, Wei, zeroWei, Parties, PartyModel, Party, Brehons, BrehonModel, Brehon)
+import Models exposing (Model, ContractCreatorModel, ContractModel, Stage(..), Event(..), ContractInfo, Settlement, Awards, Address, Wei, zeroWei, Parties, PartyModel, Party, Brehons, BrehonModel, Brehon)
 import Commands exposing (..)
+
+import UrlParser as Url exposing (..)
+import UrlParsing exposing (route)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
+    case msg of
+        UrlChange location ->
+          let
+              nextRoute =
+                Url.parseHash route location
+
+          in
+              { model
+              | history = nextRoute :: model.history
+              , currentRoute = nextRoute
+              }
+                ! []
+        _ ->
+          let
+              updatedContractMsg = updateContract msg model.contractModel
+          in
+              ( {model | contractModel = first updatedContractMsg }, second updatedContractMsg)
+
+
+updateContract : Msg -> ContractModel -> (ContractModel, Cmd Msg)
+updateContract msg model =
     case msg of
         LoadAccounts accounts ->
             ( setLoadedAddress model (List.head accounts), Cmd.none )
@@ -209,7 +234,7 @@ update msg model =
         RaiseSecondAppeal addr ->
             ( model, raiseSecondAppeal addr )
 
-        None ->
+        _ ->
             ( model, Cmd.none )
 
 
@@ -230,7 +255,7 @@ getBrehonsAcceptance brehons =
         ]
 
 
-setLoadedAddress : Model -> Maybe Address -> Model
+setLoadedAddress : ContractModel -> Maybe Address -> ContractModel
 setLoadedAddress model address =
     case address of
         Nothing ->

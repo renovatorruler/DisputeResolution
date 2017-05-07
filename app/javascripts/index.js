@@ -273,7 +273,7 @@ function portHooks(elmApp, currentProvider) {
     .then(() => updateContractInfo(ports, brehonApp)));
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('load', () => {
   const mountNode = document.getElementById('main');
   const brehonElmApp = Elm.Main.embed(mountNode);
 
