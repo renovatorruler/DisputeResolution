@@ -1,6 +1,5 @@
 port module Main exposing (..)
 
-import Html exposing (Html, div, text)
 import Msgs exposing (Msg)
 import Models exposing (Model, Party, zeroWei, initContractModel, initContractCreatorModel, Brehon, PartyModel, BrehonModel, ContractInfo, Stage(..))
 import Time exposing (every, minute, second)
@@ -8,10 +7,10 @@ import View exposing (view)
 import Update exposing (update)
 import Web3.BrehonAPI exposing (..)
 import Commands exposing (..)
-
 import Navigation
 import UrlParser as Url
 import UrlParsing exposing (..)
+
 
 -- MODEL
 
