@@ -125,7 +125,7 @@ contractCreatorView model =
                         ]
                         []
                     ]
-                , button [ class "button" ]
+                , button [ class "btn btn-primary" ]
                     [ text "Create"
                     ]
                 ]
