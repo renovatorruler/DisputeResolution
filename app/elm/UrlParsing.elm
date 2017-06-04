@@ -11,6 +11,6 @@ type Route
 route : Url.Parser (Route -> a) a
 route =
     Url.oneOf
-        [ Url.map Create (s "create")
+        [ Url.map Create top
         , Url.map Contract (s "contract" </> string)
         ]

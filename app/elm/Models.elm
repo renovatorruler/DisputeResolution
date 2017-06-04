@@ -40,15 +40,9 @@ initContractCreatorModel =
         (Just "0xffcf8fdee72ac11b5c542428b35eef5769c409f0")
         "500"
         "Party A agrees to sell Party B a 1996 Rolex watch for 500 Wei."
-        (Just "0x22d491bde2303f2f43325b2108d26f1eaba1e32b")
-        "10"
-        "100"
-        (Just "0xe11ba2b4d45eaed5996cd0823791e0c93114882d")
-        "10"
-        "100"
-        (Just "0xd03ea8624c8c5987235048901fb614fdca89b117")
-        "10"
-        "100"
+        (Brehon (Just "0x22d491bde2303f2f43325b2108d26f1eaba1e32b") False "10" "100")
+        (Brehon (Just "0xe11ba2b4d45eaed5996cd0823791e0c93114882d") False "10" "100")
+        (Brehon (Just "0xd03ea8624c8c5987235048901fb614fdca89b117") False "10" "100")
 
 
 type alias Model =
@@ -64,15 +58,9 @@ type alias ContractCreatorModel =
     , partyB : Address
     , transactionAmount : Wei
     , termsAndConditions : String
-    , primaryBrehonAddr : Address
-    , primaryBrehonFixedFee : Wei
-    , primaryBrehonDisputeFee : Wei
-    , secondaryBrehonAddr : Address
-    , secondaryBrehonFixedFee : Wei
-    , secondaryBrehonDisputeFee : Wei
-    , tertiaryBrehonAddr : Address
-    , tertiaryBrehonFixedFee : Wei
-    , tertiaryBrehonDisputeFee : Wei
+    , primaryBrehon : Brehon
+    , secondaryBrehon : Brehon
+    , tertiaryBrehon : Brehon
     }
 
 

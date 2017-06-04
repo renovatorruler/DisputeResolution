@@ -1,7 +1,7 @@
 module Create.Update exposing (..)
 
 import Msgs exposing (..)
-import Models exposing (ContractCreatorModel)
+import Models exposing (ContractCreatorModel, Wei, Address, Brehon)
 
 
 updateCreateContract : Msg -> ContractCreatorModel -> ( ContractCreatorModel, Cmd Msg )
@@ -20,31 +20,46 @@ updateCreateContract msg model =
             ( { model | termsAndConditions = termsAndConditions }, Cmd.none )
 
         PrimaryBrehonAddrChanged addr ->
-            ( { model | primaryBrehonAddr = Just addr }, Cmd.none )
+            ( { model | primaryBrehon = updateBrehonAddr model.primaryBrehon (Just addr) }, Cmd.none )
 
         PrimaryBrehonFixedFeeChanged fixedFee ->
-            ( { model | primaryBrehonFixedFee = fixedFee }, Cmd.none )
+            ( { model | primaryBrehon = updateBrehonFixedFee model.primaryBrehon fixedFee }, Cmd.none )
 
         PrimaryBrehonDisputeFeeChanged disputeFee ->
-            ( { model | primaryBrehonDisputeFee = disputeFee }, Cmd.none )
+            ( { model | primaryBrehon = updateBrehonDisputeFee model.primaryBrehon disputeFee }, Cmd.none )
 
         SecondaryBrehonAddrChanged addr ->
-            ( { model | secondaryBrehonAddr = Just addr }, Cmd.none )
+            ( { model | secondaryBrehon = updateBrehonAddr model.secondaryBrehon (Just addr) }, Cmd.none )
 
         SecondaryBrehonFixedFeeChanged fixedFee ->
-            ( { model | secondaryBrehonFixedFee = fixedFee }, Cmd.none )
+            ( { model | secondaryBrehon = updateBrehonFixedFee model.secondaryBrehon fixedFee }, Cmd.none )
 
         SecondaryBrehonDisputeFeeChanged disputeFee ->
-            ( { model | secondaryBrehonDisputeFee = disputeFee }, Cmd.none )
+            ( { model | secondaryBrehon = updateBrehonDisputeFee model.secondaryBrehon disputeFee }, Cmd.none )
 
         TertiaryBrehonAddrChanged addr ->
-            ( { model | tertiaryBrehonAddr = Just addr }, Cmd.none )
+            ( { model | tertiaryBrehon = updateBrehonAddr model.tertiaryBrehon (Just addr) }, Cmd.none )
 
         TertiaryBrehonFixedFeeChanged fixedFee ->
-            ( { model | tertiaryBrehonFixedFee = fixedFee }, Cmd.none )
+            ( { model | tertiaryBrehon = updateBrehonFixedFee model.tertiaryBrehon fixedFee }, Cmd.none )
 
         TertiaryBrehonDisputeFeeChanged disputeFee ->
-            ( { model | tertiaryBrehonDisputeFee = disputeFee }, Cmd.none )
+            ( { model | tertiaryBrehon = updateBrehonDisputeFee model.tertiaryBrehon disputeFee }, Cmd.none )
 
         _ ->
             ( model, Cmd.none )
+
+
+updateBrehonAddr : Brehon -> Address -> Brehon
+updateBrehonAddr brehon addr =
+    { brehon | addr = addr }
+
+
+updateBrehonFixedFee : Brehon -> Wei -> Brehon
+updateBrehonFixedFee brehon fixedFee =
+    { brehon | fixedFee = fixedFee }
+
+
+updateBrehonDisputeFee : Brehon -> Wei -> Brehon
+updateBrehonDisputeFee brehon disputeFee =
+    { brehon | disputeFee = disputeFee }
