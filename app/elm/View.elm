@@ -146,8 +146,8 @@ canPartyAcceptSettlement party contractInfo =
                 /= Completed
 
 
-canPartyWithdrawFunds : PartyModel -> ContractInfo -> Bool
-canPartyWithdrawFunds party contractInfo =
+isContractCompleted : ContractInfo -> Bool
+isContractCompleted contractInfo =
     contractInfo.stage
         == Completed
         || (contractInfo.stage
@@ -165,12 +165,15 @@ canPartyRaiseDispute party contractInfo =
 canPartyAppeal : PartyModel -> ContractInfo -> Bool
 canPartyAppeal party contractInfo =
     (contractInfo.stage
-        == AppealPeriod)
+        == AppealPeriod
+    )
+
 
 canPartySecondAppeal : PartyModel -> ContractInfo -> Bool
 canPartySecondAppeal party contractInfo =
     (contractInfo.stage
-        == SecondAppealPeriod)
+        == SecondAppealPeriod
+    )
 
 
 canDepositIntoContract : PartyModel -> ContractInfo -> Bool
@@ -204,7 +207,7 @@ partyView party profileImage model =
 
         canWithdrawFunds =
             ownerView
-                && canPartyWithdrawFunds party model.contractInfo
+                && isContractCompleted model.contractInfo
 
         canRaiseDispute =
             ownerView
@@ -217,7 +220,6 @@ partyView party profileImage model =
         canSecondAppeal =
             ownerView
                 && canPartySecondAppeal party model.contractInfo
-
 
         viewClass ownerView cssClass =
             case ownerView of
@@ -315,13 +317,14 @@ appealView addr appealLevel =
         [ a
             [ class "btn btn-big btn-primary block center rounded h2 black bg-aqua"
             , href "#"
-            , onClick (
-              case appealLevel of
-                First ->
-                  Msgs.RaiseAppeal addr
-                Second ->
-                  Msgs.RaiseSecondAppeal addr
-              )
+            , onClick
+                (case appealLevel of
+                    First ->
+                        Msgs.RaiseAppeal addr
+
+                    Second ->
+                        Msgs.RaiseSecondAppeal addr
+                )
             ]
             [ text "Appeal" ]
         ]
@@ -434,20 +437,25 @@ brehonView brehon profileImage model =
         ownerView =
             model.loadedAccount == brehon.struct.addr
 
+        canWithdrawFunds =
+            ownerView
+                && isContractCompleted model.contractInfo
+
         canAdjudicate =
             ownerView
                 && canBrehonAdjudicate brehon model.contractInfo
 
         brehonClass activeBrehon brehon cssClass =
-          if activeBrehon == brehon.struct.addr
-          then cssClass ++ " active-brehon"
-          else cssClass
-
+            if activeBrehon == brehon.struct.addr then
+                cssClass ++ " active-brehon"
+            else
+                cssClass
 
         brehonLabel activeBrehon brehon label =
-          if activeBrehon == brehon.struct.addr
-          then "Active " ++ label
-          else label
+            if activeBrehon == brehon.struct.addr then
+                "Active " ++ label
+            else
+                label
 
         viewClass ownerView cssClass =
             case ownerView of
@@ -464,8 +472,8 @@ brehonView brehon profileImage model =
                 |> class
             ]
             [ "Brehon"
-              |> brehonLabel model.contractInfo.activeBrehon brehon
-              |> text
+                |> brehonLabel model.contractInfo.activeBrehon brehon
+                |> text
             , div [ class "block p1" ]
                 [ img [ src profileImage ] []
                 , p []
@@ -490,19 +498,28 @@ brehonView brehon profileImage model =
                 |> conditionalBlock canAdjudicate
             , div
                 [ class "block my1 p1" ]
+                [ withdrawFundsView brehon.struct.addr ]
+                |> conditionalBlock canWithdrawFunds
+            , div
+                [ class "block my1 p1" ]
                 [ awardsView brehon.awards ]
             ]
 
 
 canBrehonAdjudicate : BrehonModel -> ContractInfo -> Bool
 canBrehonAdjudicate brehon contractInfo =
-    brehon.struct.addr == contractInfo.activeBrehon &&
-    ((contractInfo.stage
-        == Dispute) ||
-    (contractInfo.stage
-        == Appeal) ||
-    (contractInfo.stage
-        == SecondAppeal))
+    brehon.struct.addr
+        == contractInfo.activeBrehon
+        && ((contractInfo.stage
+                == Dispute
+            )
+                || (contractInfo.stage
+                        == Appeal
+                   )
+                || (contractInfo.stage
+                        == SecondAppeal
+                   )
+           )
 
 
 adjudicateView : BrehonModel -> Html Msg
