@@ -13,6 +13,7 @@ import Models
         , BrehonModel
         , Brehons
         , Wei
+        , ContractCreatorModel
         )
 
 
@@ -110,3 +111,6 @@ port receiveAwards : (Maybe Awards -> msg) -> Sub msg
 
 
 port requestWithdrawFunds : Address -> Cmd msg
+
+
+port requestCreateContract : ContractCreatorModel -> Cmd msg

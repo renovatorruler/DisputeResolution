@@ -1,6 +1,6 @@
 module Commands exposing (..)
 
-import Models exposing (Address, Wei, PartyModel, BrehonModel)
+import Models exposing (Address, Wei, PartyModel, BrehonModel, ContractCreatorModel)
 import Task exposing (perform)
 import Time as Time exposing (Time, now)
 import Msgs exposing (Msg)
@@ -86,6 +86,7 @@ raiseAppeal : Address -> Cmd Msg
 raiseAppeal addr =
     requestRaiseAppeal addr
 
+
 raiseSecondAppeal : Address -> Cmd Msg
 raiseSecondAppeal addr =
     requestRaiseSecondAppeal addr
@@ -94,6 +95,15 @@ raiseSecondAppeal addr =
 adjudicate : Address -> Wei -> Wei -> Cmd Msg
 adjudicate addr awardPartyA awardPartyB =
     requestAdjudicate ( addr, awardPartyA, awardPartyB )
+
+
+
+{- Contract creator commands -}
+
+
+createContract : ContractCreatorModel -> Cmd Msg
+createContract model =
+    requestCreateContract model
 
 
 

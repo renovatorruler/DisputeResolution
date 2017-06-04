@@ -271,6 +271,9 @@ function portHooks(elmApp, currentProvider) {
   ports.requestWithdrawFunds.subscribe(withdrawingAddress =>
     brehonApp.withdrawFunds(withdrawingAddress)
     .then(() => updateContractInfo(ports, brehonApp)));
+
+  ports.requestCreateContract.subscribe(partyAAddr =>
+    console.info(partyAAddr));
 }
 
 window.addEventListener('load', () => {

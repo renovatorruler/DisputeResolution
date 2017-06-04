@@ -2,6 +2,7 @@ module Create.Update exposing (..)
 
 import Msgs exposing (..)
 import Models exposing (ContractCreatorModel, Wei, Address, Brehon)
+import Commands exposing (..)
 
 
 updateCreateContract : Msg -> ContractCreatorModel -> ( ContractCreatorModel, Cmd Msg )
@@ -45,6 +46,9 @@ updateCreateContract msg model =
 
         TertiaryBrehonDisputeFeeChanged disputeFee ->
             ( { model | tertiaryBrehon = updateBrehonDisputeFee model.tertiaryBrehon disputeFee }, Cmd.none )
+
+        CreateContract creatorModel ->
+            ( model, createContract creatorModel )
 
         _ ->
             ( model, Cmd.none )

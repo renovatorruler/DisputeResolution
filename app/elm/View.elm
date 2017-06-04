@@ -142,7 +142,9 @@ contractCreatorView model =
                     ]
                 , a
                     [ class "btn btn-primary"
-                    , href ("#contract/" ++ toJustString identity model.partyA)
+                    , onClick (Msgs.CreateContract model)
+
+                    --, href ("#contract/" ++ toJustString identity model.partyA)
                     ]
                     [ text "Create"
                     ]

@@ -13,6 +13,7 @@ import Models
         , Parties
         , Brehons
         , Event
+        , ContractCreatorModel
         )
 import Navigation
 
@@ -63,4 +64,5 @@ type Msg
     | TertiaryBrehonAddrChanged String
     | TertiaryBrehonFixedFeeChanged Wei
     | TertiaryBrehonDisputeFeeChanged Wei
+    | CreateContract ContractCreatorModel
     | None

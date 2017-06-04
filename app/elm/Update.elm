@@ -164,5 +164,8 @@ update msg model =
             TertiaryBrehonDisputeFeeChanged disputeFee ->
                 ( { model | creatorModel = first updateCreateContractMsg }, second updateCreateContractMsg )
 
+            CreateContract creatorModel ->
+                ( { model | creatorModel = first updateCreateContractMsg }, second updateCreateContractMsg )
+
             None ->
                 ( model, Cmd.none )
