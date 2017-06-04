@@ -15,7 +15,6 @@ const verifyEvent = contractHelpers.verifyEvent;
 const getMinimumContractAmt = contractHelpers.getMinimumContractAmt;
 const getSplitForPrimaryBrehon = contractHelpers.getPercentageSplit(defaults, 0);
 const getSplitForSecondaryBrehon = contractHelpers.getPercentageSplit(defaults, 1);
-// const getSplitForTertiaryBrehon = contractHelpers.getPercentageSplit(defaults, 2);
 
 
 /**
