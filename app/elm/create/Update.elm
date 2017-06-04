@@ -16,5 +16,35 @@ updateCreateContract msg model =
         TxAmountChanged amount ->
             ( { model | transactionAmount = amount }, Cmd.none )
 
+        TermsChanged termsAndConditions ->
+            ( { model | termsAndConditions = termsAndConditions }, Cmd.none )
+
+        PrimaryBrehonAddrChanged addr ->
+            ( { model | primaryBrehonAddr = Just addr }, Cmd.none )
+
+        PrimaryBrehonFixedFeeChanged fixedFee ->
+            ( { model | primaryBrehonFixedFee = fixedFee }, Cmd.none )
+
+        PrimaryBrehonDisputeFeeChanged disputeFee ->
+            ( { model | primaryBrehonDisputeFee = disputeFee }, Cmd.none )
+
+        SecondaryBrehonAddrChanged addr ->
+            ( { model | secondaryBrehonAddr = Just addr }, Cmd.none )
+
+        SecondaryBrehonFixedFeeChanged fixedFee ->
+            ( { model | secondaryBrehonFixedFee = fixedFee }, Cmd.none )
+
+        SecondaryBrehonDisputeFeeChanged disputeFee ->
+            ( { model | secondaryBrehonDisputeFee = disputeFee }, Cmd.none )
+
+        TertiaryBrehonAddrChanged addr ->
+            ( { model | tertiaryBrehonAddr = Just addr }, Cmd.none )
+
+        TertiaryBrehonFixedFeeChanged fixedFee ->
+            ( { model | tertiaryBrehonFixedFee = fixedFee }, Cmd.none )
+
+        TertiaryBrehonDisputeFeeChanged disputeFee ->
+            ( { model | tertiaryBrehonDisputeFee = disputeFee }, Cmd.none )
+
         _ ->
             ( model, Cmd.none )

@@ -134,5 +134,35 @@ update msg model =
             TxAmountChanged amount ->
                 ( { model | creatorModel = first updateCreateContractMsg }, second updateCreateContractMsg )
 
+            TermsChanged termsAndConditions ->
+                ( { model | creatorModel = first updateCreateContractMsg }, second updateCreateContractMsg )
+
+            PrimaryBrehonAddrChanged addr ->
+                ( { model | creatorModel = first updateCreateContractMsg }, second updateCreateContractMsg )
+
+            PrimaryBrehonFixedFeeChanged fixedFee ->
+                ( { model | creatorModel = first updateCreateContractMsg }, second updateCreateContractMsg )
+
+            PrimaryBrehonDisputeFeeChanged disputeFee ->
+                ( { model | creatorModel = first updateCreateContractMsg }, second updateCreateContractMsg )
+
+            SecondaryBrehonAddrChanged addr ->
+                ( { model | creatorModel = first updateCreateContractMsg }, second updateCreateContractMsg )
+
+            SecondaryBrehonFixedFeeChanged fixedFee ->
+                ( { model | creatorModel = first updateCreateContractMsg }, second updateCreateContractMsg )
+
+            SecondaryBrehonDisputeFeeChanged disputeFee ->
+                ( { model | creatorModel = first updateCreateContractMsg }, second updateCreateContractMsg )
+
+            TertiaryBrehonAddrChanged addr ->
+                ( { model | creatorModel = first updateCreateContractMsg }, second updateCreateContractMsg )
+
+            TertiaryBrehonFixedFeeChanged fixedFee ->
+                ( { model | creatorModel = first updateCreateContractMsg }, second updateCreateContractMsg )
+
+            TertiaryBrehonDisputeFeeChanged disputeFee ->
+                ( { model | creatorModel = first updateCreateContractMsg }, second updateCreateContractMsg )
+
             None ->
                 ( model, Cmd.none )

@@ -53,4 +53,14 @@ type Msg
     | PartyAAddrChanged String
     | PartyBAddrChanged String
     | TxAmountChanged Wei
+    | TermsChanged String
+    | PrimaryBrehonAddrChanged String
+    | PrimaryBrehonFixedFeeChanged Wei
+    | PrimaryBrehonDisputeFeeChanged Wei
+    | SecondaryBrehonAddrChanged String
+    | SecondaryBrehonFixedFeeChanged Wei
+    | SecondaryBrehonDisputeFeeChanged Wei
+    | TertiaryBrehonAddrChanged String
+    | TertiaryBrehonFixedFeeChanged Wei
+    | TertiaryBrehonDisputeFeeChanged Wei
     | None
