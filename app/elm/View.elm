@@ -1,7 +1,9 @@
 module View exposing (..)
 
+import ViewHelpers exposing (..)
 import Html exposing (Html, div, text, label, form, input, textarea, button)
 import Html.Attributes exposing (class, placeholder, type_, rows, value)
+import Html.Events exposing (onClick, onInput)
 import Msgs exposing (Msg)
 import Contract.View exposing (..)
 import Models exposing (Model, ContractCreatorModel, ContractModel, Address, Event(..), ContractInfo, Settlement, Awards, Wei, PartyModel, BrehonModel, FilePath, AppealLevel(..), Stage(..))
@@ -29,14 +31,16 @@ contractCreatorView model =
                 [ label [ class "label" ] [ text "Party A" ]
                 , input
                     [ class "input ethereum-address party-a-addr"
+                    , onInput Msgs.PartyAAddrChanged
                     , placeholder "0x00000"
-                    , value "0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1"
+                    , value (toJustString identity model.partyA)
                     ]
                     []
                 , label [ class "label" ] [ text "Party B" ]
                 , input
                     [ class "input ethereum-address party-b-addr"
                     , placeholder "0x00000"
+                    , onInput Msgs.PartyAAddrChanged
                     , value "0xffcf8fdee72ac11b5c542428b35eef5769c409f0"
                     ]
                     []
@@ -125,7 +129,9 @@ contractCreatorView model =
                         ]
                         []
                     ]
-                , button [ class "btn btn-primary" ]
+                , button
+                    [ class "btn btn-primary"
+                    ]
                     [ text "Create"
                     ]
                 ]

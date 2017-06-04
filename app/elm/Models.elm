@@ -2,7 +2,6 @@ module Models exposing (..)
 
 import Time.DateTime as DateTime exposing (DateTime, dateTime)
 import Time as Time exposing (Time, now)
-
 import UrlParsing exposing (Route)
 
 
@@ -10,31 +9,33 @@ zeroWei : Wei
 zeroWei =
     "0"
 
+
 initContractModel : ContractModel
 initContractModel =
-  ContractModel
-    initContractInfo
-    0
-    []
-    Nothing
-    zeroWei
-    zeroWei
-    zeroWei
-    zeroWei
-    (PartyModel (Party Nothing zeroWei False))
-    (PartyModel (Party Nothing zeroWei False))
-    (BrehonModel (Brehon Nothing False zeroWei zeroWei) Nothing)
-    (BrehonModel (Brehon Nothing False zeroWei zeroWei) Nothing)
-    (BrehonModel (Brehon Nothing False zeroWei zeroWei) Nothing)
+    ContractModel
+        initContractInfo
+        0
+        []
+        Nothing
+        zeroWei
+        zeroWei
+        zeroWei
+        zeroWei
+        (PartyModel (Party Nothing zeroWei False))
+        (PartyModel (Party Nothing zeroWei False))
+        (BrehonModel (Brehon Nothing False zeroWei zeroWei) Nothing)
+        (BrehonModel (Brehon Nothing False zeroWei zeroWei) Nothing)
+        (BrehonModel (Brehon Nothing False zeroWei zeroWei) Nothing)
 
 
 initContractInfo : ContractInfo
 initContractInfo =
     ContractInfo Nothing Negotiation zeroWei zeroWei False False Nothing Nothing Nothing 0 False Nothing Nothing
 
+
 initContractCreatorModel : ContractCreatorModel
 initContractCreatorModel =
-    ContractCreatorModel "party A"
+    ContractCreatorModel (Just  "0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1")
 
 
 type alias Model =
@@ -44,9 +45,11 @@ type alias Model =
     , contractModel : ContractModel
     }
 
+
 type alias ContractCreatorModel =
-    { partyA : String
+    { partyA : Address
     }
+
 
 type alias ContractModel =
     { contractInfo : ContractInfo
@@ -63,6 +66,7 @@ type alias ContractModel =
     , secondaryBrehon : BrehonModel
     , tertiaryBrehon : BrehonModel
     }
+
 
 type alias ContractInfo =
     { deployedAt : Address
@@ -157,6 +161,7 @@ type Stage
     | SecondAppeal
     | Completed
 
+
 type Event
     = ExecutionStartedEvent Int Address Address Wei
     | SettlementProposedEvent Int Address Address Wei Wei
@@ -166,6 +171,7 @@ type Event
     | AppealRaisedEvent Address Address
     | SecondAppealRaisedEvent Address Address
     | FundsClaimedEvent Address Wei
+
 
 type AppealLevel
     = First

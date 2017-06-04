@@ -3,6 +3,7 @@ module Update exposing (..)
 import Tuple exposing (first, second)
 import Msgs exposing (..)
 import Contract.Update exposing (updateContract)
+import Create.Update exposing (updateCreateContract)
 import Models exposing (Model, ContractCreatorModel, ContractModel, Stage(..), Event(..), ContractInfo, Settlement, Awards, Address, Wei, zeroWei, Parties, PartyModel, Party, Brehons, BrehonModel, Brehon)
 import UrlParser as Url exposing (..)
 import UrlParsing exposing (route)
@@ -13,6 +14,9 @@ update msg model =
     let
         updatedContractMsg =
             updateContract msg model.contractModel
+
+        updateCreateContractMsg =
+            updateCreateContract msg model.creatorModel
     in
         case msg of
             UrlChange location ->
@@ -119,6 +123,10 @@ update msg model =
 
             WithdrawFunds addr ->
                 ( { model | contractModel = first updatedContractMsg }, second updatedContractMsg )
+
+            -- ContractCreator Msgs
+            PartyAAddrChanged addr ->
+                ( { model | creatorModel = first updateCreateContractMsg }, second updateCreateContractMsg )
 
             None ->
                 ( model, Cmd.none )

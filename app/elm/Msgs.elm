@@ -14,7 +14,6 @@ import Models
         , Brehons
         , Event
         )
-
 import Navigation
 
 
@@ -50,4 +49,6 @@ type Msg
     | RaiseSecondAppeal Address
     | Adjudicate BrehonModel
     | WithdrawFunds Address
+      -- ContractCreator Msgs
+    | PartyAAddrChanged String
     | None
