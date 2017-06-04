@@ -1,8 +1,8 @@
 module View exposing (..)
 
 import ViewHelpers exposing (..)
-import Html exposing (Html, div, text, label, form, input, textarea, button)
-import Html.Attributes exposing (class, placeholder, type_, rows, value)
+import Html exposing (Html, div, text, label, form, input, textarea, button, a)
+import Html.Attributes exposing (class, placeholder, type_, rows, value, href)
 import Html.Events exposing (onClick, onInput)
 import Msgs exposing (Msg)
 import Contract.View exposing (..)
@@ -16,7 +16,7 @@ view model =
         Just Create ->
             contractCreatorView model.creatorModel
 
-        Just Contract ->
+        Just (Contract contractAddr) ->
             contractView model.contractModel
 
         Nothing ->
@@ -129,8 +129,9 @@ contractCreatorView model =
                         ]
                         []
                     ]
-                , button
+                , a
                     [ class "btn btn-primary"
+                    , href ("#contract/" ++ toJustString identity model.partyA)
                     ]
                     [ text "Create"
                     ]
