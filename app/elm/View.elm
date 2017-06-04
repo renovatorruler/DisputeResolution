@@ -40,8 +40,8 @@ contractCreatorView model =
                 , input
                     [ class "input ethereum-address party-b-addr"
                     , placeholder "0x00000"
-                    , onInput Msgs.PartyAAddrChanged
-                    , value "0xffcf8fdee72ac11b5c542428b35eef5769c409f0"
+                    , onInput Msgs.PartyBAddrChanged
+                    , value (toJustString identity model.partyB)
                     ]
                     []
                 , label [ class "label" ] [ text "Transaction Amount" ]
@@ -49,7 +49,8 @@ contractCreatorView model =
                     [ class "input tx-amount"
                     , type_ "number"
                     , placeholder "e.g. 1000 Wei"
-                    , value "5000"
+                    , onInput Msgs.TxAmountChanged
+                    , value model.transactionAmount
                     ]
                     []
                 , label [ class "label" ] [ text "Terms and Conditions" ]

@@ -51,4 +51,6 @@ type Msg
     | WithdrawFunds Address
       -- ContractCreator Msgs
     | PartyAAddrChanged String
+    | PartyBAddrChanged String
+    | TxAmountChanged Wei
     | None

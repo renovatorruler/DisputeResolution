@@ -128,5 +128,11 @@ update msg model =
             PartyAAddrChanged addr ->
                 ( { model | creatorModel = first updateCreateContractMsg }, second updateCreateContractMsg )
 
+            PartyBAddrChanged addr ->
+                ( { model | creatorModel = first updateCreateContractMsg }, second updateCreateContractMsg )
+
+            TxAmountChanged amount ->
+                ( { model | creatorModel = first updateCreateContractMsg }, second updateCreateContractMsg )
+
             None ->
                 ( model, Cmd.none )

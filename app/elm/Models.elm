@@ -35,7 +35,10 @@ initContractInfo =
 
 initContractCreatorModel : ContractCreatorModel
 initContractCreatorModel =
-    ContractCreatorModel (Just  "0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1")
+    ContractCreatorModel
+        (Just "0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1")
+        (Just "0xffcf8fdee72ac11b5c542428b35eef5769c409f0")
+        "500"
 
 
 type alias Model =
@@ -48,6 +51,8 @@ type alias Model =
 
 type alias ContractCreatorModel =
     { partyA : Address
+    , partyB : Address
+    , transactionAmount : Wei
     }
 
 
