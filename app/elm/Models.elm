@@ -36,8 +36,8 @@ initContractInfo =
 initContractCreatorModel : ContractCreatorModel
 initContractCreatorModel =
     ContractCreatorModel
-        (Just "0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1")
-        (Just "0xffcf8fdee72ac11b5c542428b35eef5769c409f0")
+        (Party (Just "0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1") "0" False)
+        (Party (Just "0xffcf8fdee72ac11b5c542428b35eef5769c409f0") "0" False)
         "500"
         "Party A agrees to sell Party B a 1996 Rolex watch for 500 Wei."
         (Brehon (Just "0x22d491bde2303f2f43325b2108d26f1eaba1e32b") False "10" "100")
@@ -54,8 +54,8 @@ type alias Model =
 
 
 type alias ContractCreatorModel =
-    { partyA : Address
-    , partyB : Address
+    { partyA : Party
+    , partyB : Party
     , transactionAmount : Wei
     , termsAndConditions : String
     , primaryBrehon : Brehon

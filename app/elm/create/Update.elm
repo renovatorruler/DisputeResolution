@@ -1,7 +1,7 @@
 module Create.Update exposing (..)
 
 import Msgs exposing (..)
-import Models exposing (ContractCreatorModel, Wei, Address, Brehon)
+import Models exposing (ContractCreatorModel, Wei, Address, Brehon, Party)
 import Commands exposing (..)
 
 
@@ -9,10 +9,10 @@ updateCreateContract : Msg -> ContractCreatorModel -> ( ContractCreatorModel, Cm
 updateCreateContract msg model =
     case msg of
         PartyAAddrChanged addr ->
-            ( { model | partyA = Just addr }, Cmd.none )
+            ( { model | partyA = updatePartyAddr model.partyA (Just addr) }, Cmd.none )
 
         PartyBAddrChanged addr ->
-            ( { model | partyB = Just addr }, Cmd.none )
+            ( { model | partyB = updatePartyAddr model.partyB (Just addr) }, Cmd.none )
 
         TxAmountChanged amount ->
             ( { model | transactionAmount = amount }, Cmd.none )
@@ -52,6 +52,11 @@ updateCreateContract msg model =
 
         _ ->
             ( model, Cmd.none )
+
+
+updatePartyAddr : Party -> Address -> Party
+updatePartyAddr party addr =
+    { party | addr = addr }
 
 
 updateBrehonAddr : Brehon -> Address -> Brehon
