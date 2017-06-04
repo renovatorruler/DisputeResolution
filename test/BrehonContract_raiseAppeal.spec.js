@@ -5,6 +5,7 @@ const contractHelpers = require('../lib/contractHelpers.js');
 
 const startContract = contractHelpers.startContract;
 const startContractAndRaiseDispute = contractHelpers.startContractAndRaiseDispute;
+const fastForwardTime = contractHelpers.fastForwardTime;
 const verifyEvent = contractHelpers.verifyEvent;
 const getMinimumContractAmt = contractHelpers.getMinimumContractAmt;
 const getSplitForPrimaryBrehon = contractHelpers.getPercentageSplit(defaults, 0);
@@ -272,6 +273,41 @@ contract('BrehonContract should allow partyB to raise an appeal', () => {
       .catch(function handleException(err) {
         console.error(err);
         assert.isNull(err, 'Exception was thrown when partyB tried to raise an appeal');
+      });
+  });
+});
+
+contract('BrehonContract should not allow partyA to raise an appeal after the appeal period', () => {
+  const sufficientTime = 60 * 60 * 24 * 6;
+  it('expires', () => {
+    let brehonContract;
+    return BrehonContract.deployed()
+      .then(function captureReference(instance) {
+        brehonContract = instance;
+        return instance;
+      })
+      .then(startContractAndRaiseDispute(
+        [{
+          addr: defaults.partyA_addr,
+          value: getMinimumContractAmt(defaults),
+        }], defaults.partyA_addr, defaults.partyA_addr))
+      .catch(assertNoError('No Exception must be thrown after raiseDispute'))
+      .then(function adjudicate() {
+        return brehonContract.adjudicate(
+            getSplitForPrimaryBrehon(100),
+            getSplitForPrimaryBrehon(0),
+            { from: defaults.primaryBrehon_addr });
+      })
+      .catch(assertNoError('No Exception must be thrown after adjudication'))
+      .then(fastForwardTime(web3, sufficientTime))
+      .catch(assertNoError('No Exception must be thrown after fastForwardTime'))
+      .then(function raiseAppeal() {
+        return brehonContract.raiseAppeal({ from: defaults.partyA_addr });
+      })
+      .catch(function handleException(err) {
+        console.error(err);
+        assert.isNotNull(err, 'Exception was not thrown when partyA tried to raise an appeal after the appealPeriod expired');
+        assert.isNull(err, 'Exception was not thrown when partyA tried to raise an appeal after the appealPeriod expired');
       });
   });
 });
