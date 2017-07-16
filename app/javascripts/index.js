@@ -107,6 +107,8 @@ function updateAllBrehons(ports, brehonApp) {
     });
 }
 
+//TODO: Rewrite BrehonAPI to allow proper chaining of promises and flatten this
+//monstrosity
 function updateContractInfo(ports, brehonApp) {
   return brehonApp.getDeployed().then((brehonContract) => {
     brehonContract.instance.stage.call()
