@@ -273,9 +273,12 @@ function portHooks(elmApp, currentProvider) {
   ports.requestWithdrawFunds.subscribe(withdrawingAddress =>
     brehonApp.withdrawFunds(withdrawingAddress)
     .then(() => updateContractInfo(ports, brehonApp)));
+
+  ports.requestCreateContract.subscribe(partyAAddr =>
+    console.info(partyAAddr));
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('load', () => {
   const mountNode = document.getElementById('main');
   const brehonElmApp = Elm.Main.embed(mountNode);
 

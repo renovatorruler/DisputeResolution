@@ -13,11 +13,14 @@ import Models
         , Parties
         , Brehons
         , Event
+        , ContractCreatorModel
         )
+import Navigation
 
 
 type Msg
-    = LoadAccounts (List Address)
+    = UrlChange Navigation.Location
+    | LoadAccounts (List Address)
     | LoadContractInfo ( Address, Int, Wei, Wei, Int, Address, Maybe Awards )
     | LoadAllParties Parties
     | LoadAllBrehons Brehons
@@ -47,4 +50,19 @@ type Msg
     | RaiseSecondAppeal Address
     | Adjudicate BrehonModel
     | WithdrawFunds Address
+      -- ContractCreator Msgs
+    | PartyAAddrChanged String
+    | PartyBAddrChanged String
+    | TxAmountChanged Wei
+    | TermsChanged String
+    | PrimaryBrehonAddrChanged String
+    | PrimaryBrehonFixedFeeChanged Wei
+    | PrimaryBrehonDisputeFeeChanged Wei
+    | SecondaryBrehonAddrChanged String
+    | SecondaryBrehonFixedFeeChanged Wei
+    | SecondaryBrehonDisputeFeeChanged Wei
+    | TertiaryBrehonAddrChanged String
+    | TertiaryBrehonFixedFeeChanged Wei
+    | TertiaryBrehonDisputeFeeChanged Wei
+    | CreateContract ContractCreatorModel
     | None

@@ -1,747 +1,153 @@
 module View exposing (..)
 
-import Html exposing (Html, Attribute, a, button, div, ul, li, img, input, label, p, span, i, text)
-import Html.Attributes exposing (class, href, src, type_, placeholder)
+import ViewHelpers exposing (..)
+import Html exposing (Html, div, text, label, form, input, textarea, button, a)
+import Html.Attributes exposing (class, placeholder, type_, rows, value, href)
 import Html.Events exposing (onClick, onInput)
-import Time.DateTime as DateTime exposing (toISO8601, fromTimestamp)
 import Msgs exposing (Msg)
-import Models exposing (Model, Address, Event(..), ContractInfo, Settlement, Awards, Wei, PartyModel, BrehonModel, FilePath, AppealLevel(..), Stage(..))
+import Contract.View exposing (..)
+import Models exposing (Model, initContractCreatorModel, ContractCreatorModel, ContractModel, Address, Event(..), ContractInfo, Settlement, Awards, Wei, PartyModel, BrehonModel, FilePath, AppealLevel(..), Stage(..))
+import UrlParsing exposing (..)
 
 
 view : Model -> Html Msg
 view model =
+    case model.currentRoute of
+        Just Create ->
+            contractCreatorView model.creatorModel
+
+        Just (Contract contractAddr) ->
+            contractView model.contractModel
+
+        Nothing ->
+            div [] [ text "Not found 404" ]
+
+
+contractCreatorView : ContractCreatorModel -> Html Msg
+contractCreatorView model =
     div [ class "main-container lg-h4 md-h4 sm-h4 clearfix" ]
-        [ contractDetailView model
-        , div [ class "col col-8" ]
-            [ div [ class "party-list flex flex-wrap" ]
-                [ partyView model.partyA "images/partyA.png" model
-                , partyView model.partyB "images/partyB.png" model
-                ]
-            , div [ class "brehon-list flex flex-wrap flex-column" ]
-                [ brehonView model.primaryBrehon "images/partyPrimaryBrehon.png" model
-                , brehonView model.secondaryBrehon "images/partySecondaryBrehon.png" model
-                , brehonView model.tertiaryBrehon "images/partyTertiaryBrehon.png" model
-                ]
-            ]
-        , div [ class "col col-2 lg-h4 sm-h6" ] [ logView model ]
-        ]
-
-
-contractDetailView : Model -> Html Msg
-contractDetailView model =
-    let
-        showProposedSettlement =
-            model.contractInfo.stage /= Completed
-
-        showActiveBrehon =
-            model.contractInfo.stage == Dispute
-    in
-        ul [ class "contract-detail sm-h5 p2 col col-2 list-reset" ]
-            [ li []
-                [ text "Contract Deployed At: "
-                , textAddress model.contractInfo.deployedAt
-                ]
-            , li []
-                [ text "Current Time: "
-                , model.currentTimestamp
-                    |> fromTimestamp
-                    |> toISO8601
-                    |> text
-                ]
-            , li []
-                [ text "Loaded Account: "
-                , textAddress model.loadedAccount
-                ]
-            , li []
-                [ text "Total Deposits: "
-                , text model.totalDeposits
-                , text " Wei"
-                ]
-            , li []
-                [ text "Minimum Amount to start the contract: "
-                , text model.contractInfo.minimumContractAmt
-                , text " Wei"
-                ]
-            , li []
-                [ text "Contract Stage: "
-                , text (toString model.contractInfo.stage)
-                ]
-            , li []
-                [ text "Transaction Amount : "
-                , text model.contractInfo.transactionAmount
-                ]
-            , li []
-                [ text "Parties Accepted : "
-                , text (toString model.contractInfo.partiesAccepted)
-                ]
-            , li []
-                [ text "Brehons Accepted : "
-                , text (toString model.contractInfo.brehonsAccepted)
-                ]
-            , li []
-                [ proposedSettlementView model.contractInfo.proposedSettlement
-                ]
-                |> conditionalBlock showProposedSettlement
-            , li []
-                [ text "Active Brehon: "
-                , textAddress model.contractInfo.activeBrehon
-                ]
-                |> conditionalBlock showActiveBrehon
-            , li []
-                [ text "Appeal Period Start time: "
-                , text
-                    (model.contractInfo.appealPeriodStart
-                        |> toJustString toISO8601
-                    )
-                ]
-                |> justValue model.contractInfo.appealPeriodStart
-            , li []
-                [ text "Appeal Period Duration (days): "
-                , text (toString model.contractInfo.appealPeriodInDays)
-                ]
-                |> justValue model.contractInfo.appealPeriodEnd
-            , li []
-                [ text "Appeal Period End time: "
-                , text
-                    (model.contractInfo.appealPeriodEnd
-                        |> toJustString toISO8601
-                    )
-                ]
-                |> justValue model.contractInfo.appealPeriodEnd
-            , li []
-                [ awardsView model.contractInfo.awards
-                ]
-                |> justValue model.contractInfo.awards
-            ]
-
-
-canPartyStartContract : PartyModel -> ContractInfo -> Wei -> Bool
-canPartyStartContract party contractInfo totalDeposits =
-    (contractInfo.partiesAccepted && contractInfo.brehonsAccepted)
-        && contractInfo.stage
-        == Negotiation
-        && party.struct.contractAccepted
-        && totalDeposits
-        >= contractInfo.minimumContractAmt
-
-
-canPartyProposeSettlement : PartyModel -> ContractInfo -> Bool
-canPartyProposeSettlement party contractInfo =
-    contractInfo.stage
-        /= Negotiation
-        && contractInfo.stage
-        /= Completed
-
-
-canPartyAcceptSettlement : PartyModel -> ContractInfo -> Bool
-canPartyAcceptSettlement party contractInfo =
-    case contractInfo.proposedSettlement of
-        Nothing ->
-            False
-
-        Just settlement ->
-            settlement.proposingPartyAddr
-                /= party.struct.addr
-                && contractInfo.stage
-                /= Completed
-
-
-isContractCompleted : ContractInfo -> Bool
-isContractCompleted contractInfo =
-    contractInfo.stage
-        == Completed
-        || (contractInfo.stage
-                == AppealPeriod
-                && not contractInfo.appealPeriodInProgress
-           )
-
-
-canPartyRaiseDispute : PartyModel -> ContractInfo -> Bool
-canPartyRaiseDispute party contractInfo =
-    contractInfo.stage
-        == Execution
-
-
-canPartyAppeal : PartyModel -> ContractInfo -> Bool
-canPartyAppeal party contractInfo =
-    (contractInfo.stage
-        == AppealPeriod
-    )
-
-
-canPartySecondAppeal : PartyModel -> ContractInfo -> Bool
-canPartySecondAppeal party contractInfo =
-    (contractInfo.stage
-        == SecondAppealPeriod
-    )
-
-
-canDepositIntoContract : PartyModel -> ContractInfo -> Bool
-canDepositIntoContract party contractInfo =
-    party.struct.contractAccepted
-        && contractInfo.stage
-        /= Completed
-
-
-partyView : PartyModel -> FilePath -> Model -> Html Msg
-partyView party profileImage model =
-    let
-        ownerView =
-            model.loadedAccount == party.struct.addr
-
-        canDeposit =
-            ownerView
-                && canDepositIntoContract party model.contractInfo
-
-        canStartContract =
-            ownerView
-                && canPartyStartContract party model.contractInfo model.totalDeposits
-
-        canProposeSettlement =
-            ownerView
-                && canPartyProposeSettlement party model.contractInfo
-
-        canAcceptSettlement =
-            ownerView
-                && canPartyAcceptSettlement party model.contractInfo
-
-        canWithdrawFunds =
-            ownerView
-                && isContractCompleted model.contractInfo
-
-        canRaiseDispute =
-            ownerView
-                && canPartyRaiseDispute party model.contractInfo
-
-        canAppeal =
-            ownerView
-                && canPartyAppeal party model.contractInfo
-
-        canSecondAppeal =
-            ownerView
-                && canPartySecondAppeal party model.contractInfo
-
-        viewClass ownerView cssClass =
-            case ownerView of
-                True ->
-                    cssClass ++ " white bg-maroon border-gray"
-
-                False ->
-                    cssClass
-    in
-        div
-            [ "party-view mx-auto max-width-1 border rounded m1 p2"
-                |> viewClass ownerView
-                |> class
-            ]
-            [ text "Party"
-            , div [ class "block p1" ]
-                [ img [ src profileImage ] []
-                , text "Address: "
-                , textAddress party.struct.addr
-                ]
-            , div [ class "block p1" ]
-                [ contractAcceptanceView party.struct.contractAccepted ownerView (Msgs.AcceptContractByParty party)
-                ]
-            , div [ class "deposit-block block my1 p1" ]
-                [ div [ class "my1" ]
-                    [ text "Deposit: "
-                    , text party.struct.deposit
-                    , text " Wei"
+        [ div [ class "col-4 mx-auto" ]
+            [ form [ class "contract-creator-form" ]
+                [ label [ class "label" ] [ text "Party A" ]
+                , input
+                    [ class "input ethereum-address party-a-addr"
+                    , onInput Msgs.PartyAAddrChanged
+                    , placeholder "0x00000"
+                    , value "0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1"
                     ]
-                , depositView party
-                ]
-                |> conditionalBlock canDeposit
-            , div
-                [ class "block my1 p1" ]
-                [ startContractView party
-                ]
-                |> conditionalBlock canStartContract
-            , div
-                [ class "block my2 p1 border" ]
-                [ label [ class "label label-title bg-maroon h4" ] [ text "Settlement" ]
-                , proposeSettlementView party
-                ]
-                |> conditionalBlock canProposeSettlement
-            , div
-                [ class "block my2 p1 border" ]
-                [ acceptSettlementView party model.contractInfo.proposedSettlement
-                ]
-                |> conditionalBlock canAcceptSettlement
-            , div
-                [ class "block my1 p1" ]
-                [ withdrawFundsView party.struct.addr ]
-                |> conditionalBlock canWithdrawFunds
-            , div
-                [ class "block my1 p1" ]
-                [ raiseDisputeView party.struct.addr ]
-                |> conditionalBlock canRaiseDispute
-            , div
-                [ class "block my1 p1" ]
-                [ appealView party.struct.addr First ]
-                |> conditionalBlock canAppeal
-            , div
-                [ class "block my1 p1" ]
-                [ appealView party.struct.addr Second ]
-                |> conditionalBlock canSecondAppeal
-            ]
-
-
-withdrawFundsView : Address -> Html Msg
-withdrawFundsView addr =
-    div [ class "withdraw-funds" ]
-        [ a
-            [ class "btn btn-big btn-primary block center rounded h2 black bg-yellow"
-            , href "#"
-            , onClick (Msgs.WithdrawFunds addr)
-            ]
-            [ text "Withdraw Funds" ]
-        ]
-
-
-raiseDisputeView : Address -> Html Msg
-raiseDisputeView addr =
-    div [ class "raise-dispute" ]
-        [ a
-            [ class "btn btn-big btn-primary block center rounded h2 white bg-red"
-            , href "#"
-            , onClick (Msgs.RaiseDispute addr)
-            ]
-            [ text "Raise Dispute" ]
-        ]
-
-
-appealView : Address -> AppealLevel -> Html Msg
-appealView addr appealLevel =
-    div [ class "appeal" ]
-        [ a
-            [ class "btn btn-big btn-primary block center rounded h2 black bg-aqua"
-            , href "#"
-            , onClick
-                (case appealLevel of
-                    First ->
-                        Msgs.RaiseAppeal addr
-
-                    Second ->
-                        Msgs.RaiseSecondAppeal addr
-                )
-            ]
-            [ text "Appeal" ]
-        ]
-
-
-ctaButton : String -> String -> Msg -> Html Msg
-ctaButton label cssClass msg =
-    a
-        [ class ("btn btn-big btn-primary block center rounded h2 " ++ cssClass)
-        , href "#"
-        , onClick msg
-        ]
-        [ text label ]
-
-
-proposeSettlementView : PartyModel -> Html Msg
-proposeSettlementView party =
-    div [ class "propose-settlement" ]
-        [ label [ class "label" ] [ text "Award for Party A" ]
-        , input
-            [ class "input"
-            , placeholder "0 Wei"
-            , onInput Msgs.SettlementPartyAFieldChanged
-            ]
-            []
-        , label [ class "label" ] [ text "Award for Party B" ]
-        , input
-            [ class "input"
-            , placeholder "0 wei"
-            , onInput Msgs.SettlementPartyBFieldChanged
-            ]
-            []
-        , button
-            [ class "btn btn-primary"
-            , onClick (Msgs.ProposeSettlement party)
-            ]
-            [ text "Propose Settlement" ]
-        ]
-
-
-acceptSettlementView : PartyModel -> Maybe Settlement -> Html Msg
-acceptSettlementView party proposedSettlement =
-    case proposedSettlement of
-        Nothing ->
-            div [] []
-
-        Just settlement ->
-            div [ class "accept-settlement" ]
-                [ label [ class "label h4" ]
-                    [ text "Award for Party A: "
-                    , text settlement.settlementPartyA
+                    []
+                , label [ class "label" ] [ text "Party B" ]
+                , input
+                    [ class "input ethereum-address party-b-addr"
+                    , onInput Msgs.PartyBAddrChanged
+                    , placeholder "0x00000"
+                    , value "0xffcf8fdee72ac11b5c542428b35eef5769c409f0"
                     ]
-                , label [ class "label h4" ]
-                    [ text "Award for Party B: "
-                    , text settlement.settlementPartyB
+                    []
+                , label [ class "label" ] [ text "Transaction Amount" ]
+                , input
+                    [ class "input tx-amount"
+                    , type_ "number"
+                    , placeholder "e.g. 1000 Wei"
+                    , onInput Msgs.TxAmountChanged
+                    , value "5000"
                     ]
-                , button
-                    [ class "btn btn-primary"
-                    , onClick (Msgs.AcceptSettlement party)
+                    []
+                , label [ class "label" ] [ text "Terms and Conditions" ]
+                , textarea
+                    [ class "textarea tx-amount"
+                    , rows 6
+                    , placeholder "Party A agrees to sell Party B a 1996 Rolex watch for 500 Wei."
+                    , onInput Msgs.TermsChanged
+                    , value "Party A agrees to sell Party B a 1996 Rolex watch for 500 Wei."
                     ]
-                    [ text "Accept Settlement" ]
-                ]
-
-
-proposedSettlementView : Maybe Settlement -> Html Msg
-proposedSettlementView proposedSettlement =
-    case proposedSettlement of
-        Nothing ->
-            div [] []
-
-        Just settlement ->
-            div []
-                [ div []
-                    [ text "Proposing Party: "
-                    , textAddress settlement.proposingPartyAddr
-                    ]
-                , div []
-                    [ text "Award Party A: "
-                    , text settlement.settlementPartyA
-                    ]
-                , div []
-                    [ text "Award Party B: "
-                    , text settlement.settlementPartyB
-                    ]
-                ]
-
-
-awardsView : Maybe Awards -> Html Msg
-awardsView awards =
-    case awards of
-        Nothing ->
-            div [] []
-
-        Just awards ->
-            div []
-                [ div []
-                    [ text "Award Party A: "
-                    , text awards.awardPartyA
-                    ]
-                , div []
-                    [ text "Award Party B: "
-                    , text awards.awardPartyB
-                    ]
-                ]
-
-
-brehonView : BrehonModel -> FilePath -> Model -> Html Msg
-brehonView brehon profileImage model =
-    let
-        ownerView =
-            model.loadedAccount == brehon.struct.addr
-
-        canWithdrawFunds =
-            ownerView
-                && isContractCompleted model.contractInfo
-
-        canAdjudicate =
-            ownerView
-                && canBrehonAdjudicate brehon model.contractInfo
-
-        brehonClass activeBrehon brehon cssClass =
-            if activeBrehon == brehon.struct.addr then
-                cssClass ++ " active-brehon"
-            else
-                cssClass
-
-        brehonLabel activeBrehon brehon label =
-            if activeBrehon == brehon.struct.addr then
-                "Active " ++ label
-            else
-                label
-
-        viewClass ownerView cssClass =
-            case ownerView of
-                True ->
-                    cssClass ++ " owner white bg-maroon border-gray"
-
-                False ->
-                    cssClass
-    in
-        div
-            [ "brehon-view mx-auto max-width-1 border rounded m1 p2"
-                |> viewClass ownerView
-                |> brehonClass model.contractInfo.activeBrehon brehon
-                |> class
-            ]
-            [ "Brehon"
-                |> brehonLabel model.contractInfo.activeBrehon brehon
-                |> text
-            , div [ class "block p1" ]
-                [ img [ src profileImage ] []
-                , p []
-                    [ text "Address: "
-                    , textAddress brehon.struct.addr
-                    ]
-                , p []
-                    [ text "Fixed Fee: "
-                    , text brehon.struct.fixedFee
-                    ]
-                , p []
-                    [ text "Dispute Fee: "
-                    , text brehon.struct.disputeFee
-                    ]
-                ]
-            , div
-                [ class "block my1 p1" ]
-                [ contractAcceptanceView brehon.struct.contractAccepted ownerView (Msgs.AcceptContractByBrehon brehon) ]
-            , div
-                [ class "block my1 p1" ]
-                [ adjudicateView brehon ]
-                |> conditionalBlock canAdjudicate
-            , div
-                [ class "block my1 p1" ]
-                [ withdrawFundsView brehon.struct.addr ]
-                |> conditionalBlock canWithdrawFunds
-            , div
-                [ class "block my1 p1" ]
-                [ awardsView brehon.awards ]
-            ]
-
-
-canBrehonAdjudicate : BrehonModel -> ContractInfo -> Bool
-canBrehonAdjudicate brehon contractInfo =
-    brehon.struct.addr
-        == contractInfo.activeBrehon
-        && ((contractInfo.stage
-                == Dispute
-            )
-                || (contractInfo.stage
-                        == Appeal
-                   )
-                || (contractInfo.stage
-                        == SecondAppeal
-                   )
-           )
-
-
-adjudicateView : BrehonModel -> Html Msg
-adjudicateView brehon =
-    div [ class "adjudicate" ]
-        [ label [ class "label" ] [ text "Award for Party A" ]
-        , input
-            [ class "input"
-            , placeholder "0 Wei"
-            , onInput Msgs.SettlementPartyAFieldChanged
-            ]
-            []
-        , label [ class "label" ] [ text "Award for Party B" ]
-        , input
-            [ class "input"
-            , placeholder "0 wei"
-            , onInput Msgs.SettlementPartyBFieldChanged
-            ]
-            []
-        , button
-            [ class "btn btn-primary"
-            , onClick (Msgs.Adjudicate brehon)
-            ]
-            [ text "Adjudicate" ]
-        ]
-
-
-startContractView : PartyModel -> Html Msg
-startContractView party =
-    a
-        [ class "btn btn-big btn-primary block center rounded h2 black bg-yellow"
-        , href "#"
-        , onClick (Msgs.StartContract party)
-        ]
-        [ text "Start Contract" ]
-
-
-depositView : PartyModel -> Html Msg
-depositView party =
-    div [ class "deposit-funds my1 clearfix flex" ]
-        [ input
-            [ class "input mb0 mr2"
-            , placeholder "0 Wei"
-            , type_ "number"
-            , onInput Msgs.DepositFieldChanged
-            ]
-            []
-        , a
-            [ class "btn center rounded white bg-olive"
-            , href "#"
-            , onClick (Msgs.DepositFunds party)
-            ]
-            [ text "Deposit" ]
-        ]
-
-
-contractAcceptanceView : Bool -> Bool -> Msg -> Html Msg
-contractAcceptanceView isContractAccepted ownerView messageDispatch =
-    case isContractAccepted of
-        True ->
-            p []
-                [ i [ class "fa fa-check-circle mr1 green" ] []
-                , text "Contract Accepted"
-                ]
-
-        False ->
-            if ownerView then
-                div [ class "fit" ]
-                    [ button
-                        [ class "btn btn-primary btn-big block mx-auto"
-                        , type_ "button"
-                        , onClick (messageDispatch)
+                    []
+                , div [ class "" ]
+                    [ label [ class "label" ] [ text "Primary Brehon" ]
+                    , input
+                        [ class "input ethereum-address primary-brehon-addr"
+                        , placeholder "0x00000"
+                        , onInput Msgs.PrimaryBrehonAddrChanged
+                        , value "0x22d491bde2303f2f43325b2108d26f1eaba1e32b"
                         ]
-                        [ text "Accept Contract" ]
+                        []
+                    , label [ class "label" ] [ text "Fixed Fee" ]
+                    , input
+                        [ class "input ethereum-address primary-brehon-addr"
+                        , placeholder "e.g. 100 Wei"
+                        , onInput Msgs.PrimaryBrehonFixedFeeChanged
+                        , value "10"
+                        ]
+                        []
+                    , label [ class "label" ] [ text "Dispute Fee" ]
+                    , input
+                        [ class "input ethereum-address primary-brehon-addr"
+                        , placeholder "e.g. 100 Wei"
+                        , onInput Msgs.PrimaryBrehonDisputeFeeChanged
+                        , value "100"
+                        ]
+                        []
                     ]
-            else
-                p []
-                    [ i [ class "fa fa-minus-square mr1 red" ] []
-                    , text "Contract Not Accepted"
+                , div [ class "" ]
+                    [ label [ class "label" ] [ text "Secondary Brehon" ]
+                    , input
+                        [ class "input ethereum-address primary-brehon-addr"
+                        , placeholder "0x00000"
+                        , onInput Msgs.SecondaryBrehonAddrChanged
+                        , value "0xe11ba2b4d45eaed5996cd0823791e0c93114882d"
+                        ]
+                        []
+                    , label [ class "label" ] [ text "Fixed Fee" ]
+                    , input
+                        [ class "input ethereum-address primary-brehon-addr"
+                        , placeholder "e.g. 100 Wei"
+                        , onInput Msgs.SecondaryBrehonFixedFeeChanged
+                        , value "10"
+                        ]
+                        []
+                    , label [ class "label" ] [ text "Dispute Fee" ]
+                    , input
+                        [ class "input ethereum-address primary-brehon-addr"
+                        , placeholder "e.g. 100 Wei"
+                        , onInput Msgs.SecondaryBrehonDisputeFeeChanged
+                        , value "100"
+                        ]
+                        []
                     ]
+                , div [ class "" ]
+                    [ label [ class "label" ] [ text "Tertiary Brehon" ]
+                    , input
+                        [ class "input ethereum-address primary-brehon-addr"
+                        , placeholder "0x00000"
+                        , onInput Msgs.TertiaryBrehonAddrChanged
+                        , value "0xd03ea8624c8c5987235048901fb614fdca89b117"
+                        ]
+                        []
+                    , label [ class "label" ] [ text "Fixed Fee" ]
+                    , input
+                        [ class "input ethereum-address primary-brehon-addr"
+                        , placeholder "e.g. 100 Wei"
+                        , onInput Msgs.TertiaryBrehonFixedFeeChanged
+                        , value "10"
+                        ]
+                        []
+                    , label [ class "label" ] [ text "Dispute Fee" ]
+                    , input
+                        [ class "input ethereum-address primary-brehon-addr"
+                        , placeholder "e.g. 100 Wei"
+                        , onInput Msgs.TertiaryBrehonDisputeFeeChanged
+                        , value "100"
+                        ]
+                        []
+                    ]
+                , a
+                    [ class "btn btn-primary"
+                    , onClick (Msgs.CreateContract model)
 
-
-logView : Model -> Html Msg
-logView model =
-    ul [ class "list-reset" ]
-        (model.eventLog
-            |> List.map singleLogView
-        )
-
-
-singleLogView : Event -> Html Msg
-singleLogView event =
-    case event of
-        ExecutionStartedEvent blockNumber txHash caller totalDeposits ->
-            li [ class "mb2" ]
-                [ i [ class "fa fa-paper-plane mr1" ] []
-                , text "Contract started by "
-                , textAddress caller
-                , text " with a total deposit of "
-                , text totalDeposits
+                    --, href ("#contract/" ++ toJustString identity model.partyA)
+                    ]
+                    [ text "Create"
+                    ]
                 ]
-
-        SettlementProposedEvent blockNumber txHash proposingParty awardPartyA awardPartyB ->
-            li [ class "mb2" ]
-                [ i [ class "fa fa-money mr1" ] []
-                , text "Settlement proposed by "
-                , textAddress proposingParty
-                , text " with an award of "
-                , text awardPartyA
-                , text " for Party A and "
-                , text awardPartyB
-                , text " for Party B"
-                ]
-
-        DisputeResolvedEvent blockNumber txHash awardPartyA awardPartyB ->
-            li [ class "mb2" ]
-                [ i [ class "fa fa-hand-peace-o mr1" ] []
-                , text "Resolution reached "
-                , text " with an award of "
-                , text awardPartyA
-                , text " for Party A and "
-                , text awardPartyB
-                , text " for Party B"
-                ]
-
-        ContractDisputedEvent disputingParty activeBrehon ->
-            li [ class "mb2" ]
-                [ i [ class "fa fa-fire mr1" ] []
-                , text "Dispute raised "
-                , text " by "
-                , textAddress disputingParty
-                , text ". Brehon "
-                , textAddress activeBrehon
-                , text " is presiding."
-                ]
-
-        AppealPeriodStartedEvent startTime activeBrehon awardPartyA awardPartyB ->
-            li [ class "mb2" ]
-                [ i [ class "fa fa-gavel mr1" ] []
-                , text "Brehon "
-                , textAddress activeBrehon
-                , text " provided a judgment by awarding "
-                , text awardPartyA
-                , text " to partyA and "
-                , text awardPartyB
-                , text " to partyB at "
-                , text (toISO8601 startTime)
-                ]
-
-        AppealRaisedEvent appealingParty activeBrehon ->
-            li [ class "mb2" ]
-                [ i [ class "fa fa-fire mr1" ] []
-                , text "Appeal raised "
-                , text " by "
-                , textAddress appealingParty
-                , text ". Brehon "
-                , textAddress activeBrehon
-                , text " is presiding."
-                ]
-
-        SecondAppealRaisedEvent appealingParty activeBrehon ->
-            li [ class "mb2" ]
-                [ i [ class "fa fa-fire mr1" ] []
-                , i [ class "fa fa-fire mr1" ] []
-                , text "Second Appeal raised "
-                , text " by "
-                , textAddress appealingParty
-                , text ". Brehon "
-                , textAddress activeBrehon
-                , text " is presiding."
-                ]
-
-        FundsClaimedEvent claimingParty amount ->
-            li [ class "mb2" ]
-                [ i [ class "fa fa-money mr1" ] []
-                , text "Funds claimed "
-                , text " by "
-                , textAddress claimingParty
-                , text " in the amount of "
-                , text amount
-                ]
-
-
-textAddress : Address -> Html Msg
-textAddress address =
-    case address of
-        Nothing ->
-            span [ class "" ]
-                [ text "<Unassigned>"
-                ]
-
-        Just val ->
-            span [ class "address char-10" ]
-                [ text val
-                ]
-
-
-conditionalBlock : Bool -> Html Msg -> Html Msg
-conditionalBlock flag htmlEl =
-    case flag of
-        True ->
-            htmlEl
-
-        False ->
-            text ""
-
-
-justValue : Maybe a -> Html Msg -> Html Msg
-justValue a htmlEl =
-    case a of
-        Nothing ->
-            text ""
-
-        Just a ->
-            htmlEl
-
-
-toJustString : (a -> String) -> Maybe a -> String
-toJustString fn a =
-    case a of
-        Nothing ->
-            ""
-
-        Just a ->
-            fn a
+            ]
+        ]
