@@ -31,7 +31,8 @@
     "moment": "^2.18.1",
     "ramda": "^0.23.0",
     "solidity-sha3": "^0.4.1",
-    "truffle-contract": "^1.1.10",
+    "truffle-contract": "^3.0.2",
+    "truffle-hdwallet-provider": "^0.0.3",
     "web3": "^0.18.2"
   },
   "devDependencies": {
@@ -64,7 +65,7 @@
     "json-loader": "^0.5.4",
     "npm-run-all": "^4.0.1",
     "style-loader": "^0.13.2",
-    "truffle": "^3.2.1",
+    "truffle": "^4.0.5",
     "url-loader": "^0.5.8",
     "web3-provider-engine": "^11.0.0",
     "webpack": "^2.2.1",
