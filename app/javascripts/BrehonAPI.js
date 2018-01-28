@@ -1,8 +1,9 @@
 import contract from 'truffle-contract';
+import R from 'ramda';
 
 // Import our contract artifacts and turn them into usable abstractions.
 import BrehonContractArtifact from '../../build/contracts/BrehonContract.json';
-import { PartyStruct, BrehonStruct } from '../../lib/contractHelpers';
+import { PartyStruct, BrehonStruct, ResolutionStruct, UninitializedResolution } from '../../lib/contractHelpers';
 
 export default class BrehonAPI {
   constructor(web3provider) {
@@ -99,9 +100,116 @@ export default class BrehonAPI {
         instance.transactionAmount.call());
   }
 
+  getAppealPeriodInDays() {
+    return this.brehonContract.deployed()
+      .then(instance =>
+        instance.appealPeriodInDays.call());
+  }
+
   startContract(addr) {
     return this.brehonContract.deployed()
       .then(instance =>
         instance.startContract({ from: addr }));
+  }
+
+  proposeSettlement(addr, awardPartyA, awardPartyB) {
+    return this.brehonContract.deployed()
+      .then(instance =>
+        instance.proposeSettlement(awardPartyA, awardPartyB, { from: addr }));
+  }
+
+  acceptSettlement(addr, awardPartyA, awardPartyB) {
+    return this.brehonContract.deployed()
+      .then(instance =>
+        instance.acceptSettlement(awardPartyA, awardPartyB, { from: addr }));
+  }
+
+  getProposedSettlement() {
+    return this.brehonContract.deployed()
+      .then(instance =>
+        instance.proposedSettlement.call()
+        .then((proposedSettlement) => {
+          if (R.equals(UninitializedResolution, proposedSettlement)) {
+            return null;
+          }
+          return R.zipObj(['proposingPartyAddr', 'settlementPartyA', 'settlementPartyB'], [
+            proposedSettlement[ResolutionStruct.proposerAddr],
+            proposedSettlement[ResolutionStruct.awardPartyA].valueOf(),
+            proposedSettlement[ResolutionStruct.awardPartyB].valueOf(),
+          ]);
+        }));
+  }
+
+  getAllEvents(callback) {
+    this.brehonContract.deployed()
+      .then(instance =>
+        instance.allEvents({ fromBlock: 0, toBlock: 'latest' }, callback));
+  }
+
+  getMinimumContractAmt() {
+    return this.brehonContract.deployed()
+      .then(instance =>
+        instance.minimumContractAmt.call());
+  }
+
+  getActiveBrehon() {
+    return this.brehonContract.deployed()
+      .then(instance =>
+        instance.activeBrehon.call())
+        .then(activeBrehon => ({
+          addr: activeBrehon[BrehonStruct.addr],
+          contractAccepted: activeBrehon[BrehonStruct.contractAccepted],
+          fixedFee: activeBrehon[BrehonStruct.fixedFee],
+          disputeFee: activeBrehon[BrehonStruct.disputeFee],
+        }));
+  }
+
+  raiseDispute(addr) {
+    return this.brehonContract.deployed()
+    .then(instance =>
+      instance.raiseDispute({ from: addr }));
+  }
+
+  raiseAppeal(addr) {
+    return this.brehonContract.deployed()
+    .then(instance =>
+      instance.raiseAppeal({ from: addr }));
+  }
+
+  raiseSecondAppeal(addr) {
+    return this.brehonContract.deployed()
+    .then(instance =>
+      instance.raise2ndAppeal({ from: addr }));
+  }
+
+  adjudicate(addr, awardPartyA, awardPartyB) {
+    return this.brehonContract.deployed()
+      .then(instance =>
+        instance.adjudicate(awardPartyA, awardPartyB, { from: addr }));
+  }
+
+  getAwardsByAddr(addr) {
+    return this.brehonContract.deployed()
+      .then(instance =>
+        instance.awards.call(addr));
+  }
+
+  getAllAwards() {
+    return Promise.all([
+      this.getPartyA(),
+      this.getPartyB(),
+    ])
+    .then(parties => R.map(
+      x => this.getAwardsByAddr(x),
+      R.map(R.view(R.lensProp('addr')), parties)))
+    .then(x => Promise.all(x))
+    .then(R.map(x => x.valueOf()))
+    .then(R.zipObj(['awardPartyA', 'awardPartyB']));
+  }
+
+  withdrawFunds(addr) {
+    return this.brehonContract.deployed()
+    .then(instance =>
+      instance.claimFunds({ from: addr }));
   }
 }

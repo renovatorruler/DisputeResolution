@@ -4,12 +4,58 @@ import 'font-awesome/css/font-awesome.css';
 import Web3 from 'web3';
 import R from 'ramda';
 import BigNumber from 'bignumber.js';
+import moment from 'moment';
 
 import BrehonAPI from './BrehonAPI';
 import Elm from './../elm/Main.elm';
+
 import './../index.html';
 
 import '../stylesheets/brehon.css';
+
+const EventStructs = {
+  ExecutionStarted: [
+    'blockNumber',
+    'txHash',
+    'caller',
+    'totalDeposits',
+  ],
+  SettlementProposed: [
+    'blockNumber',
+    'txHash',
+    'proposingParty',
+    'awardPartyA',
+    'awardPartyB',
+  ],
+  DisputeResolved: [
+    'blockNumber',
+    'txHash',
+    'awardPartyA',
+    'awardPartyB',
+  ],
+  ContractDisputed: [
+    'disputingParty',
+    'activeBrehon',
+  ],
+  AppealPeriodStarted: [
+    'appealPeriodStartTime',
+    'activeBrehon',
+    'awardPartyA',
+    'awardPartyB',
+  ],
+  AppealRaised: [
+    'appealingParty',
+    'activeBrehon',
+  ],
+  SecondAppealRaised: [
+    'appealingParty',
+    'activeBrehon',
+  ],
+  FundsClaimed: [
+    'claimingParty',
+    'amount',
+  ],
+};
 
 function updateAllParties(ports, brehonApp) {
   return Promise.all([
@@ -46,6 +92,12 @@ function updateAllBrehons(ports, brehonApp) {
     brehonApp.getSecondaryBrehon(),
     brehonApp.getTertiaryBrehon(),
   ])
+    .then(R.map(R.over(
+      R.lensProp('fixedFee'),
+      x => x.valueOf())))
+    .then(R.map(R.over(
+      R.lensProp('disputeFee'),
+      x => x.valueOf())))
     .then((brehons) => {
       ports.receiveAllBrehons.send({
         primaryBrehon: R.nth(0, brehons),
@@ -55,18 +107,52 @@ function updateAllBrehons(ports, brehonApp) {
     });
 }
 
+//TODO: Rewrite BrehonAPI to allow proper chaining of promises and flatten this
+//monstrosity
 function updateContractInfo(ports, brehonApp) {
   return brehonApp.getDeployed().then((brehonContract) => {
     brehonContract.instance.stage.call()
       .then(stage =>
         brehonApp.getTransactionAmount().then(transactionAmount =>
-          ports.receiveContractInfo.send([
-            brehonContract.address,
-            Number(stage.valueOf()),
-            transactionAmount.valueOf(),
-          ])));
+          brehonApp.getMinimumContractAmt().then(minimumContractAmt =>
+            brehonApp.getActiveBrehon().then(activeBrehon =>
+              brehonApp.getAppealPeriodInDays().then(appealPeriodInDays =>
+                brehonApp.getAllAwards().then(awards =>
+                  ports.receiveContractInfo.send([
+                    brehonContract.address,
+                    Number(stage.valueOf()),
+                    transactionAmount.valueOf(),
+                    minimumContractAmt.valueOf(),
+                    Number(appealPeriodInDays.valueOf()),
+                    activeBrehon.addr,
+                    awards,
+                  ])))))));
   });
 }
+
+function updateProposedSettlement(ports, brehonApp) {
+  brehonApp.getProposedSettlement()
+    .then(ports.receiveProposedSettlement.send);
+}
+
+function getPortCallbackByEvent(ports, eventName) {
+  const eventNameCallbackMap = {
+    ExecutionStarted: ports.receiveExecutionStartedEvent,
+    SettlementProposed: ports.receiveSettlementProposedEvent,
+    DisputeResolved: ports.receiveDisputeResolvedEvent,
+    ContractDisputed: ports.receiveContractDisputedEvent,
+    AppealPeriodStarted: ports.receiveAppealPeriodStartedEvent,
+    AppealRaised: ports.receiveAppealRaisedEvent,
+    SecondAppealRaised: ports.receiveSecondAppealRaisedEvent,
+    FundsClaimed: ports.receiveFundsClaimedEvent,
+  };
+  return eventNameCallbackMap[eventName];
+}
+
+function getPortArgsByEvent(ports, eventName, portEventObj) {
+  return R.map(value => portEventObj[value], EventStructs[eventName]);
+}
+
 
 function portHooks(elmApp, currentProvider) {
   const self = window;
@@ -118,6 +204,75 @@ function portHooks(elmApp, currentProvider) {
   ports.requestStartContract.subscribe(addr =>
     brehonApp.startContract(addr).then(() =>
       updateContractInfo(ports, brehonApp)));
+
+  ports.requestProposeSettlement.subscribe(proposal =>
+    brehonApp.proposeSettlement(
+      proposal[0],
+      new BigNumber(proposal[1]),
+      new BigNumber(proposal[2]))
+    .then(() => updateProposedSettlement(ports, brehonApp)));
+
+  ports.requestProposedSettlement.subscribe(() =>
+    updateProposedSettlement(ports, brehonApp));
+
+  ports.requestAcceptSettlement.subscribe(proposal =>
+    brehonApp.acceptSettlement(
+      proposal[0],
+      new BigNumber(proposal[1]),
+      new BigNumber(proposal[2]))
+    .then(() => updateContractInfo(ports, brehonApp)));
+
+  const getDefaultBigNum = x => R.defaultTo(new BigNumber(0), x).valueOf();
+
+  ports.requestAllEvents.subscribe(() =>
+    brehonApp.getAllEvents((error, eventObj) => {
+      if (error) console.error(error);
+
+      const portEventObj = {
+        blockNumber: eventObj.blockNumber,
+        txHash: eventObj.transactionHash,
+        caller: eventObj.args.caller,
+        totalDeposits: getDefaultBigNum(eventObj.args.totalDeposits),
+        proposingParty: eventObj.args.proposingParty,
+        awardPartyA: getDefaultBigNum(eventObj.args.awardPartyA),
+        awardPartyB: getDefaultBigNum(eventObj.args.awardPartyB),
+        disputingParty: eventObj.args.disputingParty,
+        activeBrehon: R.defaultTo(eventObj.args.activeBrehon, eventObj.args.activeBrehon),
+        appealingParty: eventObj.args.appealingParty,
+        appealPeriodStartTime:
+          moment.unix(parseInt(
+            getDefaultBigNum(eventObj.args.appealPeriodStartTime),
+            10)).format(),
+        claimingParty: eventObj.args.claimingParty,
+        amount: getDefaultBigNum(eventObj.args.amount),
+      };
+      getPortCallbackByEvent(ports, eventObj.event)
+        .send(getPortArgsByEvent(ports, eventObj.event, portEventObj));
+    }));
+
+  ports.requestRaiseDispute.subscribe(disputingAddress =>
+    brehonApp.raiseDispute(disputingAddress)
+    .then(() => updateContractInfo(ports, brehonApp)));
+
+  ports.requestRaiseAppeal.subscribe(disputingAddress =>
+    brehonApp.raiseAppeal(disputingAddress)
+    .then(() => updateContractInfo(ports, brehonApp)));
+
+  ports.requestRaiseSecondAppeal.subscribe(disputingAddress =>
+    brehonApp.raiseSecondAppeal(disputingAddress)
+    .then(() => updateContractInfo(ports, brehonApp)));
+
+  ports.requestAdjudicate.subscribe(judgment =>
+    brehonApp.adjudicate(
+      judgment[0],
+      new BigNumber(judgment[1]),
+      new BigNumber(judgment[2]))
+    .then(() => updateContractInfo(ports, brehonApp)));
+
+
+  ports.requestWithdrawFunds.subscribe(withdrawingAddress =>
+    brehonApp.withdrawFunds(withdrawingAddress)
+    .then(() => updateContractInfo(ports, brehonApp)));
 }
 
 document.addEventListener('DOMContentLoaded', () => {

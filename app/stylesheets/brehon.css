@@ -2,3 +2,17 @@
   width: 10ch;
   word-wrap: break-word;
 }
+
+.label-title {
+  margin-top: -1.55rem;
+  float: right;
+  padding: 0.3rem;
+}
+
+.label-title.h4 {
+  margin-top: -1.7rem;
+}
+
+.active-brehon:not(.owner) {
+  border-width: 0.2rem;
+}

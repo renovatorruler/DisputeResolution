@@ -1,19 +1,28 @@
 module Models exposing (..)
 
+import Time.DateTime as DateTime exposing (DateTime, dateTime)
+import Time as Time exposing (Time, now)
 
+
+zeroWei : Wei
 zeroWei =
     "0"
 
 
+initContractInfo : ContractInfo
 initContractInfo =
-    ContractInfo Nothing Negotiation zeroWei False False
+    ContractInfo Nothing Negotiation zeroWei zeroWei False False Nothing Nothing Nothing 0 False Nothing Nothing
 
 
 type alias Model =
     { contractInfo : ContractInfo
+    , currentTimestamp : Time
+    , eventLog : List Event
     , loadedAccount : Address
     , depositField : Wei
     , totalDeposits : Wei
+    , settlementPartyAField : Wei
+    , settlementPartyBField : Wei
     , partyA : PartyModel
     , partyB : PartyModel
     , primaryBrehon : BrehonModel
@@ -26,8 +35,29 @@ type alias ContractInfo =
     { deployedAt : Address
     , stage : Stage
     , transactionAmount : Wei
+    , minimumContractAmt : Wei
     , partiesAccepted : Bool
     , brehonsAccepted : Bool
+    , proposedSettlement : Maybe Settlement
+    , appealPeriodStart : Maybe DateTime
+    , appealPeriodEnd : Maybe DateTime
+    , appealPeriodInDays : Int
+    , appealPeriodInProgress : Bool
+    , awards : Maybe Awards
+    , activeBrehon : Address
+    }
+
+
+type alias Settlement =
+    { proposingPartyAddr : Address
+    , settlementPartyA : Wei
+    , settlementPartyB : Wei
+    }
+
+
+type alias Awards =
+    { awardPartyA : Wei
+    , awardPartyB : Wei
     }
 
 
@@ -38,6 +68,7 @@ type alias PartyModel =
 
 type alias BrehonModel =
     { struct : Brehon
+    , awards : Maybe Awards
     }
 
 
@@ -51,6 +82,8 @@ type alias Party =
 type alias Brehon =
     { addr : Address
     , contractAccepted : Bool
+    , fixedFee : Wei
+    , disputeFee : Wei
     }
 
 
@@ -87,4 +120,20 @@ type Stage
     | Resolved
     | AppealPeriod
     | Appeal
+    | SecondAppealPeriod
+    | SecondAppeal
     | Completed
+
+type Event
+    = ExecutionStartedEvent Int Address Address Wei
+    | SettlementProposedEvent Int Address Address Wei Wei
+    | DisputeResolvedEvent Int Address Wei Wei
+    | ContractDisputedEvent Address Address
+    | AppealPeriodStartedEvent DateTime Address Wei Wei
+    | AppealRaisedEvent Address Address
+    | SecondAppealRaisedEvent Address Address
+    | FundsClaimedEvent Address Wei
+
+type AppealLevel
+    = First
+    | Second

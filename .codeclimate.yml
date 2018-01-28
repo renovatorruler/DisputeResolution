@@ -2,8 +2,11 @@
 engines:
   csslint:
     enabled: true
+    checks:
+      Similar code:
+        enabled: false
   duplication:
-    enabled: true
+    enabled: false
     config:
       languages:
       - ruby
@@ -14,6 +17,8 @@ engines:
     enabled: true
     checks:
       import/no-unresolved:
+        enabled: false
+      import/extensions:
         enabled: false
   fixme:
     enabled: true

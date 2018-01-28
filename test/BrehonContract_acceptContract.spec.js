@@ -192,6 +192,5 @@ contract('BrehonContract acceptContract should ', () =>
       .then(() =>
         brehonContract.acceptContract({ from: defaults.partyA_addr }))
     .catch(err =>
-      assert.isNotNull(err, 'Exception was not thrown when acceptContract was triggerred at a stage which was not Negotiation stage'))
-  })
-);
+      assert.isNotNull(err, 'Exception was not thrown when acceptContract was triggerred at a stage which was not Negotiation stage'));
+  }));
