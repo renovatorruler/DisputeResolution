@@ -1,4 +1,4 @@
-pragma solidity ^0.4.8;
+pragma solidity ^0.4.18;
 
 import "./stateMachine.sol";
 import "./accessRestricted.sol";
@@ -55,44 +55,38 @@ contract BrehonContract is
   event FundsClaimed(address claimingParty, uint amount);
 
   modifier byEitherEntities() {
-    if (msg.sender != primaryBrehon.addr &&
+    require(msg.sender != primaryBrehon.addr &&
         msg.sender != secondaryBrehon.addr &&
         msg.sender != tertiaryBrehon.addr &&
         msg.sender != partyA.addr &&
-        msg.sender != partyB.addr) {
-        throw;
-    }
+        msg.sender != partyB.addr);
     _;
   }
 
   modifier eitherByParty(Party _party1, Party _party2)
   {
-    if (msg.sender != _party1.addr &&
-        msg.sender != _party2.addr)
-        throw;
+    require(msg.sender != _party1.addr &&
+        msg.sender != _party2.addr);
     _;
   }
 
   modifier atAdjudicatableStages()
   {
-    if(stage != Stages.Dispute &&
+    require(stage != Stages.Dispute &&
        stage != Stages.Appeal &&
-       stage != Stages.SecondAppeal)
-        throw;
+       stage != Stages.SecondAppeal);
     _;
   }
 
   modifier duringDispute()
   {
-    if(stage == Stages.Negotiation ||
-       stage == Stages.Completed)
-        throw;
+    require(stage == Stages.Negotiation ||
+       stage == Stages.Completed);
     _;
   }
 
   modifier onlyByBrehon(Brehon _brehon) {
-    if (msg.sender != _brehon.addr)
-        throw;
+    require(msg.sender != _brehon.addr);
     _;
   }
 
@@ -110,7 +104,7 @@ contract BrehonContract is
       address _tertiaryBrehon,
       uint _tertiaryBrehonFixedFee,
       uint _tertiaryBrehonDisputeFee
-  ) {
+  ) public {
     partyA.addr = _partyA;
     transactionAmount = _transactionAmount;
     contractTermsHash = _contractTermsHash;
@@ -147,7 +141,7 @@ contract BrehonContract is
     tertiaryBrehon.contractAccepted = false;
   }
 
-  function acceptContract()
+  function acceptContract() public
     atStage(Stages.Negotiation)
   {
       if (msg.sender == partyA.addr) {
@@ -160,28 +154,28 @@ contract BrehonContract is
           secondaryBrehon.contractAccepted = true;
       } else if(msg.sender == tertiaryBrehon.addr) {
           tertiaryBrehon.contractAccepted = true;
-      } else throw;
+      } else revert();
   }
 
-  function deposit()
+  function deposit() public
     payable
   {
       if(msg.sender == partyA.addr) {
           partyA.deposit += msg.value;
       } else if (msg.sender == partyB.addr) {
           partyB.deposit += msg.value;
-      } else throw;
+      } else revert();
   }
 
-  function startContract()
+  function startContract() public
     atStage(Stages.Negotiation)
     eitherByParty(partyA, partyB)
   {
-      if(!partyA.contractAccepted ||
+      require(!partyA.contractAccepted ||
          !partyB.contractAccepted ||
          !primaryBrehon.contractAccepted ||
          !secondaryBrehon.contractAccepted ||
-         !tertiaryBrehon.contractAccepted) throw;
+         !tertiaryBrehon.contractAccepted);
 
       if ((partyA.deposit + partyB.deposit) >=
           minimumContractAmt) {
@@ -190,10 +184,10 @@ contract BrehonContract is
              awards[primaryBrehon.addr] = primaryBrehon.fixedFee;
              awards[secondaryBrehon.addr] = secondaryBrehon.fixedFee;
              awards[tertiaryBrehon.addr] = tertiaryBrehon.fixedFee;
-      } else throw;
+      } else revert();
   }
 
-  function raiseDispute()
+  function raiseDispute() public
     atStage(Stages.Execution)
     eitherByParty(partyA, partyB)
   {
@@ -203,11 +197,11 @@ contract BrehonContract is
     ContractDisputed(msg.sender, primaryBrehon.addr);
   }
 
-  function adjudicate(uint _awardPartyA, uint _awardPartyB)
+  function adjudicate(uint _awardPartyA, uint _awardPartyB) public
     atAdjudicatableStages()
     onlyByBrehon(activeBrehon)
   {
-    if((_awardPartyA + _awardPartyB) > (partyA.deposit + partyB.deposit)) throw;
+    require((_awardPartyA + _awardPartyB) > (partyA.deposit + partyB.deposit));
 
     if (stage == Stages.Dispute) {
         stage = Stages.AppealPeriod; // STATECHANGE
@@ -216,7 +210,7 @@ contract BrehonContract is
     } else if (stage == Stages.SecondAppeal) {
         stage = Stages.Completed; // STATECHANGE
     } else {
-        throw;
+        revert();
     }
 
     awards[partyA.addr] = _awardPartyA;
@@ -231,37 +225,32 @@ contract BrehonContract is
     }
   }
 
-  function getActiveJudgmentByParty(address _partyAddress)
+  function getActiveJudgmentByParty(address _partyAddress) public view
     returns (uint)
   {
-      if(_partyAddress != partyA.addr &&
-         _partyAddress != partyB.addr) throw;
-    return awards[_partyAddress];
+      require(_partyAddress != partyA.addr &&
+              _partyAddress != partyB.addr);
+      return awards[_partyAddress];
   }
 
-  function claimFunds()
+  function claimFunds() public
     byEitherEntities()
   {
     if (stage != Stages.Completed) {
-        if (stage != Stages.AppealPeriod && stage != Stages.SecondAppealPeriod) {
-            throw;
-        }
+        require(stage != Stages.AppealPeriod && stage != Stages.SecondAppealPeriod);
+
         if (now >= appealPeriodStartTime + (appealPeriodInDays * 1 days)) {
             stage = Stages.Completed; // STATECHANGE
         }
     }
 
-    if (stage != Stages.Completed) throw;
+    require(stage != Stages.Completed);
 
     uint amount = awards[msg.sender];
 
-    if (amount == 0) {
-      throw;
-    }
+    require(amount == 0);
 
-    if (this.balance < amount) {
-      throw;
-    }
+    require(this.balance < amount);
 
     awards[msg.sender] = 0;
 
@@ -269,11 +258,11 @@ contract BrehonContract is
       FundsClaimed(msg.sender, amount);
     } else {
       awards[msg.sender] = amount;
-      throw;
+      revert();
     }
   }
 
-  function raiseAppeal()
+  function raiseAppeal() public
     atStage(Stages.AppealPeriod)
     eitherByParty(partyA, partyB)
   {
@@ -285,7 +274,7 @@ contract BrehonContract is
     AppealRaised(msg.sender, activeBrehon.addr);
   }
 
-  function raise2ndAppeal()
+  function raise2ndAppeal() public
     atStage(Stages.SecondAppealPeriod)
     eitherByParty(partyA, partyB)
   {
@@ -297,7 +286,7 @@ contract BrehonContract is
     SecondAppealRaised(msg.sender, activeBrehon.addr);
   }
 
-  function proposeSettlement(uint _awardPartyA, uint _awardPartyB)
+  function proposeSettlement(uint _awardPartyA, uint _awardPartyB) public
     duringDispute()
     eitherByParty(partyA, partyB)
   {
@@ -315,13 +304,12 @@ contract BrehonContract is
       SettlementProposed(msg.sender, _awardPartyA, _awardPartyB);
   }
 
-  function acceptSettlement(uint _awardPartyA, uint _awardPartyB)
+  function acceptSettlement(uint _awardPartyA, uint _awardPartyB) public
     duringDispute()
     eitherByParty(partyA, partyB)
   {
-      if((proposedSettlement.awardPartyA != _awardPartyA) ||
-         (proposedSettlement.awardPartyB != _awardPartyB))
-          throw;
+      require((proposedSettlement.awardPartyA != _awardPartyA) ||
+         (proposedSettlement.awardPartyB != _awardPartyB));
 
       if(msg.sender == partyA.addr) {
           proposedSettlement.partyAAccepted = true;
