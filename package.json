@@ -3,13 +3,13 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "truffle serve",
+    "start": "truffle serve || echo 'truffle serve seems to be broken, use dev task'",
     "testrpc": "ganache-cli -m 'myth like bonus scare over problem client lizard pioneer submit female collect' --hostname 0.0.0.0",
     "testrpc-silent": "ganache-cli -m 'myth like bonus scare over problem client lizard pioneer submit female collect' --hostname 0.0.0.0 > /dev/null",
     "truffle": "truffle",
     "truffletest": "truffle test",
     "migrate": "truffle migrate",
-    "migrate-ropsten" : "truffle migrate --network ropsten",
+    "migrate-ropsten": "truffle migrate --network ropsten",
     "test": "run-p -r \"testrpc-silent\" \"truffletest\"",
     "blockchain": "run-p \"migrate\" \"testrpc\"",
     "build": "truffle compile && webpack",
@@ -33,7 +33,8 @@
     "solidity-sha3": "^0.4.1",
     "truffle-contract": "^3.0.2",
     "truffle-hdwallet-provider": "^0.0.3",
-    "web3": "^0.18.2"
+    "web3": "^0.18.2",
+    "zeppelin-solidity": "1.6.0"
   },
   "devDependencies": {
     "babel-cli": "^6.23.0",

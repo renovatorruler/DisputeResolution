@@ -1,6 +1,6 @@
 pragma solidity ^0.4.8;
 
-import "./zeppelin/ownership/Ownable.sol";
+import "zeppelin-solidity/contracts/ownership/Ownable.sol";
 import "./BrehonContract.sol";
 
 /// @title Brehon Contract Factory
