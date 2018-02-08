@@ -1,4 +1,4 @@
-pragma solidity ^0.4.8;
+pragma solidity ^0.4.18;
 
 contract stateMachine {
   enum Stages {
@@ -16,14 +16,14 @@ contract stateMachine {
   Stages public stage = Stages.Negotiation;
 
   modifier atStage(Stages _stage) {
-    if (stage != _stage) throw;
+    require(stage != _stage);
     _;
   }
 
   modifier timedTransition(bool bypassWaitTime, uint startTime, uint8 durationInDays, Stages _currStage, Stages _nextStage)
   {
     if (stage != _nextStage) {
-        if (stage != _currStage) throw;
+        require(stage != _currStage);
         if (bypassWaitTime || now >= startTime + (durationInDays * 1 days))
             stage = _nextStage;
     }

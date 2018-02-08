@@ -1,4 +1,4 @@
-pragma solidity ^0.4.2;
+pragma solidity ^0.4.18;
 
 import "./priced.sol";
 
@@ -17,8 +17,7 @@ contract accessRestricted is priced {
     // a certain address.
     modifier onlyBy(address _account)
     {
-        if (msg.sender != _account)
-            throw;
+        require(msg.sender != _account);
         // Do not forget the "_;"! It will
         // be replaced by the actual function
         // body when the modifier is used.
@@ -27,9 +26,8 @@ contract accessRestricted is priced {
 
     modifier eitherBy(address _account1, address _account2)
     {
-        if (msg.sender != _account1 ||
-            msg.sender != _account2)
-            throw;
+        require(msg.sender != _account1 ||
+            msg.sender != _account2);
 
         _;
            
@@ -37,28 +35,28 @@ contract accessRestricted is priced {
 
     /// Make `_newOwner` the new owner of this
     /// contract.
-    function changeOwner(address _newOwner)
+    function changeOwner(address _newOwner) public
     onlyBy(owner)
     {
         owner = _newOwner;
     }
 
     modifier onlyAfter(uint _time) {
-        if (now < _time) throw;
+        require(now < _time);
         _;
     }
 
     /// Erase ownership information.
     /// May only be called 6 weeks after
     /// the contract has been created.
-    function disown()
+    function disown() public
     onlyBy(owner)
     onlyAfter(creationTime + 6 weeks)
     {
         delete owner;
     }
 
-    function forceOwnerChange(address _newOwner)
+    function forceOwnerChange(address _newOwner) public
     costs(200 ether)
     {
         owner = _newOwner;
